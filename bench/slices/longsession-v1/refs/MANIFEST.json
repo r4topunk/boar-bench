@@ -1,0 +1,14 @@
+{
+ "bench": "boar-eval slice longsession-v1 (agent-written dev); references = the engine's own STANDALONE answers (no history), not frontier answers",
+ "questions_sha256": "a73f1e644e5e163adf6c5c8887016706dc0606ba258d10595442356b4a466b08",
+ "jsonl_sha256": "8f1ca9acd5e9f9fbe52b3ada9f899be88ed2c12533b3d03ebee6ddf514bbbb06",
+ "frozen": true,
+ "n_items": 80,
+ "n_ok": 80,
+ "missing_ids": [],
+ "source_traces": "ls-standalone-all80.traces.jsonl",
+ "source_traces_sha256": "5885b8f2d931f934269f2b20cf0e704c9ba0135c69a6e868ed0f323cf9255ca6",
+ "source_run": "ls-standalone-s42 (cut 7, kiln-local/be-0cfd4a77-cut7, seed 42, kit boar-crypto + boar-wikivoyage-en)",
+ "createdAt": "2026-10-15T01:40:19.364200+00:00",
+ "license": "CC BY 4.0"
+}

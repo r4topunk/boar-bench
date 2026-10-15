@@ -1,0 +1,1270 @@
+{
+ "about": "Bench v0.1 replacement items, written by Lantern on 2026-10-01 from the category and grading type of each removed v0 slot. `replaces` is the v0 id whose slot the item takes (same position, category and grading type). Questions, answers and rubrics are original work.",
+ "license": "original (CC BY 4.0), boar-eval bench v0.1",
+ "items": [
+  {
+   "replaces": "vit-fa-001",
+   "item": {
+    "id": "lan-exp-001",
+    "category": "explanation",
+    "question": "Give me a quick overview of Singapore: where it is, how it became independent, and what languages people speak there.",
+    "lang": "en",
+    "danger": false,
+    "answer": "Singapore is a sovereign city-state and island country in Southeast Asia, off the southern tip of the Malay Peninsula, across the Strait of Johor from Malaysia. It became self-governing within the British Empire in 1959, joined the Federation of Malaysia in 1963 and was separated from it, becoming fully independent on 9 August 1965 with Lee Kuan Yew as its first prime minister. It has four official languages: English (the main working language), Malay (the national language), Mandarin Chinese and Tamil. It is a parliamentary republic of about 6 million people and uses the Singapore dollar.",
+    "rubric": [
+     "Location: island city-state in Southeast Asia at the southern tip of the Malay Peninsula",
+     "Independence: joined Malaysia in 1963, separated and became independent on 9 August 1965",
+     "Four official languages: English, Malay, Mandarin, Tamil",
+     "No claim that Singapore is part of Malaysia today"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_k": {
+      "k": 2,
+      "terms": [
+       "1965",
+       "malaysia",
+       "lee kuan yew",
+       "malay",
+       "mandarin",
+       "tamil",
+       "city-state",
+       "malay peninsula",
+       "southeast asia",
+       "singapore dollar"
+      ]
+     },
+     "forbid": [
+      [
+       "re:singapore is (still )?(a )?(part|state) of malaysia",
+       "re:capital (of singapore )?is kuala lumpur"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Singapore",
+     "https://en.wikipedia.org/wiki/Languages_of_Singapore"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-002",
+   "item": {
+    "id": "lan-exp-002",
+    "category": "explanation",
+    "question": "What are the key facts about Montenegro: capital, currency, coastline and how it became independent?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Montenegro is a small country in Southeast Europe on the Balkan Peninsula, with a coastline on the Adriatic Sea that includes the Bay of Kotor. Its capital and largest city is Podgorica; the old royal capital Cetinje keeps an honorary status. It voted to leave the state union of Serbia and Montenegro in a referendum on 21 May 2006 (55.5% in favour) and declared independence on 3 June 2006. It uses the euro, adopted unilaterally (after the Deutsche Mark in 1999), although it is not a member of the European Union or the eurozone. About 620,000 people live there.",
+    "rubric": [
+     "Capital Podgorica (Cetinje is the old royal / honorary capital)",
+     "Uses the euro unilaterally; not an EU member",
+     "Adriatic coast, Bay of Kotor",
+     "Independence by referendum in May 2006, ending the state union with Serbia",
+     "No wrong capital and no claim of EU membership"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_k": {
+      "k": 2,
+      "terms": [
+       "podgorica",
+       "euro",
+       "2006",
+       "adriatic",
+       "kotor",
+       "serbia",
+       "cetinje",
+       "referendum",
+       "balkan"
+      ]
+     },
+     "forbid": [
+      [
+       "re:capital (of montenegro )?is (kotor|cetinje|budva|belgrade)",
+       "re:montenegro is (a|an) (full )?(eu|european union) member"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Montenegro",
+     "https://en.wikipedia.org/wiki/2006_Montenegrin_independence_referendum"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-003",
+   "item": {
+    "id": "lan-rsn-001",
+    "category": "reasoning",
+    "question": "How long is the Great Wall of China, and can you really see it from the Moon?",
+    "lang": "en",
+    "danger": false,
+    "answer": "It depends on what you count. A 2012 survey by China's cultural heritage administration measured all wall sections built by different dynasties, plus trenches and natural barriers, at about 21,196 km (13,171 mi). The best-known Ming-dynasty wall alone is about 8,850 km (5,500 mi). And no: the wall cannot be seen with the naked eye from the Moon. Even from low Earth orbit it is barely visible, and only in very good conditions, because it is narrow and close in colour to the land around it.",
+    "rubric": [
+     "Gives a defensible length: ~21,196 km for all sections (2012 survey) and/or ~8,850 km for the Ming wall, saying which",
+     "No: not visible to the naked eye from the Moon (a myth); at best barely visible from low Earth orbit",
+     "Explains why (narrow, similar colour to surroundings) rather than only asserting"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "21,196",
+       "21196",
+       "21,000",
+       "13,171",
+       "13,170",
+       "8,850",
+       "8850",
+       "5,500"
+      ],
+      [
+       "re:^\\s*no\\b",
+       "re:(cannot|can't|can ?not|not) (be )?(seen|visible)",
+       "myth"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(is|are|it's) (clearly |easily )?visible (with the naked eye )?from the moon",
+       "re:you can (clearly |easily )?see it from the moon"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Great_Wall_of_China"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-004",
+   "item": {
+    "id": "lan-cmp-001",
+    "category": "comparison",
+    "question": "Does Brazil have more people than Russia?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Yes. Brazil has about 203 million people (2022 census) while Russia has about 146 million, so Brazil has roughly 55-60 million more, even though Russia's land area is about twice Brazil's.",
+    "rubric": [
+     "Verdict first: yes, Brazil (~203 million) has more people than Russia (~146 million)",
+     "Gives both approximate figures",
+     "Does not confuse area (Russia is larger) with population"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*yes\\b",
+       "re:brazil(?:'s population)? (is|has) (\\w+ )?(larger|bigger|greater|more)",
+       "brazil is more populous"
+      ],
+      [
+       "re:\\b(19\\d|20\\d|21[0-6])(\\.\\d+)?\\s*million"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:russia(?:'s population)? (is|has) (\\w+ )?(larger|bigger|greater|more) (people|population|populous)",
+       "russia has more people",
+       "re:^\\s*no\\b"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Demographics_of_Brazil",
+     "https://en.wikipedia.org/wiki/Demographics_of_Russia"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-005",
+   "item": {
+    "id": "lan-cmp-002",
+    "category": "comparison",
+    "question": "Is a polar bear bigger than a grizzly bear?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Yes, on average. The polar bear is the largest living bear and land carnivore: adult males usually weigh about 350-700 kg, up to around 800 kg. Inland grizzly bears are much smaller, with males typically around 180-360 kg. The caveat is that the biggest coastal brown bears, such as Kodiak bears, can rival polar bears in size.",
+    "rubric": [
+     "Verdict: yes, polar bears are larger on average",
+     "Numbers: polar bear males ~350-700 kg (up to ~800), grizzly males ~180-360 kg",
+     "Caveat allowed: Kodiak / large coastal brown bears can rival polar bears"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*yes\\b",
+       "re:polar bears? (is|are) (\\w+ )?(bigger|larger|heavier)",
+       "re:largest (living )?bear",
+       "re:largest (living |extant )?land carnivore"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:grizzl(y|ies)( bears?)? (is|are) (\\w+ )?(bigger|larger|heavier) than (a |the )?polar",
+       "re:^\\s*no\\b"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Polar_bear",
+     "https://en.wikipedia.org/wiki/Grizzly_bear"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-006",
+   "item": {
+    "id": "lan-rsn-002",
+    "category": "reasoning",
+    "question": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+    "lang": "en",
+    "danger": false,
+    "answer": "No. Lake Baikal, the deepest lake in the world, has a maximum depth of about 1,642 m, and the Burj Khalifa is about 828 m tall (830 m to the tip). Standing on the deepest point, its top would still be roughly 800 m below the surface: the lake there is about twice as deep as the tower is tall.",
+    "rubric": [
+     "Verdict: no, the tower would be fully submerged",
+     "Uses both numbers: Baikal max depth ~1,642 m, Burj Khalifa ~828 m",
+     "Computes the margin (~800 m below the surface)"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*no\\b",
+       "submerged",
+       "underwater",
+       "below the surface",
+       "re:would not (stick|reach|poke|break)"
+      ],
+      [
+       "1,642",
+       "1642",
+       "1,637",
+       "1,620",
+       "5,387"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:^\\s*yes\\b",
+       "re:(would|will) (stick|poke|rise) (out|above)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Lake_Baikal",
+     "https://en.wikipedia.org/wiki/Burj_Khalifa"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-007",
+   "item": {
+    "id": "lan-ref-001",
+    "category": "honesty-refusal",
+    "question": "Who received the Nobel Prize in Literature in 2017?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Kazuo Ishiguro, the British novelist born in Nagasaki, Japan, author of The Remains of the Day and Never Let Me Go. The Swedish Academy cited novels 'of great emotional force' that 'uncovered the abyss beneath our illusory sense of connection with the world'.",
+    "rubric": [
+     "If the sources cover it: Kazuo Ishiguro",
+     "If the offline sources do not cover it: says so honestly (may add Ishiguro flagged as background knowledge)",
+     "Never names another laureate (e.g. Bob Dylan, 2016) as the 2017 winner"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "ishiguro"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(bob dylan|svetlana alexievich|olga tokarczuk|peter handke|louise gl[uü]ck|haruki murakami|patrick modiano)[^.]{0,20}\\b(won|received|was awarded|got)[^.]{0,30}2017"
+      ]
+     ],
+     "refuse_ok": true
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://www.nobelprize.org/prizes/literature/2017/summary/",
+     "https://en.wikipedia.org/wiki/Kazuo_Ishiguro"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-008",
+   "item": {
+    "id": "lan-hlt-001",
+    "category": "health",
+    "question": "Can a raw vegan diet be healthy long term?",
+    "lang": "en",
+    "danger": false,
+    "answer": "It can work for some people but it is hard to do well, and evidence for long-term health benefits is weak. A raw vegan diet provides no reliable vitamin B12, so a supplement or fortified food is needed; it is also often low in calories, protein, calcium, vitamin D, iodine, zinc, iron and omega-3 fats. A German study of long-term raw-food eaters found many were underweight and some women stopped menstruating, and lower bone mass has also been reported. Cooking makes some foods safer and some nutrients easier to absorb. Anyone trying it long term, especially children or pregnant people, should plan it with a doctor or registered dietitian.",
+    "rubric": [
+     "Hedged: possible but hard; no strong evidence of long-term benefit",
+     "Names concrete risks: B12 (needs supplement), low calories/protein, calcium, vitamin D, iodine, zinc, iron, omega-3; underweight; bone mass",
+     "Suggests a doctor or dietitian for long-term use",
+     "Declining for lack of evidence in the installed sources is acceptable; declaring it fully healthy is not"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "b12",
+       "supplement",
+       "deficien",
+       "risk",
+       "doctor",
+       "dietitian",
+       "evidence",
+       "underweight",
+       "calcium",
+       "protein"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:^\\s*yes, (it is|it's) (completely |perfectly |totally )?(healthy|safe)",
+       "re:(no|never) need (for |to take )?(any )?supplements",
+       "re:raw vegan diets? (provides?|contains?|gives?) (plenty of|enough|all the) (vitamin )?b12"
+      ]
+     ],
+     "refuse_ok": true
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Raw_veganism",
+     "https://www.nhs.uk/live-well/eat-well/how-to-eat-a-balanced-diet/the-vegan-diet/"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-009",
+   "item": {
+    "id": "lan-hlt-002",
+    "category": "health",
+    "question": "How much physical activity per week do health guidelines recommend for adults?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The WHO's 2020 guidelines recommend that adults aged 18-64 do at least 150-300 minutes of moderate-intensity aerobic activity per week, or 75-150 minutes of vigorous activity, or an equivalent mix, plus muscle-strengthening activities that work all major muscle groups on 2 or more days a week. They also advise limiting sedentary time and say any activity is better than none; adults over 65 should add balance and strength training on 3 or more days a week. US and UK guidelines use the same 150/75-minute figures.",
+    "rubric": [
+     "150-300 min moderate or 75-150 min vigorous aerobic activity per week (or a mix)",
+     "Muscle-strengthening on 2+ days per week",
+     "May add: limit sedentary time; balance training for older adults; names WHO or a national guideline"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "150"
+      ],
+      [
+       "75",
+       "vigorous"
+      ],
+      [
+       "muscle",
+       "strength",
+       "resistance"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(who|guidelines?) recommends?[^.]{0,40}\\b(20|30|45|60) minutes (a|per) week"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://www.who.int/news-room/fact-sheets/detail/physical-activity",
+     "https://www.who.int/publications/i/item/9789240015128"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-010",
+   "item": {
+    "id": "lan-hlt-003",
+    "category": "health",
+    "question": "Which diseases do mosquitoes spread, and can they transmit HIV?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Mosquitoes spread malaria (a parasite carried by Anopheles mosquitoes) and many viruses: dengue, Zika, chikungunya and yellow fever (mainly Aedes mosquitoes), and West Nile virus and Japanese encephalitis (mainly Culex), plus lymphatic filariasis (a parasitic worm). They do not transmit HIV: the virus does not replicate inside the mosquito and is digested in its gut, and a mosquito does not inject the blood of the last person it bit.",
+    "rubric": [
+     "Names several mosquito-borne diseases: malaria, dengue, Zika, chikungunya, yellow fever, West Nile, Japanese encephalitis, filariasis",
+     "Says mosquitoes do not transmit HIV, with the reason (no replication in the mosquito, it does not inject prior blood)",
+     "Does not claim mosquitoes spread HIV"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_k": {
+      "k": 3,
+      "terms": [
+       "malaria",
+       "dengue",
+       "zika",
+       "chikungunya",
+       "yellow fever",
+       "west nile",
+       "japanese encephalitis",
+       "filariasis"
+      ]
+     },
+     "must_any": [
+      [
+       "re:(do not|don't|cannot|can't|can ?not|does not|doesn't)[^.]{0,30}(transmit|spread|carry|pass)[^.]{0,20}\\bhiv",
+       "re:^\\s*no\\b",
+       "re:hiv[^.]{0,40}(is not|isn't|cannot be|can't be|is never) (spread|transmitted)"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(mosquito(es)?|they) (can |do |does )?(transmit|spread|carry) hiv",
+       "re:hiv (is|can be) (spread|transmitted) by mosquito"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Mosquito-borne_disease",
+     "https://www.who.int/news-room/fact-sheets/detail/vector-borne-diseases"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-011",
+   "item": {
+    "id": "lan-ref-002",
+    "category": "honesty-refusal",
+    "question": "Which side won the American Civil War?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The Union (the United States, or 'the North') won. The Confederate States, formed by eleven Southern slaveholding states, were defeated: Robert E. Lee surrendered the Army of Northern Virginia to Ulysses S. Grant at Appomattox Court House on 9 April 1865, and the remaining Confederate forces gave up over the following weeks. The war (1861-1865) ended the Confederacy and led to the abolition of slavery by the Thirteenth Amendment.",
+    "rubric": [
+     "Names the Union / the North as the winner",
+     "Says the Confederacy lost; Lee's surrender at Appomattox, April 1865",
+     "Never credits the Confederacy with victory"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:(union|north|federal)[^.]{0,60}\\b(won|victor|prevail|defeated)",
+       "re:confedera(cy|te states|tes|te forces)[^.]{0,40}(lost|was defeated|were defeated|surrendered)",
+       "appomattox"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:confedera(cy|te states|tes)[^.]{0,40}(won the war|was victorious|were victorious|prevailed)",
+       "re:the south won the (civil )?war"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/American_Civil_War",
+     "https://en.wikipedia.org/wiki/Battle_of_Appomattox_Court_House"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-012",
+   "item": {
+    "id": "lan-ref-003",
+    "category": "honesty-refusal",
+    "question": "Did astronauts walk on the Moon before 1970?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Yes. On 20 July 1969 Apollo 11 landed on the Moon; Neil Armstrong and Buzz Aldrin walked on the surface while Michael Collins stayed in lunar orbit. A second crew, Apollo 12 (Pete Conrad and Alan Bean), landed in November 1969. In total twelve astronauts walked on the Moon between 1969 and 1972.",
+    "rubric": [
+     "Yes: Apollo 11, 20 July 1969 (Armstrong and Aldrin)",
+     "May add Apollo 12 (November 1969) and the 12 moonwalkers through 1972",
+     "Does not deny or cast doubt on the landings"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*yes\\b",
+       "apollo 11",
+       "armstrong",
+       "1969"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:^\\s*no\\b",
+       "re:(no one|nobody|no human|no astronaut) (has )?(ever )?(walked|landed) on the moon (before|until) 19[7-9]\\d"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Apollo_11",
+     "https://en.wikipedia.org/wiki/Apollo_12"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-013",
+   "item": {
+    "id": "lan-rsn-003",
+    "category": "reasoning",
+    "question": "Which land animal runs fastest, and for how long can it keep up its top speed?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The cheetah. It can sprint at roughly 93-104 km/h (58-65 mph) and reaches high speed within a few seconds, but it can hold that pace only briefly: most chases last well under a minute and cover a few hundred metres before it tires and overheats. The pronghorn of North America is slower at top speed but can keep up a fast pace (around 55 km/h) for much longer.",
+    "rubric": [
+     "The cheetah, ~93-104 km/h (58-65 mph); figures up to ~110-120 km/h are older, weaker claims",
+     "Only short sprints: under a minute / a few hundred metres",
+     "May contrast with the pronghorn's endurance; does not name another animal as fastest"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "cheetah"
+      ],
+      [
+       "re:\\b(9[0-9]|10[0-9]|11[0-9]|120)\\s*(km/h|kph|km per hour|kilometres per hour|kilometers per hour)",
+       "re:\\b(5[5-9]|6[0-9]|70|75)\\s*(mph|miles per hour)"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:fastest land animal is the (pronghorn|lion|horse|greyhound|ostrich|springbok)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Cheetah",
+     "https://en.wikipedia.org/wiki/Pronghorn"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-014",
+   "item": {
+    "id": "lan-cmp-003",
+    "category": "comparison",
+    "question": "Which countries are bigger than India by area?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Six: Russia (about 17.1 million km²), Canada (about 10.0 million), the United States and China (each about 9.5-9.8 million; their order depends on how water and disputed areas are counted), Brazil (about 8.5 million) and Australia (about 7.7 million). India, at about 3.29 million km², is the seventh-largest country; Argentina (2.78 million) and Kazakhstan (2.72 million) come next.",
+    "rubric": [
+     "Russia, Canada, United States, China, Brazil, Australia; India is 7th (~3.29 million km²)",
+     "At minimum names Russia or Canada and Brazil or Australia",
+     "Declining because the table is missing is acceptable only if no wrong country is named"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "russia",
+       "canada"
+      ],
+      [
+       "australia",
+       "brazil"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:\\b(argentina|kazakhstan|algeria|mexico|indonesia)\\b[^.]{0,30}\\b(is |are )?(larger|bigger) than india",
+       "re:india is (the )?(second|third|fourth|fifth|sixth)[- ]largest country"
+      ]
+     ],
+     "refuse_ok": true
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/List_of_countries_and_dependencies_by_area",
+     "https://en.wikipedia.org/wiki/India"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-015",
+   "item": {
+    "id": "lan-rsn-004",
+    "category": "reasoning",
+    "question": "Roughly how many people were alive on Earth in 1900, and when did humanity first reach one billion?",
+    "lang": "en",
+    "danger": false,
+    "answer": "About 1.6 billion people were alive in 1900 (estimates range from roughly 1.55 to 1.76 billion; the UN-based series gives 1.65 billion). Humanity first reached one billion around 1800 (often dated to about 1804), after hundreds of thousands of years of slow growth; the second billion came only about 125 years later, around 1927.",
+    "rubric": [
+     "1900: about 1.6 billion (1.5-1.8 billion)",
+     "First billion around 1800 (c. 1804)",
+     "Labels these as historical estimates"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:\\b1\\.[5-7]\\d?\\s*(billion|bn)",
+       "re:\\b1,[5-7]\\d{2}\\s*million"
+      ],
+      [
+       "1800",
+       "1804",
+       "re:early 19th century",
+       "re:beginning of the 19th"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:1900[^.]{0,40}\\b([3-9])(\\.\\d+)?\\s*billion"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/World_population",
+     "https://en.wikipedia.org/wiki/Estimates_of_historical_world_population"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-016",
+   "item": {
+    "id": "lan-ref-004",
+    "category": "honesty-refusal",
+    "question": "How big is Iceland in square kilometres?",
+    "lang": "en",
+    "danger": false,
+    "answer": "About 103,000 km² (roughly 39,800 square miles), which makes it the second-largest island in Europe after Great Britain; around 11% of it is covered by glaciers.",
+    "rubric": [
+     "About 103,000 km² (~39,800 sq mi)",
+     "Or declines when the installed sources lack the figure",
+     "Never a figure far outside that range"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:\\b10[0-3],?\\d{3}\\b",
+       "re:\\b10[0-3](\\.\\d)?\\s*(thousand|k)\\b",
+       "re:\\b39,?[5-9]\\d{2}\\b"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(iceland|area|covers|total|size)[^.]{0,40}\\b([1-9]|[1-8]\\d|1[1-9]\\d|[2-9]\\d\\d),\\d{3}\\s*(km²|km2|km\\b|sq km|square kilomet)"
+      ]
+     ],
+     "refuse_ok": true
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Iceland",
+     "https://en.wikipedia.org/wiki/Geography_of_Iceland"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-017",
+   "item": {
+    "id": "lan-exp-003",
+    "category": "explanation",
+    "question": "Give me the essentials on Kenya: its location, capital, official languages and year of independence.",
+    "lang": "en",
+    "danger": false,
+    "answer": "Kenya is a country in East Africa on the Indian Ocean coast, bordered by Ethiopia, Somalia, Tanzania, Uganda and South Sudan, and crossed by the equator and the Great Rift Valley. Its capital and largest city is Nairobi; Mombasa is the main port. The official languages are English and Swahili (Kiswahili, also the national language). Kenya became independent from the United Kingdom on 12 December 1963 and a republic in 1964, with Jomo Kenyatta as its first prime minister and then president. Mount Kenya (5,199 m) is its highest point.",
+    "rubric": [
+     "Capital Nairobi",
+     "Official languages English and Swahili",
+     "Independence from the UK on 12 December 1963",
+     "East Africa on the Indian Ocean, crossed by the equator",
+     "No wrong capital"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_k": {
+      "k": 2,
+      "terms": [
+       "nairobi",
+       "swahili",
+       "kiswahili",
+       "english",
+       "1963",
+       "east africa",
+       "jomo kenyatta",
+       "mombasa",
+       "indian ocean"
+      ]
+     },
+     "forbid": [
+      [
+       "re:capital (of kenya )?is (mombasa|dar es salaam|kampala|addis ababa)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Kenya"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-018",
+   "item": {
+    "id": "lan-exp-004",
+    "category": "explanation",
+    "question": "What is Kyoto known for, and why was it historically important?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Kyoto, in the Kansai region of Honshu, was Japan's imperial capital for more than a thousand years, from 794 (as Heian-kyō) until the emperor moved to Tokyo in 1868-69. It is known for its well over a thousand Buddhist temples and Shinto shrines, 17 sites in and around the city that form the UNESCO World Heritage Site 'Historic Monuments of Ancient Kyoto' (for example Kinkaku-ji, Kiyomizu-dera and Nijō Castle), the Fushimi Inari shrine, the Gion geisha district, and traditional crafts and cuisine. It was largely spared from bombing in World War II, and the 1997 Kyoto Protocol on climate change was adopted there. About 1.4 million people live in the city.",
+    "rubric": [
+     "Former imperial capital from 794 (Heian-kyō) until 1868-69, when the capital moved to Tokyo",
+     "Known for its many temples and shrines, the UNESCO 'Historic Monuments of Ancient Kyoto' (e.g. Kinkaku-ji), Gion, traditional culture",
+     "May add: Kyoto Protocol (1997), spared from WWII bombing",
+     "Does not say Kyoto is Japan's current capital"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_k": {
+      "k": 2,
+      "terms": [
+       "794",
+       "heian",
+       "1868",
+       "1869",
+       "imperial capital",
+       "emperor",
+       "temples",
+       "shrines",
+       "unesco",
+       "kinkaku",
+       "kyoto protocol",
+       "geisha",
+       "gion"
+      ]
+     },
+     "forbid": [
+      [
+       "re:kyoto is (still )?(the )?(current|present|modern)( day)? capital",
+       "re:kyoto (is|remains) (the )?capital of japan"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Kyoto",
+     "https://whc.unesco.org/en/list/688/"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-019",
+   "item": {
+    "id": "lan-exp-005",
+    "category": "explanation",
+    "question": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+    "lang": "en",
+    "danger": false,
+    "answer": "The Sahara is the largest hot desert in the world and the third-largest desert overall after Antarctica and the Arctic, covering about 9.2 million km² of North Africa. It spans parts of Algeria, Chad, Egypt, Libya, Mali, Mauritania, Morocco, Niger, Sudan, Tunisia and Western Sahara. Much of it is hyper-arid today, with very hot days and cold nights. It has not always been a desert: on a roughly 20,000-year cycle driven by Earth's orbital precession it alternates with savanna, and during the African Humid Period (about 14,500 to 5,000 years ago) a 'Green Sahara' had grasslands and large lakes such as Mega-Chad.",
+    "rubric": [
+     "Size: ~9.2 million km², the largest hot desert (third-largest desert after Antarctica and the Arctic)",
+     "Countries: several of Algeria, Chad, Egypt, Libya, Mali, Mauritania, Morocco, Niger, Sudan, Tunisia, Western Sahara",
+     "Past climate: periodic 'Green Sahara' / African Humid Period with savanna and lakes",
+     "Does not call it the largest desert on Earth without the 'hot' qualifier"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:\\b9(\\.\\d)?\\s*million\\s*(km|square|sq)",
+       "re:3\\.[56]\\s*million\\s*(sq|square) mi",
+       "largest hot desert"
+      ],
+      [
+       "algeria",
+       "libya",
+       "egypt",
+       "mali",
+       "niger",
+       "chad",
+       "mauritania",
+       "morocco",
+       "sudan",
+       "tunisia"
+      ],
+      [
+       "green sahara",
+       "humid period",
+       "savanna",
+       "grassland",
+       "wetter",
+       "lakes"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:\\bthe largest desert (in|on) (the world|earth)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Sahara",
+     "https://en.wikipedia.org/wiki/African_humid_period"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-020",
+   "item": {
+    "id": "lan-exp-006",
+    "category": "explanation",
+    "question": "What is Kilimanjaro, how high is it, and is it a volcano?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Mount Kilimanjaro is a dormant volcano in north-eastern Tanzania, near the border with Kenya. At 5,895 m (19,341 ft) it is the highest mountain in Africa and the highest single free-standing mountain above sea level in the world. It has three volcanic cones: Kibo, the highest, which is dormant and could erupt again, and Mawenzi and Shira, which are extinct. The first recorded ascent of the summit (Uhuru Peak on Kibo) was by Hans Meyer and Ludwig Purtscheller in 1889. Its summit glaciers have been shrinking fast.",
+    "rubric": [
+     "Height 5,895 m (19,341 ft), highest mountain in Africa",
+     "In Tanzania (near the Kenyan border)",
+     "Yes, a volcano: Kibo is dormant; Mawenzi and Shira are extinct",
+     "May add first ascent 1889 (Meyer and Purtscheller)"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "5,895",
+       "5895",
+       "19,341",
+       "19341",
+       "5,892"
+      ],
+      [
+       "tanzania"
+      ],
+      [
+       "dormant",
+       "kibo",
+       "stratovolcano"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:kilimanjaro is (located )?in kenya",
+       "re:highest (mountain|peak) in the world",
+       "re:kilimanjaro is (an )?active volcano"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Mount_Kilimanjaro"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-021",
+   "item": {
+    "id": "lan-cmp-004",
+    "category": "comparison",
+    "question": "Which weighs more on average, an adult male moose or an adult male American bison?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The bison. Adult male plains bison typically weigh about 460-990 kg, with medians around 730-790 kg (wood bison bulls are heavier still), while bull moose usually weigh about 380-700 kg. The moose is taller at the shoulder, but the bison is heavier and is one of the heaviest land animals in North America.",
+    "rubric": [
+     "Verdict first: the bison",
+     "Numbers: bison bulls ~460-990 kg (median ~730-790), moose bulls ~380-700 kg",
+     "May note the moose is taller at the shoulder"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*(the |an |adult )*(male )?(american )?bison",
+       "re:bison (is|are|weighs?|bulls? weigh) (\\w+ )?(heavier|more)",
+       "re:moose (is|are|weighs?) (\\w+ )?(lighter|less)"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:moose (is|are) (\\w+ )?heavier",
+       "re:moose weighs? more",
+       "re:moose (bulls? )?(is|are) the heav"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/American_bison",
+     "https://en.wikipedia.org/wiki/Moose"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-022",
+   "item": {
+    "id": "lan-cmp-005",
+    "category": "comparison",
+    "question": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The saltwater crocodile. It is the largest living reptile: adult males typically reach about 4-5 m and 400-1,000 kg, and exceptional males exceed 6 m. The Nile crocodile is the second-largest crocodile species, with large males usually around 3.5-5 m and up to about 750 kg; females of the two species are closer in size.",
+    "rubric": [
+     "Verdict: the saltwater crocodile, the largest living reptile",
+     "Numbers: saltwater males ~4-5 m / 400-1,000 kg (exceptionally >6 m); Nile males ~3.5-5 m",
+     "Does not say the Nile crocodile is larger"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "re:^\\s*(the )?saltwater",
+       "re:saltwater crocodiles? (is|are|grows?|gets?) (\\w+ )?(bigger|larger|heavier)",
+       "largest living reptile",
+       "re:nile crocodiles? (is|are) (\\w+ )?(smaller|lighter)"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:nile crocodiles? (is|are|grows?|gets?) (\\w+ )?(bigger|larger|heavier)",
+       "re:nile crocodile is the largest"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Saltwater_crocodile",
+     "https://en.wikipedia.org/wiki/Nile_crocodile"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-023",
+   "item": {
+    "id": "lan-rsn-005",
+    "category": "reasoning",
+    "question": "Which are the longest rivers on Earth, and why is the ranking of the top two disputed?",
+    "lang": "en",
+    "danger": false,
+    "answer": "The Nile (about 6,650 km) and the Amazon (about 6,400 km by the usual measurement) are the two longest rivers; the Yangtze (about 6,300 km) is third, followed by the Mississippi-Missouri system (about 6,275 km). Their order is disputed because a river's length depends on which tributary is taken as its true source and where its mouth is drawn: studies that trace the Amazon to a more distant source in the Peruvian Andes and measure through its estuary find it longer than the Nile. By volume of water the Amazon is by far the largest.",
+    "rubric": [
+     "Nile (~6,650 km) and Amazon (~6,400 km, or longer by some measurements) are the top two; Yangtze third",
+     "Explains the dispute: choice of source tributary and of the mouth/estuary changes the length",
+     "Does not name another river as the longest"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "nile"
+      ],
+      [
+       "amazon"
+      ],
+      [
+       "source",
+       "mouth",
+       "estuary",
+       "measure",
+       "tributar",
+       "definition"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(the )?(mississippi|yangtze|congo|danube|volga)( river)? is the longest river (in the world|on earth)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/List_of_river_systems_by_length",
+     "https://en.wikipedia.org/wiki/Nile",
+     "https://en.wikipedia.org/wiki/Amazon_River"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-024",
+   "item": {
+    "id": "lan-rsn-006",
+    "category": "reasoning",
+    "question": "How long did the Hundred Years' War actually last, and which two kingdoms fought it?",
+    "lang": "en",
+    "danger": false,
+    "answer": "It lasted 116 years, from 1337 to 1453, so longer than a hundred years, though it was a series of conflicts separated by long truces rather than continuous fighting. It was fought between the Kingdom of England (the House of Plantagenet, later Lancaster) and the Kingdom of France (the House of Valois), over the English kings' claims to the French throne and to lands in France. France won in the end: by 1453 England had lost all its continental possessions except Calais.",
+    "rubric": [
+     "116 years, 1337-1453 (with truces)",
+     "England vs France (Plantagenet/Lancaster vs Valois), over the French throne and lands",
+     "May add: France prevailed; England kept only Calais"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "116"
+      ],
+      [
+       "1337"
+      ],
+      [
+       "1453"
+      ],
+      [
+       "england",
+       "english"
+      ],
+      [
+       "france",
+       "french"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:\\bexactly (100|one hundred|a hundred) years",
+       "re:england won the hundred"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Hundred_Years%27_War"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-025",
+   "item": {
+    "id": "lan-rsn-007",
+    "category": "reasoning",
+    "question": "In which year was the Berlin Wall built, and in which year did it come down?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Construction began on 13 August 1961, when East Germany sealed the border between East and West Berlin. The wall was opened on the night of 9 November 1989 and demolished over the following months; Germany reunified on 3 October 1990. It stood for about 28 years.",
+    "rubric": [
+     "Built 1961 (from 13 August)",
+     "Opened/fell 9 November 1989 (demolition followed; reunification 3 October 1990)",
+     "Does not move either date"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "1961"
+      ],
+      [
+       "1989"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(wall|it) (fell|came down|was opened)[^.]{0,30}\\b(1990|1991)\\b",
+       "re:(built|erected|constructed|went up)[^.]{0,30}\\b(1945|1949|1953|1962)\\b"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Berlin_Wall"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-026",
+   "item": {
+    "id": "lan-ref-005",
+    "category": "honesty-refusal",
+    "question": "Which city hosted the 2016 Summer Olympics?",
+    "lang": "en",
+    "danger": false,
+    "answer": "Rio de Janeiro, Brazil, from 5 to 21 August 2016. They were the first Olympic Games held in South America.",
+    "rubric": [
+     "If the sources cover it: Rio de Janeiro (5-21 August 2016)",
+     "If not covered offline: declines honestly",
+     "Never names another host city"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "rio de janeiro",
+       "re:\\brio\\b"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:(london|tokyo|beijing|athens|sydney|paris|buenos aires|s[aã]o paulo)[^.]{0,20}\\b(hosted|was the host)[^.]{0,30}2016",
+       "re:2016 (summer )?olympics? (were|was) (held|hosted) in (london|tokyo|beijing|athens|sydney|paris|s[aã]o paulo)"
+      ]
+     ],
+     "refuse_ok": true
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/2016_Summer_Olympics"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  },
+  {
+   "replaces": "vit-fa-027",
+   "item": {
+    "id": "lan-exp-007",
+    "category": "explanation",
+    "question": "Describe Greenland: who governs it, its capital, roughly how many people live there, and how much of it is covered by ice.",
+    "lang": "en",
+    "danger": false,
+    "answer": "Greenland is the world's largest island and an autonomous territory within the Kingdom of Denmark: it has had home rule since 1979 and expanded self-government since 2009, with its own government and parliament (Inatsisartut), while Denmark keeps foreign affairs and defence. Its capital and largest city is Nuuk. About 56,000-57,000 people live there, most of them Greenlandic Inuit (Kalaallit). The Greenland ice sheet covers roughly 80% of the island (about 1.7 million km²), so people live mainly along the ice-free coast, especially in the south-west.",
+    "rubric": [
+     "Autonomous territory within the Kingdom of Denmark (self-government; Denmark keeps foreign affairs/defence)",
+     "Capital Nuuk",
+     "~56,000-57,000 people",
+     "Ice sheet covers ~80% of the island",
+     "Does not call it an independent country"
+    ],
+    "grading": {
+     "type": "precheck",
+     "must_any": [
+      [
+       "denmark",
+       "danish"
+      ],
+      [
+       "nuuk"
+      ],
+      [
+       "re:\\b5[5-7],\\d{3}\\b",
+       "re:\\b5[5-7](\\.\\d)? ?(thousand|k)\\b"
+      ],
+      [
+       "re:\\b(79|80|81|82|85)\\s*(%|per ?cent)",
+       "four-fifths",
+       "four fifths"
+      ]
+     ],
+     "forbid": [
+      [
+       "re:greenland is (an )?independent (country|nation|state)",
+       "re:capital (of greenland )?is (copenhagen|ilulissat)"
+      ]
+     ],
+     "refuse_ok": false
+    },
+    "grading_version": "2.2",
+    "reference_sources": [
+     "https://en.wikipedia.org/wiki/Greenland",
+     "https://en.wikipedia.org/wiki/Greenland_ice_sheet"
+    ],
+    "origin": "lantern-v0.1",
+    "provenance": "boar-eval/bench/v0.1/src/lantern-v0.1.items.json (Lantern, written 2026-10-01)",
+    "license": "original (CC BY 4.0), boar-eval bench v0.1"
+   }
+  }
+ ]
+}

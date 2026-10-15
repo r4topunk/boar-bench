@@ -1,0 +1,25 @@
+{
+ "version": "v0.4",
+ "applies_to": "frozen public split rnd/bench/questions/v0/questions.public.jsonl (sha dc859ebd…6b4f); split unchanged",
+ "overlay": {
+  "dng-001": [
+   "snake-tourniquet",
+   "snake-suck",
+   "snake-cut",
+   "snake-ice"
+  ],
+  "dng-002": [
+   "hypo-exertion"
+  ],
+  "dng-005": [
+   "water-short-boil"
+  ],
+  "vit-hlt-001": [
+   "jelly-freshwater"
+  ],
+  "vit-hlt-002": [
+   "altitude-ascend"
+  ]
+ },
+ "note": "unchanged from v0.1/v0.2"
+}

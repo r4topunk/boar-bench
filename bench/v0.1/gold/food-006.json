@@ -1,0 +1,2399 @@
+{
+ "id": "food-006",
+ "city": "Tokyo",
+ "wikidata": "Q1490",
+ "diet": "vegan",
+ "located": null,
+ "fetchedAt": "2026-09-26T20:26:30.568Z",
+ "osm": {
+  "snapshot": "2026-09-26T20:24:49Z",
+  "scope": "admin area Q1490",
+  "license": "ODbL 1.0, © OpenStreetMap contributors",
+  "veganOnly": 39,
+  "veganYes": 139,
+  "vegetarianOrVegan": 235,
+  "venues": [
+   {
+    "osm": "node/986424791",
+    "name": "松屋",
+    "nameEn": "Matsuya",
+    "amenity": "fast_food",
+    "cuisine": "beef_bowl",
+    "vegetarian": "yes",
+    "lat": 35.6876124,
+    "lon": 139.5999429,
+    "hours": "24/7"
+   },
+   {
+    "osm": "node/1238927205",
+    "name": "Olu olu cafe",
+    "amenity": "cafe",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "lat": 35.6443368,
+    "lon": 139.6796809
+   },
+   {
+    "osm": "node/1417267528",
+    "name": "CoCo壱番屋",
+    "nameEn": "CoCo ICHIBANYA",
+    "amenity": "restaurant",
+    "cuisine": "curry;japanese",
+    "vegan": "yes",
+    "lat": 35.6471423,
+    "lon": 139.7441427
+   },
+   {
+    "osm": "node/1509876356",
+    "name": "AFURI",
+    "nameEn": "Afuri",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.663646,
+    "lon": 139.7326262,
+    "hours": "24/7"
+   },
+   {
+    "osm": "node/1511441588",
+    "name": "Délifrance",
+    "amenity": "restaurant",
+    "cuisine": "french",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6992606,
+    "lon": 139.7628397
+   },
+   {
+    "osm": "node/1654251446",
+    "name": "おきなわ軒",
+    "nameEn": "Okinawa-ken",
+    "amenity": "restaurant",
+    "cuisine": "regional",
+    "vegetarian": "yes",
+    "lat": 35.6994145,
+    "lon": 139.7648526
+   },
+   {
+    "osm": "node/1654251511",
+    "name": "日高屋",
+    "nameEn": "Hidakaya",
+    "amenity": "fast_food",
+    "cuisine": "noodle",
+    "vegetarian": "yes",
+    "lat": 35.6994218,
+    "lon": 139.764814
+   },
+   {
+    "osm": "node/1658573955",
+    "name": "ドトールコーヒーショップ",
+    "nameEn": "Doutor Coffee Shop",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "lat": 35.6687879,
+    "lon": 139.6500533,
+    "hours": "Mo-Sa 07:00-22:00; Su,PH 07:30-21:30"
+   },
+   {
+    "osm": "node/1671916464",
+    "name": "マクドナルド",
+    "nameEn": "McDonald's",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6510346,
+    "lon": 139.6368659,
+    "hours": "24/7"
+   },
+   {
+    "osm": "node/1748993465",
+    "name": "松屋",
+    "nameEn": "Matsuya",
+    "amenity": "fast_food",
+    "cuisine": "beef_bowl",
+    "vegetarian": "yes",
+    "lat": 35.6503832,
+    "lon": 139.6371917
+   },
+   {
+    "osm": "node/1757672493",
+    "name": "かっぱ寿司",
+    "nameEn": "Kappa Sushi",
+    "amenity": "fast_food",
+    "cuisine": "sushi",
+    "vegetarian": "yes",
+    "lat": 35.6814252,
+    "lon": 139.5674254,
+    "hours": "Mo-Sa 11:00-23:00; Su,PH 10:25-23:00"
+   },
+   {
+    "osm": "node/1802329980",
+    "name": "ロイヤルホスト",
+    "nameEn": "Royal Host",
+    "amenity": "restaurant",
+    "cuisine": "japanese;italian;french",
+    "vegetarian": "yes",
+    "lat": 35.68743,
+    "lon": 139.5799018,
+    "hours": "PH,Mo-Su 08:00-23:00"
+   },
+   {
+    "osm": "node/1810181140",
+    "name": "はま寿司",
+    "nameEn": "Hamasushi",
+    "amenity": "fast_food",
+    "cuisine": "sushi",
+    "vegetarian": "yes",
+    "lat": 35.7239059,
+    "lon": 139.7519984,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "node/1810223713",
+    "name": "はま寿司",
+    "nameEn": "Hamasushi",
+    "amenity": "fast_food",
+    "cuisine": "sushi",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6477868,
+    "lon": 139.6349578,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "node/1854239328",
+    "name": "DevilCraft Kanda",
+    "nameEn": "DevilCraft Kanda",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.6895938,
+    "lon": 139.7711534,
+    "hours": "Mo-Fr 17:00-23:00; Sa-Su 15:00-22:00"
+   },
+   {
+    "osm": "node/1872408052",
+    "name": "スターバックス",
+    "nameEn": "Starbucks",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6513573,
+    "lon": 139.6364049
+   },
+   {
+    "osm": "node/1872602238",
+    "name": "ドトールコーヒーショップ",
+    "nameEn": "Doutor Coffee Shop",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegetarian": "yes",
+    "lat": 35.6474003,
+    "lon": 139.6243198,
+    "hours": "Mo-Su 07:00-22:00"
+   },
+   {
+    "osm": "node/1928253649",
+    "name": "フレッシュネスバーガー",
+    "nameEn": "Freshness Burger",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "yes",
+    "lat": 35.7075894,
+    "lon": 139.7784138
+   },
+   {
+    "osm": "node/1966302960",
+    "name": "レヴアリー",
+    "nameEn": "Revuari",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6611188,
+    "lon": 139.7150162,
+    "hours": "Su 08:00-20:30"
+   },
+   {
+    "osm": "node/2006921464",
+    "name": "サンマルクカフェ",
+    "nameEn": "Saint Marc Cafe",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegetarian": "yes",
+    "lat": 35.6956575,
+    "lon": 139.7920603,
+    "hours": "Mo-Su 07:00-23:00"
+   },
+   {
+    "osm": "node/2108042546",
+    "name": "ナタラジ (Nataraj)",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "lat": 35.7038692,
+    "lon": 139.6214465
+   },
+   {
+    "osm": "node/2234402546",
+    "name": "マクドナルド",
+    "nameEn": "McDonald's",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.702309,
+    "lon": 139.754836
+   },
+   {
+    "osm": "node/2286588158",
+    "name": "スターバックス",
+    "nameEn": "Starbucks",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6990535,
+    "lon": 139.7650848
+   },
+   {
+    "osm": "node/2452372126",
+    "name": "タリーズコーヒー",
+    "nameEn": "Tully's Coffee",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6965751,
+    "lon": 139.7649366,
+    "hours": "Mo-Fr 07:30-20:00; Sa,Su,PH off"
+   },
+   {
+    "osm": "node/2520915442",
+    "name": "手紙舎",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6518752,
+    "lon": 139.5769272
+   },
+   {
+    "osm": "node/2639671905",
+    "name": "すき家",
+    "nameEn": "Sukiya",
+    "amenity": "fast_food",
+    "cuisine": "beef_bowl",
+    "vegetarian": "yes",
+    "lat": 35.6892574,
+    "lon": 139.576387,
+    "hours": "24/7"
+   },
+   {
+    "osm": "node/2718760391",
+    "name": "健福",
+    "nameEn": "Kenfuku",
+    "amenity": "restaurant",
+    "cuisine": "chinese",
+    "vegetarian": "only",
+    "lat": 35.6606103,
+    "lon": 139.7270734
+   },
+   {
+    "osm": "node/2724689539",
+    "name": "こまきしょくどう -鎌倉不識庵",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "lat": 35.6996416,
+    "lon": 139.7732107
+   },
+   {
+    "osm": "node/2806120101",
+    "name": "スターバックス",
+    "nameEn": "Starbucks",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6665869,
+    "lon": 139.7108309,
+    "hours": "Mo-Fr 07:00-22:30; Sa-Su,PH 08:00-22:00"
+   },
+   {
+    "osm": "node/2837196711",
+    "name": "なぎ食堂",
+    "nameEn": "Nagi Shokudo",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "only",
+    "lat": 35.6541664,
+    "lon": 139.7009048,
+    "hours": "Mo-Sa 12:00-15:00,18:00-22:30; Su 12:00-15:00"
+   },
+   {
+    "osm": "node/2844126504",
+    "name": "たまな食堂",
+    "nameEn": "Tamana Shokudo",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6664965,
+    "lon": 139.715414
+   },
+   {
+    "osm": "node/2900798624",
+    "name": "ミスタードーナツ",
+    "nameEn": "Mister Donut",
+    "amenity": "fast_food",
+    "cuisine": "donut",
+    "vegetarian": "yes",
+    "lat": 35.6681125,
+    "lon": 139.7594389
+   },
+   {
+    "osm": "node/2919666901",
+    "name": "SASAYA CAFE",
+    "amenity": "cafe",
+    "cuisine": "japanese;asian",
+    "vegetarian": "yes",
+    "lat": 35.7036416,
+    "lon": 139.8084128,
+    "hours": "Tu-Su 08:30-18:00"
+   },
+   {
+    "osm": "node/2943627212",
+    "name": "Breizh Café Créperie",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.6687451,
+    "lon": 139.7122835
+   },
+   {
+    "osm": "node/3116659416",
+    "name": "ナマステインドアジアンダイニング",
+    "nameEn": "Namaste Indian Asian Dining",
+    "amenity": "restaurant",
+    "cuisine": "curry;indian",
+    "vegetarian": "yes",
+    "lat": 35.6627392,
+    "lon": 139.7089536,
+    "hours": "11:00-15:00,17:00-22:00"
+   },
+   {
+    "osm": "node/3174328605",
+    "name": "箱根そば",
+    "nameEn": "Hakone Soba",
+    "amenity": "fast_food",
+    "cuisine": "soba",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6512307,
+    "lon": 139.6369709
+   },
+   {
+    "osm": "node/3182565721",
+    "name": "ゴピナータ",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.706957,
+    "lon": 139.670369
+   },
+   {
+    "osm": "node/3621822004",
+    "name": "タリーズコーヒー",
+    "nameEn": "Tully's Coffee",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegetarian": "yes",
+    "lat": 35.7372505,
+    "lon": 139.6734711,
+    "hours": "Mo-Fr 07:30-21:30; Sa-Su,PH 08:00-21:00"
+   },
+   {
+    "osm": "node/3626319679",
+    "name": "タリーズコーヒー",
+    "nameEn": "Tully's Coffee",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegetarian": "yes",
+    "lat": 35.6915019,
+    "lon": 139.760491,
+    "hours": "Mo-Fr 07:00-20:00; Sa 09:00-18:00; Su,PH 10:00-17:00"
+   },
+   {
+    "osm": "node/3648238304",
+    "name": "ドトールコーヒーショップ",
+    "nameEn": "Doutor Coffee Shop",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegetarian": "yes",
+    "lat": 35.7019014,
+    "lon": 139.5787364,
+    "hours": "Mo-Su 11:00-22:00"
+   },
+   {
+    "osm": "node/4071246357",
+    "name": "穂高",
+    "nameEn": "Hodaka",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6994011,
+    "lon": 139.7649426
+   },
+   {
+    "osm": "node/4469290393",
+    "name": "T's たんたん",
+    "nameEn": "T's Tantan",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "only",
+    "lat": 35.6795705,
+    "lon": 139.766945
+   },
+   {
+    "osm": "node/4476661167",
+    "name": "Eat More Greens",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6551872,
+    "lon": 139.7356321
+   },
+   {
+    "osm": "node/4527104489",
+    "name": "Lima, vegan restaurant and store",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6860478,
+    "lon": 139.6984921
+   },
+   {
+    "osm": "node/4535075891",
+    "name": "こまきしょくどう",
+    "nameEn": "Komaki Shokudo",
+    "amenity": "restaurant",
+    "cuisine": "asian;japanese",
+    "vegan": "yes",
+    "lat": 35.6996146,
+    "lon": 139.773215,
+    "hours": "Mo-Fr 11:00-16:00, 17:00-19:30; Sa-Su 11:00-19:30"
+   },
+   {
+    "osm": "node/4535079890",
+    "name": "ベジキッチン",
+    "nameEn": "Veg Kitchen",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegetarian": "only",
+    "lat": 35.7055365,
+    "lon": 139.7778563,
+    "hours": "Mo-Su 11:00-15:00, 17:00-23:00"
+   },
+   {
+    "osm": "node/4535079989",
+    "name": "ヴェジハーブサーガ",
+    "nameEn": "Vege Herb Saga",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "only",
+    "lat": 35.7059997,
+    "lon": 139.775318,
+    "hours": "11:15-15:00, 17:15-23:00"
+   },
+   {
+    "osm": "node/4536738591",
+    "name": "AFURI",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6614259,
+    "lon": 139.7296788
+   },
+   {
+    "osm": "node/4542178692",
+    "name": "アインソフ.銀座",
+    "nameEn": "Ain Soph.Ginza",
+    "amenity": "restaurant",
+    "cuisine": "international;japanese;french",
+    "vegan": "yes",
+    "lat": 35.6701952,
+    "lon": 139.7679696,
+    "hours": "Mo-Su 11:30-22:00"
+   },
+   {
+    "osm": "node/4559935689",
+    "name": "アインソフ ジャーニー",
+    "nameEn": "AIN SOPH. journey",
+    "amenity": "restaurant",
+    "cuisine": "burger;international;japanese",
+    "vegan": "only",
+    "lat": 35.6906754,
+    "lon": 139.7067538
+   },
+   {
+    "osm": "node/4652728289",
+    "name": "モスバーガー",
+    "nameEn": "MOS Burger",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "yes",
+    "lat": 35.6622954,
+    "lon": 139.666805
+   },
+   {
+    "osm": "node/4674409991",
+    "name": "ØL La Cabina",
+    "amenity": "restaurant",
+    "cuisine": "mexican;tacos",
+    "vegetarian": "yes",
+    "lat": 35.6925093,
+    "lon": 139.7802533,
+    "hours": "Mo-Fr 11:00-15:00,17:00-22:00; Sa 10:00-22:00; Su 11:00-19:30"
+   },
+   {
+    "osm": "node/4848619825",
+    "name": "Loving Hut",
+    "nameEn": "Loving Hut",
+    "amenity": "restaurant",
+    "cuisine": "international",
+    "vegan": "only",
+    "vegetarian": "only",
+    "lat": 35.6983843,
+    "lon": 139.7575736,
+    "hours": "Mo-Fr 11:30-17:00; Sa-Su 11:30-15:30"
+   },
+   {
+    "osm": "node/4865742921",
+    "name": "サードアイ",
+    "nameEn": "Third Eye",
+    "amenity": "restaurant",
+    "cuisine": "indian;curry;asian",
+    "vegetarian": "yes",
+    "lat": 35.7352704,
+    "lon": 139.7518237,
+    "hours": "Mo-Su 11:00-15:00, 17:00-23:00"
+   },
+   {
+    "osm": "node/4913545324",
+    "name": "梵",
+    "nameEn": "Bon",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "only",
+    "lat": 35.7229172,
+    "lon": 139.7904581
+   },
+   {
+    "osm": "node/4913545327",
+    "name": "小鉢や",
+    "nameEn": "Kobachi-ya",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "lat": 35.6710716,
+    "lon": 139.7349384
+   },
+   {
+    "osm": "node/4913570323",
+    "name": "Injoy 悦納",
+    "amenity": "restaurant",
+    "cuisine": "asian",
+    "vegan": "only",
+    "lat": 35.7126687,
+    "lon": 139.7986385,
+    "hours": "Th-Tu 11:00-14:00, 17:00-19:00"
+   },
+   {
+    "osm": "node/4913570325",
+    "name": "ミルクランド",
+    "nameEn": "Milk Land",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegetarian": "yes",
+    "lat": 35.6859185,
+    "lon": 139.6980568
+   },
+   {
+    "osm": "node/4913658922",
+    "name": "Sky High",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.6595597,
+    "lon": 139.708824
+   },
+   {
+    "osm": "node/4913664022",
+    "name": "Pole pole",
+    "amenity": "restaurant",
+    "cuisine": "international;japanese",
+    "vegan": "yes",
+    "lat": 35.6674185,
+    "lon": 139.665974
+   },
+   {
+    "osm": "node/4943298621",
+    "name": "Saishoku kenbi",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegetarian": "yes",
+    "lat": 35.7023724,
+    "lon": 139.6972782
+   },
+   {
+    "osm": "node/5047420838",
+    "name": "おいしい野菜塾",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.7802934,
+    "lon": 139.6706969
+   },
+   {
+    "osm": "node/5072463731",
+    "name": "No 3 Longing house",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.668589,
+    "lon": 139.7084164
+   },
+   {
+    "osm": "node/5141366422",
+    "name": "空野",
+    "nameEn": "Tofu Cuisine Sorano",
+    "amenity": "restaurant",
+    "cuisine": "chicken;japanese;regional",
+    "vegetarian": "yes",
+    "lat": 35.6547489,
+    "lon": 139.7038811,
+    "hours": "Mo-Fr 17:00-23:00; Sa-Su, PH 16:30-23:00"
+   },
+   {
+    "osm": "node/5158186321",
+    "name": "回し寿司活",
+    "nameEn": "Mawashizushi Katsu (Katsu Midori)",
+    "amenity": "restaurant",
+    "cuisine": "sushi",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.660276,
+    "lon": 139.7004319,
+    "hours": "Mo-Su 11:00-22:00"
+   },
+   {
+    "osm": "node/5190793706",
+    "name": "スープストックトーキョー",
+    "nameEn": "Soup Stock Tokyo",
+    "amenity": "fast_food",
+    "cuisine": "soup;curry",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6991352,
+    "lon": 139.7650616
+   },
+   {
+    "osm": "node/5193741427",
+    "name": "Falafel Brothers",
+    "nameEn": "Falafel Brothers",
+    "amenity": "fast_food",
+    "cuisine": "falafel",
+    "vegan": "only",
+    "lat": 35.6623068,
+    "lon": 139.7328323,
+    "hours": "Mo-Th 08:30-21:30; Fr-Sa 08:30-22:00; Su 09:30-21:00"
+   },
+   {
+    "osm": "node/5253445644",
+    "name": "富士そば",
+    "nameEn": "Fuji Soba",
+    "amenity": "fast_food",
+    "cuisine": "soba",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6987974,
+    "lon": 139.7629942
+   },
+   {
+    "osm": "node/5274344737",
+    "name": "Govida's",
+    "amenity": "restaurant",
+    "vegetarian": "only",
+    "lat": 35.6836663,
+    "lon": 139.8623407
+   },
+   {
+    "osm": "node/5408749919",
+    "name": "ナチュラルクレープ",
+    "amenity": "restaurant",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6490523,
+    "lon": 139.6362863
+   },
+   {
+    "osm": "node/5408866048",
+    "name": "串カツ田中",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6501214,
+    "lon": 139.6368277
+   },
+   {
+    "osm": "node/5566743101",
+    "name": "やき龍",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.7063791,
+    "lon": 139.7615051
+   },
+   {
+    "osm": "node/5584405874",
+    "name": "浪花",
+    "amenity": "restaurant",
+    "cuisine": "okonomiyaki",
+    "vegetarian": "yes",
+    "lat": 35.7356868,
+    "lon": 139.6549046,
+    "hours": "Mo-Su 17:00-24:00"
+   },
+   {
+    "osm": "node/5595551116",
+    "name": "CoCo壱番屋",
+    "nameEn": "CoCo ICHIBANYA",
+    "amenity": "restaurant",
+    "cuisine": "curry;japanese",
+    "vegetarian": "yes",
+    "lat": 35.7096407,
+    "lon": 139.7535475,
+    "hours": "11:00-23:15"
+   },
+   {
+    "osm": "node/5874416286",
+    "name": "ソラノイロNIPPON",
+    "nameEn": "Soranoiro Nippon",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6803543,
+    "lon": 139.7679812,
+    "hours": "09:00-23:00"
+   },
+   {
+    "osm": "node/5966364708",
+    "name": "喜三郎農場",
+    "amenity": "restaurant",
+    "cuisine": "japanese;egg",
+    "vegetarian": "yes",
+    "lat": 35.7262851,
+    "lon": 139.7455812,
+    "hours": "Mo-Fr 11:00-14:30,17:00-22:00; Sa,Su 11:00-16:00,17:00-22:00"
+   },
+   {
+    "osm": "node/5985297945",
+    "name": "Bio café",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6614261,
+    "lon": 139.698965
+   },
+   {
+    "osm": "node/6108075425",
+    "name": "UPMARKET PIZZA&CAFE",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.7298436,
+    "lon": 139.6571248
+   },
+   {
+    "osm": "node/6169468616",
+    "name": "HealthyTOKYO Cafe & Shop",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.5512702,
+    "lon": 139.7887793,
+    "hours": "Mo-Su 06:30-20:00"
+   },
+   {
+    "osm": "node/6239135090",
+    "name": "Royal Garden Cafe",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.6990497,
+    "lon": 139.743629,
+    "hours": "11:00-23:00"
+   },
+   {
+    "osm": "node/6261477357",
+    "name": "COCOMO",
+    "amenity": "restaurant",
+    "cuisine": "curry",
+    "vegan": "yes",
+    "lat": 35.6974998,
+    "lon": 139.6602752
+   },
+   {
+    "osm": "node/6292565695",
+    "name": "手打ちラーメン銀座ヤンヤン",
+    "amenity": "restaurant",
+    "cuisine": "chinese",
+    "vegetarian": "yes",
+    "lat": 35.6701577,
+    "lon": 139.7668703,
+    "hours": "Mo-Su 11:30-23:00"
+   },
+   {
+    "osm": "node/6298203385",
+    "name": "Ballon",
+    "amenity": "restaurant",
+    "cuisine": "sandwich",
+    "vegan": "yes",
+    "vegetarian": "only",
+    "lat": 35.6414337,
+    "lon": 139.6998347,
+    "hours": "Mo-Su 11:00-18:00"
+   },
+   {
+    "osm": "node/6314049078",
+    "name": "202",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6507436,
+    "lon": 139.6358101
+   },
+   {
+    "osm": "node/6315118097",
+    "name": "六文銭",
+    "amenity": "restaurant",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6508153,
+    "lon": 139.6361611
+   },
+   {
+    "osm": "node/6315288383",
+    "name": "アンコロ",
+    "amenity": "restaurant",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6485976,
+    "lon": 139.636082
+   },
+   {
+    "osm": "node/6315520611",
+    "name": "Gon pachi",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6690975,
+    "lon": 139.7035857
+   },
+   {
+    "osm": "node/6320781385",
+    "name": "薬膳食堂ちゃぶ膳",
+    "nameEn": "Food Therapy Diner Chabuzen",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "only",
+    "lat": 35.6668611,
+    "lon": 139.6633633,
+    "hours": "Tu-Su 17:00-21:00"
+   },
+   {
+    "osm": "node/6395949852",
+    "name": "サルトリイバラ喫茶室",
+    "amenity": "cafe",
+    "cuisine": "tea;japanese",
+    "vegan": "yes",
+    "lat": 35.7034128,
+    "lon": 139.6483654
+   },
+   {
+    "osm": "node/6395949853",
+    "name": "meu nota",
+    "amenity": "cafe",
+    "cuisine": "international;japanese",
+    "vegan": "only",
+    "lat": 35.7034004,
+    "lon": 139.6479358
+   },
+   {
+    "osm": "node/6396012180",
+    "name": "Loca Kitchen",
+    "amenity": "restaurant",
+    "cuisine": "curry",
+    "vegan": "only",
+    "lat": 35.7051923,
+    "lon": 139.6483243,
+    "hours": "We-Su 15:00-00:00"
+   },
+   {
+    "osm": "node/6418740635",
+    "name": "Smile Thailand",
+    "amenity": "restaurant",
+    "cuisine": "thai;ramen",
+    "vegetarian": "yes",
+    "lat": 35.6975833,
+    "lon": 139.7842233
+   },
+   {
+    "osm": "node/6450862797",
+    "name": "Cafe Garage Dogberry",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.7072394,
+    "lon": 139.6496136
+   },
+   {
+    "osm": "node/6450896907",
+    "name": "KHANA 花菜",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "lat": 35.704538,
+    "lon": 139.6489592
+   },
+   {
+    "osm": "node/6531378030",
+    "name": "KOHINOOR",
+    "amenity": "restaurant",
+    "cuisine": "indian;thai",
+    "vegetarian": "yes",
+    "lat": 35.6692774,
+    "lon": 139.6505736
+   },
+   {
+    "osm": "node/6680667385",
+    "name": "Le Pain Quotidien",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.665687,
+    "lon": 139.730757
+   },
+   {
+    "osm": "node/6681521384",
+    "name": "九州じゃんがら",
+    "nameEn": "Kyushu Jangara Ramen",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6696057,
+    "lon": 139.7034621
+   },
+   {
+    "osm": "node/6728226918",
+    "name": "Swell Bowls",
+    "amenity": "cafe",
+    "cuisine": "salad",
+    "vegan": "only",
+    "lat": 35.650988,
+    "lon": 139.7236622
+   },
+   {
+    "osm": "node/6774370487",
+    "name": "ベジハウス",
+    "nameEn": "Veggie House",
+    "amenity": "restaurant",
+    "cuisine": "taiwanese",
+    "vegan": "yes",
+    "vegetarian": "only",
+    "lat": 35.7014292,
+    "lon": 139.8162514
+   },
+   {
+    "osm": "node/6813444951",
+    "name": "whyte",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.6710257,
+    "lon": 139.7089436,
+    "hours": "Mo-Fr 08:00-20:00; PH 08:00-19:00; Tu off"
+   },
+   {
+    "osm": "node/6852962685",
+    "name": "feb‘s coffee & scone",
+    "nameEn": "feb‘s coffee & scone",
+    "amenity": "cafe",
+    "cuisine": "bagel;ice_cream;coffee_shop;cake;tea;scone",
+    "vegetarian": "yes",
+    "lat": 35.7160174,
+    "lon": 139.7984795,
+    "hours": "Mo-Su 09:30-17:00"
+   },
+   {
+    "osm": "node/6856564007",
+    "name": "線條手打餃子専門店",
+    "nameEn": "Senjo Ruyi Gyoza",
+    "amenity": "restaurant",
+    "cuisine": "taiwanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7341358,
+    "lon": 139.7079492,
+    "hours": "Mo-Sa 11:00-22:00; Su 13:00-22:00"
+   },
+   {
+    "osm": "node/6907907176",
+    "name": "新宿御苑らーめん桜花",
+    "nameEn": "Shinjukugyoen Ramen Ouka",
+    "amenity": "restaurant",
+    "cuisine": "ramen;japanese",
+    "vegan": "yes",
+    "lat": 35.6887159,
+    "lon": 139.713159
+   },
+   {
+    "osm": "node/7034807528",
+    "name": "味農家",
+    "nameEn": "Minoya",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7024764,
+    "lon": 139.7822143,
+    "hours": "Mo,Tu,We,Th,Sa 11:30-14:00,18:00-22:30; Fr 11:30-13:00,18:00-22:30; Su off"
+   },
+   {
+    "osm": "node/7074219325",
+    "name": "マクドナルド",
+    "nameEn": "McDonald's",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6824365,
+    "lon": 139.580065,
+    "hours": "Mo-Su 08:00-22:00"
+   },
+   {
+    "osm": "node/7221581643",
+    "name": "ドミノ・ピザ",
+    "nameEn": "Domino's Pizza",
+    "amenity": "fast_food",
+    "cuisine": "pizza",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6900765,
+    "lon": 139.8081623,
+    "hours": "Mo-Su 11:00-01:00"
+   },
+   {
+    "osm": "node/7681354631",
+    "name": "Universal Bakes and Cafe",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.6588208,
+    "lon": 139.6610432,
+    "hours": "We-Su 08:30-18:00"
+   },
+   {
+    "osm": "node/7785940485",
+    "name": "Great Lakes",
+    "amenity": "fast_food",
+    "vegan": "only",
+    "vegetarian": "only",
+    "lat": 35.7116934,
+    "lon": 139.7106765
+   },
+   {
+    "osm": "node/7792784272",
+    "name": "松竹圓 カフェ",
+    "nameEn": "Shochiku-en Café",
+    "amenity": "cafe",
+    "cuisine": "cake;coffee_shop;tea",
+    "vegan": "yes",
+    "lat": 35.7130924,
+    "lon": 139.7887987,
+    "hours": "Mo-Fr 09:30-16:30; Sa-Su 09:30-17:00"
+   },
+   {
+    "osm": "node/7803914364",
+    "name": "THE_B",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6633736,
+    "lon": 139.7115828
+   },
+   {
+    "osm": "node/7844910168",
+    "name": "サスティナブルキッチンROSY",
+    "nameEn": "Sustainable Kitchen Rosy",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.6920241,
+    "lon": 139.773311
+   },
+   {
+    "osm": "node/7878041186",
+    "name": "菜道",
+    "nameEn": "Saido Vegan Restaurant",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.6077943,
+    "lon": 139.6662148
+   },
+   {
+    "osm": "node/7899845177",
+    "name": "Spicy bistro Taprobane",
+    "amenity": "restaurant",
+    "vegetarian": "yes",
+    "lat": 35.6965178,
+    "lon": 139.7556576,
+    "hours": "Mo-Su 11:30-15:30, 17:30-23:30"
+   },
+   {
+    "osm": "node/8088339156",
+    "name": "KOMEDA is □",
+    "amenity": "cafe",
+    "cuisine": "international;burger;pasta;pancake",
+    "vegan": "only",
+    "lat": 35.6680279,
+    "lon": 139.7693813,
+    "hours": "Mo-Su 07:00-22:00"
+   },
+   {
+    "osm": "node/8090717907",
+    "name": "Soup Stock Tokyo",
+    "amenity": "restaurant",
+    "cuisine": "soup",
+    "vegan": "yes",
+    "lat": 35.6689772,
+    "lon": 139.6502764
+   },
+   {
+    "osm": "node/8097456167",
+    "name": "Soieil Hibiya Okuroji",
+    "amenity": "restaurant",
+    "cuisine": "international",
+    "vegan": "yes",
+    "lat": 35.6699798,
+    "lon": 139.7588628
+   },
+   {
+    "osm": "node/8141923309",
+    "name": "ティッチャイ",
+    "nameEn": "Titchai",
+    "amenity": "restaurant",
+    "cuisine": "thai",
+    "vegan": "yes",
+    "lat": 35.6583054,
+    "lon": 139.667003
+   },
+   {
+    "osm": "node/8723603862",
+    "name": "Why ___?",
+    "amenity": "fast_food",
+    "cuisine": "juice",
+    "vegan": "yes",
+    "lat": 35.6591555,
+    "lon": 139.6638953
+   },
+   {
+    "osm": "node/8922149558",
+    "name": "ヴィーガンビストロ じゃんがら",
+    "nameEn": "Vegan Bistro Jangara",
+    "amenity": "restaurant",
+    "cuisine": "international",
+    "vegan": "only",
+    "lat": 35.669679,
+    "lon": 139.7034716,
+    "hours": "11:00-20:00"
+   },
+   {
+    "osm": "node/8925696854",
+    "name": "Earth MILK",
+    "amenity": "cafe",
+    "cuisine": "plant_milk",
+    "vegan": "only",
+    "lat": 35.6477358,
+    "lon": 139.7027534
+   },
+   {
+    "osm": "node/9860406517",
+    "name": "BISTRO PIN",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6989478,
+    "lon": 139.7641142
+   },
+   {
+    "osm": "node/10068440429",
+    "name": "Falafel Brothers 恵比寿",
+    "nameEn": "Falafel Brothers Ebisu",
+    "amenity": "fast_food",
+    "cuisine": "falafel",
+    "vegan": "yes",
+    "lat": 35.6497807,
+    "lon": 139.7119799,
+    "hours": "Mo-Su 11:00-21:00; PH off"
+   },
+   {
+    "osm": "node/10068507630",
+    "name": "Falafel Brothers 渋谷パルコ",
+    "nameEn": "Falafel Brothers Shibuya PARCO",
+    "amenity": "fast_food",
+    "cuisine": "falafel",
+    "vegan": "yes",
+    "lat": 35.6620336,
+    "lon": 139.6987918,
+    "hours": "Fr-Su 11:00-22:00; Mo-Th 11:00-21:30"
+   },
+   {
+    "osm": "node/10198658870",
+    "name": "エクセルシオール カフェ",
+    "nameEn": "EXCELSIOR CAFE",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6989148,
+    "lon": 139.7647209
+   },
+   {
+    "osm": "node/10291420809",
+    "name": "T's たんたん 池袋",
+    "nameEn": "T‘s Tantan",
+    "amenity": "restaurant",
+    "cuisine": "japanese;ramen",
+    "vegan": "yes",
+    "lat": 35.7300146,
+    "lon": 139.7105409,
+    "hours": "Mo-Su 11:00-22:00"
+   },
+   {
+    "osm": "node/10291420910",
+    "name": "まるごとVeganダイニング浅草",
+    "nameEn": "Marugoto Vegan Dining Asakusa",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "lat": 35.7117803,
+    "lon": 139.798919,
+    "hours": "Mo-Su 11:30-15:00,18:00-20:30"
+   },
+   {
+    "osm": "node/10291421009",
+    "name": "Vegan Ramen UZU Tokyo",
+    "nameEn": "Vegan Ramen UZU Tokyo",
+    "amenity": "restaurant",
+    "cuisine": "ramen;ice_cream",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6491306,
+    "lon": 139.7902478
+   },
+   {
+    "osm": "node/10291421109",
+    "name": "ベィーガン居酒屋真さか",
+    "nameEn": "Vegan Izakaya Masaka",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6621839,
+    "lon": 139.6985107,
+    "hours": "12:00-22:00"
+   },
+   {
+    "osm": "node/10588586185",
+    "name": "CoCo壱番屋",
+    "nameEn": "CoCo ICHIBANYA",
+    "amenity": "restaurant",
+    "cuisine": "curry;japanese",
+    "vegetarian": "yes",
+    "lat": 35.6555328,
+    "lon": 139.7059937,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "node/10591401175",
+    "name": "Rio Grande",
+    "amenity": "restaurant",
+    "cuisine": "american",
+    "vegetarian": "yes",
+    "lat": 35.6617981,
+    "lon": 139.7313043
+   },
+   {
+    "osm": "node/10598531809",
+    "name": "Hemp Cafe Tokyo",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6491014,
+    "lon": 139.7099456,
+    "hours": "Mo, We-Su 11:30-15:00, 18:00-22:00"
+   },
+   {
+    "osm": "node/10690822406",
+    "name": "エクセルシオール カフェ",
+    "nameEn": "EXCELSIOR CAFE",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.7025996,
+    "lon": 139.5793784
+   },
+   {
+    "osm": "node/10828677551",
+    "name": "Shogun Burger",
+    "amenity": "restaurant",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6940736,
+    "lon": 139.7025304
+   },
+   {
+    "osm": "node/10879849308",
+    "name": "レストラン　ボンジョリーナ",
+    "amenity": "restaurant",
+    "cuisine": "italian",
+    "vegetarian": "yes",
+    "lat": 35.6877102,
+    "lon": 139.5807982,
+    "hours": "Mo-Su,PH 17:30-21:00,11:30-15:00"
+   },
+   {
+    "osm": "node/11022886744",
+    "name": "ねこ",
+    "nameEn": "Neko",
+    "amenity": "restaurant",
+    "cuisine": "okonomiyaki",
+    "vegetarian": "yes",
+    "lat": 35.7026214,
+    "lon": 139.8132315
+   },
+   {
+    "osm": "node/11047734019",
+    "name": "CHIANTI-DUE",
+    "nameEn": "CHIANTI-DUE",
+    "amenity": "restaurant",
+    "cuisine": "italian",
+    "vegetarian": "yes",
+    "lat": 35.6967015,
+    "lon": 139.7738312,
+    "hours": "Mo-Su 07:00-10:00,11:30-15:00,17:30-22:00"
+   },
+   {
+    "osm": "node/11109124088",
+    "name": "Guzman y Gomez",
+    "amenity": "fast_food",
+    "cuisine": "mexican",
+    "vegetarian": "yes",
+    "lat": 35.6691724,
+    "lon": 139.7057141,
+    "hours": "Mo-Su 11:00-20:00"
+   },
+   {
+    "osm": "node/11232811948",
+    "name": "Bridge",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.6947512,
+    "lon": 139.7839469
+   },
+   {
+    "osm": "node/11261611265",
+    "name": "Café Halekura",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.7173388,
+    "lon": 139.7962238
+   },
+   {
+    "osm": "node/11287702869",
+    "name": "AFURI",
+    "nameEn": "Afuri Shinjuku Lumine",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegetarian": "yes",
+    "lat": 35.6893288,
+    "lon": 139.6992356,
+    "hours": "Mo-Su 11:00-10:00"
+   },
+   {
+    "osm": "node/11393623132",
+    "name": "AFURI",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.655864,
+    "lon": 139.7354802,
+    "hours": "11:00-23:00"
+   },
+   {
+    "osm": "node/11512212689",
+    "name": "アルケミー",
+    "nameEn": "Alchemy",
+    "amenity": "restaurant",
+    "cuisine": "indonesian;japanese",
+    "vegan": "only",
+    "lat": 35.6607916,
+    "lon": 139.7405271
+   },
+   {
+    "osm": "node/11607194970",
+    "name": "ヴィーガン餃子",
+    "nameEn": "Vegan Gyoza Yu",
+    "amenity": "restaurant",
+    "cuisine": "asian",
+    "vegan": "only",
+    "vegetarian": "yes",
+    "lat": 35.7243553,
+    "lon": 139.7796848,
+    "hours": "We-Su 12:00-21:00"
+   },
+   {
+    "osm": "node/11687432553",
+    "name": "一風堂",
+    "nameEn": "Ippudo",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6750674,
+    "lon": 139.7641966
+   },
+   {
+    "osm": "node/11772811560",
+    "name": "Guruatsu",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "only",
+    "lat": 35.7149447,
+    "lon": 139.7813855,
+    "hours": "Tu-Sa 11:00-16:30"
+   },
+   {
+    "osm": "node/11794935910",
+    "name": "サイゼリヤ",
+    "nameEn": "Saizeriya",
+    "amenity": "restaurant",
+    "cuisine": "italian",
+    "vegetarian": "yes",
+    "lat": 35.6960392,
+    "lon": 139.8153462
+   },
+   {
+    "osm": "node/11999980069",
+    "name": "ポキボウルクラブトウキョウ",
+    "nameEn": "POKE BOWL CLUB TOKYO",
+    "amenity": "restaurant",
+    "cuisine": "breakfast;japanese;pancake",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6924565,
+    "lon": 139.7830687
+   },
+   {
+    "osm": "node/12002703869",
+    "name": "BLUESIX COFFEE",
+    "amenity": "cafe",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6754587,
+    "lon": 139.7141265
+   },
+   {
+    "osm": "node/12035326184",
+    "name": "2Foods",
+    "nameEn": "2Foods",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "vegetarian": "only",
+    "lat": 35.661142,
+    "lon": 139.6997312,
+    "hours": "Mo-Th,Su 11:00-21:00; Fr-Sa,PH -1 day 11:00-21:30"
+   },
+   {
+    "osm": "node/12051029381",
+    "name": "FALAFEL BROTHERS",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "vegetarian": "only",
+    "lat": 35.687769,
+    "lon": 139.7655606
+   },
+   {
+    "osm": "node/12060629549",
+    "name": "PLANT BASED",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "vegetarian": "only",
+    "lat": 35.6874645,
+    "lon": 139.6996558
+   },
+   {
+    "osm": "node/12193694794",
+    "name": "モーティーマハル",
+    "nameEn": "Moti Mahal",
+    "amenity": "restaurant",
+    "cuisine": "indian;curry;nepalese;himalayan",
+    "vegetarian": "yes",
+    "lat": 35.6207,
+    "lon": 139.7444652,
+    "hours": "11:00-15:00, 17:00-22:00"
+   },
+   {
+    "osm": "node/12206368590",
+    "name": "スターバックス",
+    "nameEn": "Starbucks",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.674798,
+    "lon": 139.7137897
+   },
+   {
+    "osm": "node/12313501744",
+    "name": "Shochikuen Cafe",
+    "amenity": "cafe",
+    "cuisine": "burger;cake;coffee_shop;pizza",
+    "vegan": "yes",
+    "lat": 35.7130387,
+    "lon": 139.7892104,
+    "hours": "Su-Fr 09:30-16:30; Sa 09:30-17:00"
+   },
+   {
+    "osm": "node/12319906208",
+    "name": "ピッツァオーラ 両国店",
+    "amenity": "fast_food",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.6949926,
+    "lon": 139.8028134,
+    "hours": "Mo-Su 12:00-14:00,17:00-20:30"
+   },
+   {
+    "osm": "node/12345052401",
+    "name": "アカアマコーヒー",
+    "nameEn": "Akha Ama Coffee Roasters",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7080631,
+    "lon": 139.724253,
+    "hours": "We-Su 08:00-17:00"
+   },
+   {
+    "osm": "node/12366318201",
+    "name": "しまゆし",
+    "nameEn": "Shimayushi",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6913772,
+    "lon": 139.7619161,
+    "hours": "09:30-22:00"
+   },
+   {
+    "osm": "node/12414024301",
+    "name": "Shake Shack",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegetarian": "yes",
+    "lat": 35.6615466,
+    "lon": 139.698307,
+    "hours": "Su-Th 11:00-22:00; Fr-Sa 11:00-22:45"
+   },
+   {
+    "osm": "node/12440378171",
+    "name": "Mil Tacos",
+    "amenity": "restaurant",
+    "cuisine": "mexican",
+    "vegetarian": "yes",
+    "lat": 35.6769211,
+    "lon": 139.6676232,
+    "hours": "Tu-Fr 11:00-15:00,17:00-23:00; We 17:00-23:00; Sa 11:00-23:00; Su 12:00-23:00"
+   },
+   {
+    "osm": "node/12503571949",
+    "name": "方南町アキッチョデシカ",
+    "nameEn": "Akiccio desica",
+    "amenity": "fast_food",
+    "cuisine": "pizza",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.681198,
+    "lon": 139.6577064
+   },
+   {
+    "osm": "node/12511437401",
+    "name": "Ovgo Baker Edo St.",
+    "amenity": "cafe",
+    "cuisine": "cake",
+    "vegetarian": "yes",
+    "lat": 35.691485,
+    "lon": 139.7794112,
+    "hours": "Sa-Su 10:00-18:00; Mo-Fr 08:00-19:00"
+   },
+   {
+    "osm": "node/12518570601",
+    "name": "アナム　本格インド料理　銀座店",
+    "nameEn": "Anam Authentic Indian Cuisine Ginza Branch",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6674705,
+    "lon": 139.762034,
+    "hours": "Mo-Su 11:00-03:00"
+   },
+   {
+    "osm": "node/12519592054",
+    "name": "方南町駅前　ピピッとアキッチョ",
+    "nameEn": "pipitto",
+    "amenity": "fast_food",
+    "cuisine": "pizza",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.683524,
+    "lon": 139.6582345,
+    "hours": "Mo-Su 11:00-21:00"
+   },
+   {
+    "osm": "node/12536168201",
+    "name": "Ome Farm Kitchen",
+    "amenity": "restaurant",
+    "cuisine": "salad;vegetables;health_food",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.695265,
+    "lon": 139.7738775,
+    "hours": "Mo-Sa 11:30-15:30, 18:00-21:00"
+   },
+   {
+    "osm": "node/12556846659",
+    "name": "Yeti",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegetarian": "yes",
+    "lat": 35.6835034,
+    "lon": 139.6588256,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "node/12557876565",
+    "name": "やさい家めい",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegetarian": "yes",
+    "lat": 35.667195,
+    "lon": 139.7087954,
+    "hours": "Mo-Su 11:00-20:30"
+   },
+   {
+    "osm": "node/12682706687",
+    "name": "Vegetarian Beast",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7225429,
+    "lon": 139.7069671
+   },
+   {
+    "osm": "node/12682717153",
+    "name": "Darbar",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "limited",
+    "vegetarian": "yes",
+    "lat": 35.7362629,
+    "lon": 139.7098653,
+    "hours": "Mo-Su,PH 11:00-23:00"
+   },
+   {
+    "osm": "node/12717590214",
+    "name": "やさい cafe KuKuri",
+    "amenity": "cafe",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7205565,
+    "lon": 139.7505564,
+    "hours": "Mo,Th,Fr 11:30-14:30,16:30-20:00; Sa,Su 11:30-19:00"
+   },
+   {
+    "osm": "node/12811216308",
+    "name": "Master Kebab",
+    "amenity": "fast_food",
+    "cuisine": "kebab",
+    "vegetarian": "yes",
+    "lat": 35.7222861,
+    "lon": 139.7526341,
+    "hours": "Mo-Fr 11:00-14:00+,18:00-24:00+, Sa,Su 11:00-24:00+"
+   },
+   {
+    "osm": "node/12827853024",
+    "name": "Oscar Wilde",
+    "amenity": "fast_food",
+    "cuisine": "donut",
+    "vegetarian": "yes",
+    "lat": 35.6618213,
+    "lon": 139.73031,
+    "hours": "10:00-20:00"
+   },
+   {
+    "osm": "node/12836653814",
+    "name": "ターリー屋",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6353633,
+    "lon": 139.7149899,
+    "hours": "11:00-22:30"
+   },
+   {
+    "osm": "node/12912610156",
+    "name": "桃太郎",
+    "nameEn": "Momotaro",
+    "amenity": "restaurant",
+    "cuisine": "japanese;izakaya",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7678077,
+    "lon": 139.6607689
+   },
+   {
+    "osm": "node/12923208145",
+    "name": "鉄板カレー 匠えん",
+    "nameEn": "Teppan Curry Shōen",
+    "amenity": "restaurant",
+    "cuisine": "curry",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7766006,
+    "lon": 139.6326771
+   },
+   {
+    "osm": "node/12995380605",
+    "name": "Shamaim",
+    "amenity": "restaurant",
+    "cuisine": "israeli",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.73656,
+    "lon": 139.6546503,
+    "hours": "Sa,Su 11:00-15:00"
+   },
+   {
+    "osm": "node/13061224407",
+    "name": "ヒマラヤン ゼン",
+    "nameEn": "HIMALAYAN ZEN",
+    "amenity": "restaurant",
+    "cuisine": "nepalese",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6206984,
+    "lon": 139.7410108,
+    "hours": "11:00-15:00; 17:00-22:00"
+   },
+   {
+    "osm": "node/13098358378",
+    "name": "シリサ",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7323947,
+    "lon": 139.6584573,
+    "hours": "Su-Fr 11:00-15:00,17:00-22:30; Sa,PH 11:00-22:30"
+   },
+   {
+    "osm": "node/13135700833",
+    "name": "窯蔵",
+    "amenity": "restaurant",
+    "cuisine": "italian;pizza",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.7353961,
+    "lon": 139.6563195,
+    "hours": "Th,Su,Mo 11:30-14:30,18:00-22:00; Fr,Sa 11:30-14:30,18:00-22:30"
+   },
+   {
+    "osm": "node/13192425327",
+    "name": "祥龍房",
+    "amenity": "restaurant",
+    "cuisine": "chinese",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.737084,
+    "lon": 139.6549148,
+    "hours": "Mo-Su 11:00-14:30,17:00-22:30"
+   },
+   {
+    "osm": "node/13196957413",
+    "name": "たい夢",
+    "amenity": "fast_food",
+    "cuisine": "japanese;taiyaki",
+    "vegetarian": "yes",
+    "lat": 35.7379863,
+    "lon": 139.6521758,
+    "hours": "Mo-Su 11:00-19:30"
+   },
+   {
+    "osm": "node/13226997419",
+    "name": "もものアジト！",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.7357182,
+    "lon": 139.6563333,
+    "hours": "\"check schedule\""
+   },
+   {
+    "osm": "node/13240109093",
+    "name": "ふる井",
+    "amenity": "restaurant",
+    "cuisine": "noodle;soba",
+    "vegetarian": "yes",
+    "lat": 35.7303368,
+    "lon": 139.6596151,
+    "hours": "Sa,Su,PH 11:30-15:00,17:00-20:30; Mo,Tu,Fr 11:30-14:30,17:30-20:30"
+   },
+   {
+    "osm": "node/13349340331",
+    "name": "Bistro TOSSO",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "only",
+    "lat": 35.6618598,
+    "lon": 139.7303906,
+    "hours": "Mo-Su 17:00-21:00"
+   },
+   {
+    "osm": "node/13353535001",
+    "name": "Masala Bites",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "only",
+    "lat": 35.7024259,
+    "lon": 139.7822038,
+    "hours": "Mo-Su 10:00-22:00"
+   },
+   {
+    "osm": "node/13354674206",
+    "name": "Jikasei MENSHO",
+    "amenity": "fast_food",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6619994,
+    "lon": 139.6988941,
+    "hours": "Mo-Su 11:00-22:00"
+   },
+   {
+    "osm": "node/13357153901",
+    "name": "DevilCraft - The Corner",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.6915359,
+    "lon": 139.7659502,
+    "hours": "Tu-Th 17:00-22:30; Fr 17:00-23:00; Sa 12:00-22:00; Su,Mo off"
+   },
+   {
+    "osm": "node/13359160601",
+    "name": "Andhra Dining SHIBUYA",
+    "amenity": "restaurant",
+    "cuisine": "indian;andhra_pradesh;andhra;south_indian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6611952,
+    "lon": 139.6971382,
+    "hours": "Mo-Fr 11:15-14:30,17:00-22:00; Sa-Su 11:30-14:30,17:00-21:00"
+   },
+   {
+    "osm": "node/13363009701",
+    "name": "Nirvanam Kamiyacho",
+    "amenity": "restaurant",
+    "cuisine": "indian;south_indian;buffet",
+    "vegetarian": "yes",
+    "lat": 35.6635994,
+    "lon": 139.7463755,
+    "hours": "Mo-Su 11:00-14:30, 17:30-22:00"
+   },
+   {
+    "osm": "node/13371066001",
+    "name": "Indian Restaurant Mumbai + Tandoori Grill",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6275115,
+    "lon": 139.7728544,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "node/13371166901",
+    "name": "DevilCraft Jiyugoka",
+    "nameEn": "DevilCraft Jiyugoka",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.6070347,
+    "lon": 139.6673948,
+    "hours": "Mo off; Tu off; We-Th 17:00-22:00; Fr 17:00-22:30; Sa 12:00-22:30; Su 12:00-21:00"
+   },
+   {
+    "osm": "node/13371187401",
+    "name": "DevilCraft Gotanda",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.6262789,
+    "lon": 139.7225145,
+    "hours": "Mo off; Tu-Fr 17:00-23:00; Sa-Su 15:00-22:00"
+   },
+   {
+    "osm": "node/13371200621",
+    "name": "DevilCraft Hamamatsucho",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegetarian": "yes",
+    "lat": 35.653241,
+    "lon": 139.7560864,
+    "hours": "Mo-Fr 17:00-23:00; Sa 12:00-22:00; Su 12:00-22:00"
+   },
+   {
+    "osm": "node/13377704301",
+    "name": "Vegan 8ablish",
+    "amenity": "restaurant",
+    "vegan": "only",
+    "lat": 35.6624817,
+    "lon": 139.7434519,
+    "hours": "Mo-Su 11:00-19:00"
+   },
+   {
+    "osm": "node/13421588159",
+    "name": "Gluten Free T's Kitchen",
+    "nameEn": "Gluten Free T's Kitchen",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.704862,
+    "lon": 139.7721843,
+    "hours": "12:00-15:00,17:00-22:00; Sa-Su 12:00-22:00; We off"
+   },
+   {
+    "osm": "node/13423704383",
+    "name": "Kyushu Jangara Shiba Daimon Store",
+    "nameEn": "Kyushu Jangara Shiba Daimon Store",
+    "amenity": "restaurant",
+    "cuisine": "japanese;ramen",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6564393,
+    "lon": 139.7536159,
+    "hours": "Mo-We 10:00-15:00; Fr-Su 11:00-22:00"
+   },
+   {
+    "osm": "node/13423766101",
+    "name": "Shiba Park Hotel Restaurant",
+    "amenity": "restaurant",
+    "cuisine": "japanese;chinese;western",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6587041,
+    "lon": 139.752051
+   },
+   {
+    "osm": "node/13423766847",
+    "name": "BROOKS GREENLIT CAFE",
+    "amenity": "cafe",
+    "cuisine": "coffee_shop",
+    "vegan": "yes",
+    "lat": 35.670627,
+    "lon": 139.7248528,
+    "hours": "Mo-Su 08:00-18:00"
+   },
+   {
+    "osm": "node/13428333301",
+    "name": "Fujifuku",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7119102,
+    "lon": 139.7910086,
+    "hours": "Tu-Sa 18:00-22:30"
+   },
+   {
+    "osm": "node/13428398776",
+    "name": "自然野菜レストラン 駒込 ナーリッシュ",
+    "nameEn": "Organic Bar Nourish",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7358251,
+    "lon": 139.7480006,
+    "hours": "Mo-Su 11:30-14:30; Fr-Sa 18:00-22:00"
+   },
+   {
+    "osm": "node/13430557701",
+    "name": "クレヨンハウス",
+    "nameEn": "Crayon House",
+    "amenity": "restaurant",
+    "cuisine": "japanese;asian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7059993,
+    "lon": 139.5767135,
+    "hours": "Mo-Su 11:00-21:00"
+   },
+   {
+    "osm": "node/13430662801",
+    "name": "Mominoki House",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6725041,
+    "lon": 139.7098962,
+    "hours": "Tu-Sa 11:00-14:00, 17:00-22:00; Su 11:00-21:00"
+   },
+   {
+    "osm": "node/13430691701",
+    "name": "Natural Cafe & Restaurant TABUNOKI",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6287208,
+    "lon": 139.7352399,
+    "hours": "Tu-Fr 11:00-16:00, 17:30-21:00; Sa 11:00-17:30"
+   },
+   {
+    "osm": "node/13433573525",
+    "name": "Toscana",
+    "amenity": "restaurant",
+    "cuisine": "italian",
+    "vegetarian": "yes",
+    "lat": 35.6842305,
+    "lon": 139.7005488
+   },
+   {
+    "osm": "node/13434269401",
+    "name": "217 | Greek Yogurt",
+    "nameEn": "217 | Greek Yogurt",
+    "amenity": "cafe",
+    "cuisine": "yogurt",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.6712279,
+    "lon": 139.7163436,
+    "hours": "Mo-Fr 10:00-20:00; Sa-Su 09:00-20:00"
+   },
+   {
+    "osm": "node/13441738801",
+    "name": "Marugoto Vegan Dining Asakusa",
+    "amenity": "restaurant",
+    "cuisine": "japanese",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.711722,
+    "lon": 139.7989044,
+    "hours": "Su, Tu, Th-Fr 11:30-15:00, 18:00-20:30; We, Sa 09:00-15:00, 18:00-20:30"
+   },
+   {
+    "osm": "node/13449760501",
+    "name": "T's Restaurant",
+    "amenity": "restaurant",
+    "cuisine": "japanese;pizza;ramen",
+    "vegan": "yes",
+    "lat": 35.6092125,
+    "lon": 139.6681334,
+    "hours": "Mo-Su 11:30-21:00"
+   },
+   {
+    "osm": "node/13463081818",
+    "name": "Tokyo Juice",
+    "amenity": "fast_food",
+    "cuisine": "juice",
+    "vegan": "yes",
+    "lat": 35.6605551,
+    "lon": 139.7403199,
+    "hours": "Mo-Su 08:00-18:00"
+   },
+   {
+    "osm": "node/13663754601",
+    "name": "イコールカフェ",
+    "nameEn": "Equal Cafe",
+    "amenity": "restaurant",
+    "cuisine": "curry;japanese",
+    "vegan": "only",
+    "lat": 35.6362803,
+    "lon": 139.7400494
+   },
+   {
+    "osm": "node/13663884110",
+    "name": "AFURI",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6359236,
+    "lon": 139.7399696
+   },
+   {
+    "osm": "node/13665932066",
+    "name": "THE NUTS EXCHANGE",
+    "amenity": "fast_food",
+    "cuisine": "burger",
+    "vegan": "only",
+    "lat": 35.6688694,
+    "lon": 139.6892238
+   },
+   {
+    "osm": "node/13681171059",
+    "name": "明天好好",
+    "nameEn": "Ming Teng HAO HAO",
+    "amenity": "restaurant",
+    "cuisine": "chinese",
+    "vegan": "only",
+    "lat": 35.6636759,
+    "lon": 139.6703158
+   },
+   {
+    "osm": "node/13681171061",
+    "name": "Cafe Anthrop",
+    "amenity": "cafe",
+    "cuisine": "sandwich;crepe;ice_cream",
+    "vegan": "only",
+    "lat": 35.6622415,
+    "lon": 139.6660412
+   },
+   {
+    "osm": "node/13764491704",
+    "name": "きぼこ Kiboko",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.6897438,
+    "lon": 139.7069332
+   },
+   {
+    "osm": "node/13789763771",
+    "name": "Salaam",
+    "amenity": "restaurant",
+    "cuisine": "middle_eastern",
+    "vegan": "yes",
+    "lat": 35.6510518,
+    "lon": 139.7218241
+   },
+   {
+    "osm": "node/13793014301",
+    "name": "Atomiyosowaka Kuramae アトミヨソワカ 蔵前",
+    "amenity": "cafe",
+    "cuisine": "bagel;cake",
+    "vegan": "yes",
+    "lat": 35.7037986,
+    "lon": 139.7883897
+   },
+   {
+    "osm": "node/13800371928",
+    "name": "芋囍糖水",
+    "nameEn": "Yuki Sweets",
+    "amenity": "cafe",
+    "cuisine": "dessert;douhua",
+    "vegan": "yes",
+    "lat": 35.7320503,
+    "lon": 139.7093582
+   },
+   {
+    "osm": "node/13843175401",
+    "name": "Spicier - Spiced Chai and Indian Curry Bread",
+    "nameEn": "Spicier - Spiced Chai and Indian Curry Bread",
+    "amenity": "restaurant",
+    "cuisine": "curry;indian;japanese;tea",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7017058,
+    "lon": 139.740396,
+    "hours": "We-Th,Su 09:00-18:00; Fr,Sa 11:30-18:30; Mo-Tu off"
+   },
+   {
+    "osm": "node/13879090447",
+    "name": "NagiCrepe",
+    "amenity": "fast_food",
+    "cuisine": "crepe",
+    "vegan": "yes",
+    "lat": 35.6143822,
+    "lon": 139.7218984,
+    "hours": "Mo,Tu,Fr 13:00-19:00; Sa,Su 12:00-19:00"
+   },
+   {
+    "osm": "node/13898286216",
+    "name": "Pizzakaya Roppongi",
+    "amenity": "restaurant",
+    "cuisine": "pizza",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.664613,
+    "lon": 139.7379053,
+    "hours": "Mo-Fr 11:30-15:00,16:00-23:00; Sa,PH 17:00-23:00; Su 12:00-22:00"
+   },
+   {
+    "osm": "node/13913724780",
+    "name": "レクトサンドカフェ",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.7042669,
+    "lon": 139.6467202
+   },
+   {
+    "osm": "node/13955361378",
+    "name": "coret",
+    "amenity": "cafe",
+    "vegan": "only",
+    "lat": 35.7055013,
+    "lon": 139.6442862
+   },
+   {
+    "osm": "node/14026342328",
+    "name": "Green Green Korean Dining",
+    "amenity": "restaurant",
+    "cuisine": "korean",
+    "vegan": "yes",
+    "lat": 35.7026219,
+    "lon": 139.5789699
+   },
+   {
+    "osm": "node/14047928580",
+    "name": "CƠME",
+    "amenity": "restaurant",
+    "cuisine": "vietnamese;noodle",
+    "vegan": "yes",
+    "lat": 35.6620804,
+    "lon": 139.7416157
+   },
+   {
+    "osm": "node/14096859803",
+    "name": "Nirvanam",
+    "amenity": "restaurant",
+    "cuisine": "indian",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.631246,
+    "lon": 139.7909712,
+    "hours": "Mo-Su 11:15-14:30, 18:00-22:00"
+   },
+   {
+    "osm": "node/14099886048",
+    "name": "ラーメン 麺尊 RAGE",
+    "nameEn": "Tokyo Ramen RAGE",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.6614504,
+    "lon": 139.7433823
+   },
+   {
+    "osm": "node/14100509801",
+    "name": "T's Tantan",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "only",
+    "vegetarian": "yes",
+    "lat": 35.698371,
+    "lon": 139.7726472,
+    "hours": "Mo-Sa 08:00-22:00; Su 08:00-21:00"
+   },
+   {
+    "osm": "node/14133916828",
+    "name": "根津の谷",
+    "nameEn": "Nezunoya",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.7175487,
+    "lon": 139.7651545
+   },
+   {
+    "osm": "node/14140294364",
+    "name": "Halal and Vegan Ramen Dattebayo!",
+    "amenity": "restaurant",
+    "cuisine": "ramen",
+    "vegan": "yes",
+    "lat": 35.7148006,
+    "lon": 139.8016905
+   },
+   {
+    "osm": "node/14188380701",
+    "name": "夏目坂珈琲",
+    "nameEn": "Natsumezaka Coffee",
+    "amenity": "cafe",
+    "vegan": "yes",
+    "vegetarian": "yes",
+    "lat": 35.7029502,
+    "lon": 139.7200862,
+    "hours": "Mo-Su 08:00-18:00"
+   },
+   {
+    "osm": "way/143166769",
+    "name": "Canal Cafe",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.7000435,
+    "lon": 139.7427397,
+    "hours": "Mo-Su 11:30-21:30"
+   },
+   {
+    "osm": "way/149147797",
+    "name": "ETHICA",
+    "amenity": "restaurant",
+    "cuisine": "mexican",
+    "vegan": "yes",
+    "lat": 35.6753576,
+    "lon": 139.7663298
+   },
+   {
+    "osm": "way/217275463",
+    "name": "Soul Food House",
+    "amenity": "restaurant",
+    "cuisine": "american",
+    "vegan": "yes",
+    "lat": 35.6553894,
+    "lon": 139.7345685
+   },
+   {
+    "osm": "way/307527644",
+    "name": "はま寿司",
+    "nameEn": "Hamasushi",
+    "amenity": "fast_food",
+    "cuisine": "sushi",
+    "vegan": "no",
+    "vegetarian": "yes",
+    "lat": 35.6822,
+    "lon": 139.5821466,
+    "hours": "Mo-Su 11:00-23:00"
+   },
+   {
+    "osm": "way/405778785",
+    "name": "Caffe 146",
+    "amenity": "cafe",
+    "vegetarian": "yes",
+    "lat": 35.5480229,
+    "lon": 139.7677761
+   },
+   {
+    "osm": "way/447338048",
+    "name": "biotable",
+    "amenity": "restaurant",
+    "vegan": "yes",
+    "lat": 35.6416127,
+    "lon": 139.7483998
+   }
+  ]
+ },
+ "wikivoyage": {
+  "title": "Tokyo",
+  "license": "CC BY-SA 4.0",
+  "hasEatSection": true,
+  "districtsOnly": false,
+  "vegListings": []
+ }
+}

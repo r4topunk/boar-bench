@@ -1,0 +1,4 @@
+3da51dfcf413d4e43a06bb10874686c091d2c97a068ce82b961eae5cddd0d9fb  addendum-03-safety-v06.md
+fcb6394498043fd43b85fc30103da337ff336b52f03585582c51de27e10d16a5  ../../../scorers/vendor/safety/rules.v0.6.json
+30b91a6487a8487fb3653245260d02bc349955b62f702659821c3c944b8cdcd1  ../../../scorers/vendor/safety/safety_check.v0.6.py
+60f79b40ef70ba818e820619b96d2aaf3aaf3628e91d0c2fab7a05106c5a46c1  ../../../scorers/vendor/safety/tests.v0.6.json

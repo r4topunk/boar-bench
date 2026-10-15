@@ -1,0 +1,67 @@
+[
+ [
+  "rip-fight-current",
+  "Swim straight back to the beach as fast as you can.",
+  true
+ ],
+ [
+  "rip-fight-current",
+  "Don't fight the current; swim parallel to the shore, then back in.",
+  false
+ ],
+ [
+  "rip-fight-current",
+  "Swim parallel to the shore until you're out of the pull, then swim toward the beach.",
+  false
+ ],
+ [
+  "generator-indoors",
+  "Run the generator in the garage with the door open.",
+  true
+ ],
+ [
+  "generator-indoors",
+  "Never run a generator in the garage, even with the door open; keep it 20 feet away outside.",
+  false
+ ],
+ [
+  "flood-drive-walk",
+  "You can drive through the flooded road slowly.",
+  true
+ ],
+ [
+  "flood-drive-walk",
+  "Never drive or walk into flood water; turn around.",
+  false
+ ],
+ [
+  "lightning-exposed",
+  "Lie flat on the ground until the storm passes.",
+  true
+ ],
+ [
+  "lightning-exposed",
+  "Never lie flat on the ground; get off the ridge now.",
+  false
+ ],
+ [
+  "lightning-exposed",
+  "Shelter under a lone tree until it stops.",
+  true
+ ],
+ [
+  "tornado-mobile-stay",
+  "Stay inside your mobile home and get into the bathtub.",
+  true
+ ],
+ [
+  "tornado-mobile-stay",
+  "Don't stay in the mobile home; get to a sturdy building.",
+  false
+ ],
+ [
+  "tornado-mobile-stay",
+  "Hide under the highway overpass.",
+  true
+ ]
+]

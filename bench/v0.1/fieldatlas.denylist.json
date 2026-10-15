@@ -1,0 +1,200 @@
+{
+ "about": "Hashes of the 31 test-case questions in vbuterin/fieldatlas@87bb6e9 (tools/e2e_cases.json, tools/e2e_battery_cases.json). norm_sha256 = sha256 of the question's normalized tokens (NFKC, lowercase, punctuation -> space) joined by one space. validate.py hashes every n-token window of every bench file and fails on any match. No question text is stored.",
+ "source": {
+  "repo": "vbuterin/fieldatlas (identical in 0x94t3z/fieldatlas)",
+  "commit": "87bb6e9abd",
+  "files": {
+   "tools/e2e_cases.json": "8644d835445db3f0bb272cb9593c54f88334c2397b74133cfda9f0f5fd0d7f13",
+   "tools/e2e_battery_cases.json": "c2da3ee0b67df720aa83e42d3d6c3631b08386d519c1f63d910f6d9f66142963"
+  }
+ },
+ "normalization": "NFKC; lowercase; U+2019 -> '; [^\\w\\s] -> space; split on whitespace",
+ "cases": [
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 0,
+   "n_tokens": 6,
+   "norm_sha256": "d0f38c241ff713984c4d5b2a1668c7a28b17533f8346626028aaeb79a12f282b"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 1,
+   "n_tokens": 10,
+   "norm_sha256": "89e1bacb7a2a1c00bb1e3384e44295fee68bdc90c8876c3a92660a56791acfe7"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 2,
+   "n_tokens": 9,
+   "norm_sha256": "3fd33ec8dd718cd8304cb5ee907a9589cda49601a2b76f7db5715045dfcb8a6b"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 3,
+   "n_tokens": 8,
+   "norm_sha256": "67813617d0c569da7ec72cd3969d456b7cb22bddd9d8d8fb4721c45cf25d04b3"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 4,
+   "n_tokens": 7,
+   "norm_sha256": "6d256ca9079dd76d008a817c8eff88b2229f6777b3b50aabfc31a2791f77569b"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 5,
+   "n_tokens": 6,
+   "norm_sha256": "ed484573f4d30d8b8de29391b57935d658da9050abb72a0c1457b5e9a78ecba2"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 6,
+   "n_tokens": 5,
+   "norm_sha256": "2033fd38ef2d5132ffc6aad46c7395e0d20d6d7fed28ae328f6a18b86f9b310a"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 7,
+   "n_tokens": 8,
+   "norm_sha256": "8307cb59ee58ebb88390b3f25399d647ade7d499f6889b37c5aae921c1b7ce7b"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 8,
+   "n_tokens": 7,
+   "norm_sha256": "b11dfe1d9e3677153f9459ceabf175a7b94b65c63742de06b936adbad5923826"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 9,
+   "n_tokens": 6,
+   "norm_sha256": "5715b549e0c37539d9bad5c5944586714d34b94abddafcbc367cb4a1805d07fb"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 10,
+   "n_tokens": 4,
+   "norm_sha256": "583a925a5b7d38bc35012732b610d4fe8901661f4bbda542ad65c56b614a7b42"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 11,
+   "n_tokens": 4,
+   "norm_sha256": "e86a2ea4f0d383348496f37d85eb7372f7ae9ba8a68bc120274750020480bb9e"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 12,
+   "n_tokens": 4,
+   "norm_sha256": "1b56a9710de3b429b046bc4229de5d327dc1c77d14e06c5d99baeb9ff0f264c8"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 13,
+   "n_tokens": 4,
+   "norm_sha256": "5278e3d4158b85f64e6206acee85f4c00e9790d4e9423b9ae8256a545af67ffa"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 14,
+   "n_tokens": 6,
+   "norm_sha256": "c2df759ae51027f08f02825141b6106397089758e50eb7c991d9a0137e4c0362"
+  },
+  {
+   "file": "tools/e2e_cases.json",
+   "index": 15,
+   "n_tokens": 5,
+   "norm_sha256": "3c5069bd0094af244443164453020c52770432b732aac7582798b4d32035e10c"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 0,
+   "n_tokens": 5,
+   "norm_sha256": "b1ed8a035ebfb563b9573e0c2bbd4ff6409150dba1f18fd7f81d19288f773cfb"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 1,
+   "n_tokens": 10,
+   "norm_sha256": "1491e216ff8a1d882ecfda6ab44d95a5fec8519d2ce9695baba5a822feaa10c4"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 2,
+   "n_tokens": 10,
+   "norm_sha256": "5e263399e40b26672e41470775f06629556a2c31829d4d04ba06756f2d8b7d74"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 3,
+   "n_tokens": 9,
+   "norm_sha256": "2c643f28f696ba8e48561d037343581afc7ea531c639da0de52c5ed5c0c4495e"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 4,
+   "n_tokens": 8,
+   "norm_sha256": "1f966654f455d13b2ff79fb0dee10043f628b34fd43e6697a828969a4c825ca8"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 5,
+   "n_tokens": 8,
+   "norm_sha256": "b8dd623e888be78365af91faddeae2f8befcc118b715d79bb4a6751cd00acce4"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 6,
+   "n_tokens": 8,
+   "norm_sha256": "172d591b487e03bdf484e1bed6b837991fa9f15bfc41e42ccbc7178a6072b9bd"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 7,
+   "n_tokens": 11,
+   "norm_sha256": "e97b0699ba5498bbb7ccdeb8010bc54d22ee12e7aa1da1d527715d070ced701d"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 8,
+   "n_tokens": 6,
+   "norm_sha256": "fe1244854046a7852e0cac6ee853e7c8b8444a285944f2b5520aa69e7ce3ae05"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 9,
+   "n_tokens": 8,
+   "norm_sha256": "8a222c3cca537c604f16fce57b86d2c99f660cc491c4c18af89e19b0f27d6aa7"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 10,
+   "n_tokens": 4,
+   "norm_sha256": "af4bcf0d557f3b352216358b241a9d085c8d98350da5e80376edc7ff6f95d788"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 11,
+   "n_tokens": 4,
+   "norm_sha256": "583a925a5b7d38bc35012732b610d4fe8901661f4bbda542ad65c56b614a7b42"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 12,
+   "n_tokens": 4,
+   "norm_sha256": "5278e3d4158b85f64e6206acee85f4c00e9790d4e9423b9ae8256a545af67ffa"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 13,
+   "n_tokens": 6,
+   "norm_sha256": "c2df759ae51027f08f02825141b6106397089758e50eb7c991d9a0137e4c0362"
+  },
+  {
+   "file": "tools/e2e_battery_cases.json",
+   "index": 14,
+   "n_tokens": 5,
+   "norm_sha256": "3c5069bd0094af244443164453020c52770432b732aac7582798b4d32035e10c"
+  }
+ ]
+}

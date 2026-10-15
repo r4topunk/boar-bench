@@ -1,0 +1,19 @@
+BOAR bench
+Copyright 2026 BOAR R&D
+
+Licences by part
+
+| Part | Licence |
+|---|---|
+| Code (harness/, scorers/, metrics/, packages/, tools/, *.py, *.mjs, *.ts, *.sh) | Apache-2.0 (LICENSE) |
+| Our questions, gold answers, rubrics, docs, dataset cards (bench/, docs/, *.md) | CC BY 4.0 (LICENSE-DATA) |
+| Items and gold that derive from Wikipedia / Wikivoyage / Stack Exchange text | CC BY-SA 4.0 for that part (per-item `license` field); share-alike applies to the derived part |
+| OpenStreetMap venue gold: bench/v0.1/gold/food-00{1,2,6}.json | ODbL 1.0, (c) OpenStreetMap contributors (bench/v0.1/gold/NOTICE.md) |
+| bench/v0.1 items quoting a named author's public posts (25 items, short quotations with links) | quotation with attribution; only our wrapper is CC BY 4.0 |
+| Reference answers (bench/v0.1/refs/refs.jsonl, bench/slices/longsession-v1/refs/refs.jsonl) | CC BY 4.0 to the extent we hold rights; the v0.1 answers are Claude Opus + web search output and may quote cited sources, which keep their own terms |
+| Safety rules (scorers/vendor/safety/, bench/v0.1/safety/) | CC BY 4.0; quoted NHS wording was removed from the public re-issue; short quotations of US public-domain guidance (CDC, NWS, NIOSH) remain, with links |
+| bench/slices/longsession-v1 | CC BY 4.0 (bench/slices/longsession-v1/NOTICE.md) |
+
+Not released: the held-out sets (hashes and plan only), the BOAR runner and traces, and the emergency-detector model (its base-model licence is unknown). Upstream engine patches, where referenced, are MIT like the upstream app.
+
+Health, first-aid and safety content (v0.1 health and danger items, their gold answers, the safety track and the safety rules) is AI-reviewed, not clinically reviewed. Nothing in this repository is medical advice.

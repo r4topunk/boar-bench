@@ -1,0 +1,6 @@
+packages:
+  - "packages/*"
+  - "adapters/*"
+  - "harness"
+allowBuilds:
+  esbuild: false

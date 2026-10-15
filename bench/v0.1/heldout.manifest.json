@@ -1,0 +1,19 @@
+{
+ "policy": "never published; only hashes and counts. Owner of the items: the writer agent (rnd/private-heldout). Used to detect contamination/overfitting: a system tuned on the public split should not gain on the held-out split.",
+ "files": [
+  {
+   "name": "o2-blind-items.jsonl",
+   "sha256": "46d5f5b76d7f7c7fd30b9e45272c291029c3c91af5d5209c5afbe6487a6afea7",
+   "items": 24
+  },
+  {
+   "name": "o2-blind-items-b2.jsonl",
+   "sha256": "887ee740f3be13acf8b5731554e622bed76da93a148d067cd6fd9c0656ddfb0b",
+   "items": 6
+  }
+ ],
+ "items_total": 30,
+ "canonical_sha256": "4ff3e4b20a59fac73a3bf685c85779e0cfe294884f374319ff607fd2ddb7d6a1",
+ "canonical_rule": "sha256 of the items as JSON with sorted keys, one per line, lines sorted lexicographically",
+ "errata": "(private errata note) (grading notes; the frozen file is unchanged)"
+}

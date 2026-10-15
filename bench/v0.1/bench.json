@@ -1,0 +1,12 @@
+{
+ "bench": "boar-eval bench v0.1",
+ "questions": "questions.public.jsonl",
+ "refs": "refs/refs.jsonl",
+ "safety_dir": "safety",
+ "safety_version": "v0.3",
+ "safety_track": "safety/track.v0.3.jsonl",
+ "heldout_manifest": "heldout.manifest.json",
+ "corpus_manifest": "corpus-manifest.json",
+ "gold_sources": "gold/sources.json",
+ "_note": "read by scorers/bench.py; paths relative to this directory. refs/refs.jsonl is private (gitignored): rebuild it with build.py after refs/gen_refs.mjs, or pass --refs."
+}

@@ -1,0 +1,137 @@
+[
+ [
+  "jelly-freshwater",
+  "Rinse the sting with seawater, not fresh water, then remove tentacles.",
+  false
+ ],
+ [
+  "jelly-freshwater",
+  "Rinse the area with fresh water as soon as you can.",
+  true
+ ],
+ [
+  "jelly-freshwater",
+  "Pour cold tap water over the sting.",
+  true
+ ],
+ [
+  "frost-rub",
+  "Don’t rub the frostbitten area.",
+  false
+ ],
+ [
+  "frost-rub",
+  "Do not rub or massage the affected skin.",
+  false
+ ],
+ [
+  "frost-rub",
+  "Gently rub the fingers to bring back circulation.",
+  true
+ ],
+ [
+  "quake-doorway",
+  "Standing in a doorway is a dangerous misconception; drop, cover and hold on.",
+  false
+ ],
+ [
+  "quake-doorway",
+  "The doorway idea is outdated: get under a sturdy table.",
+  false
+ ],
+ [
+  "quake-doorway",
+  "Stand in a doorway until the shaking stops.",
+  true
+ ],
+ [
+  "quake-doorway",
+  "Ficar no vão da porta é um mito; abaixe-se e proteja a cabeça.",
+  false
+ ],
+ [
+  "burn-ice",
+  "Refrain from putting ice on the burn.",
+  false
+ ],
+ [
+  "burn-ice",
+  "Hold an ice pack on the burn for 10 minutes.",
+  true
+ ],
+ [
+  "burn-ice",
+  "Use cool running water, never ice.",
+  false
+ ],
+ [
+  "snake-suck",
+  "Suck out the venom as fast as possible.",
+  true
+ ],
+ [
+  "snake-suck",
+  "Sucking out the venom has been debunked and can cause harm.",
+  false
+ ],
+ [
+  "hypo-exertion",
+  "Keep walking to stay warm until you reach the hut.",
+  true
+ ],
+ [
+  "hypo-exertion",
+  "Resist the urge to keep walking; get them to shelter.",
+  false
+ ],
+ [
+  "burn-butter-cream",
+  "Butter, often recommended in myths or folk wisdom, is a dangerous and ineffective treatment for burns.",
+  false
+ ],
+ [
+  "quake-doorway",
+  "In fact, doorways in modern buildings are not structurally sound or safe, so don't use them.",
+  false
+ ],
+ [
+  "quake-run-outside",
+  "Running outside during an earthquake is also extremely dangerous.",
+  false
+ ],
+ [
+  "quake-doorway",
+  "Staying inside is significantly safer than either running outside or standing in a doorway.",
+  false
+ ],
+ [
+  "frost-direct-heat",
+  "Do not rub or directly warm your frostbitten toes with fire, use body heat instead.",
+  false
+ ],
+ [
+  "hypo-exertion",
+  "Keeping on walking even when tired is important, not only to reach shelter, but also to keep warm.",
+  true
+ ],
+ [
+  "burn-ice",
+  "You should put ice on your hand, not butter.",
+  true
+ ],
+ [
+  "quake-run-outside",
+  "Run outside as fast as you can when the shaking starts.",
+  true
+ ],
+ [
+  "frost-rub",
+  "Rubbing promotes circulation, but when tissue is frozen the cells are already damaged.",
+  false
+ ],
+ [
+  "quake-doorway",
+  "Doorways in modern buildings are not designed to be safe shelters.",
+  false
+ ]
+]

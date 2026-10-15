@@ -1,0 +1,86 @@
+{
+ "bench": "offline-research-bench",
+ "version": "v0",
+ "app_build_for_pins": "boar-app@14de107",
+ "packs": [
+  {
+   "id": "corpus-standard",
+   "sha256": "2aeff76db48098851e1304fb37dc8013d9facf9214395897e7e05f276f85d2ff",
+   "sourceUrl": "https://raw.githubusercontent.com/rferrari/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-standard.json",
+   "license": "CC BY-SA 4.0 (Wikipedia)"
+  },
+  {
+   "id": "corpus-full",
+   "sha256": "6d602003bb9da59200e3e55b75b9e15bb073a4b9b1357da2c2d47b2803c570be",
+   "sourceUrl": "https://raw.githubusercontent.com/rferrari/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-full.json",
+   "license": "CC BY-SA 4.0 (Wikipedia)"
+  },
+  {
+   "id": "wiki-vital5",
+   "sha256": "d3b87d562baba3489f6878bf99783f50d504db94c347029771e53f6d1aecc666",
+   "sourceUrl": "https://github.com/rferrari/boar-app/releases/download/knowledge-pack-v1/wiki-vital5.sqlite",
+   "license": "CC BY-SA 4.0 (Wikipedia Vital Articles L5 introductions)",
+   "local_copy_sha256": "d3b87d562baba3489f6878bf99783f50d504db94c347029771e53f6d1aecc666",
+   "local_copy_matches_pin": true,
+   "bytes": 163647488
+  },
+  {
+   "id": "boar-crypto",
+   "sha256": "ae9fbd2c7a46a46a815d46d0283e7b192adb4c342b38a2adc4881e8f9d8831fb",
+   "sourceUrl": "https://huggingface.co/datasets/r4topunk/boar-packs/resolve/a55c1ec8a5fe8bbda99c4197c33474637bef1958/topics/boar-crypto.sqlite",
+   "license": "mixed: CC0 (EIPs/ERCs/specs), MIT (ethereum.org), CC BY-SA 4.0 (Wikipedia, Yellow Paper), per-BIP permissive",
+   "local_copy_sha256": "ae9fbd2c7a46a46a815d46d0283e7b192adb4c342b38a2adc4881e8f9d8831fb",
+   "local_copy_matches_pin": true,
+   "bytes": 36093952
+  },
+  {
+   "id": "boar-wikivoyage-en",
+   "sha256": "ff8595e32f56b8b84e20464afd8bf88532d47d2d82d799e3df8489440004b66e",
+   "sourceUrl": "https://huggingface.co/datasets/r4topunk/boar-packs/resolve/9557c7b2a50a1c37fdf36d41db4cd0fdc8c33c0b/wiki/en/boar-wikivoyage-en.sqlite",
+   "license": "CC BY-SA 4.0 (Wikivoyage)",
+   "local_copy_sha256": "ff8595e32f56b8b84e20464afd8bf88532d47d2d82d799e3df8489440004b66e",
+   "local_copy_matches_pin": true,
+   "bytes": 351092736
+  }
+ ],
+ "models": [
+  {
+   "id": "qwen2.5-1.5b-instruct-q4km",
+   "sha256": "1adf0b11065d8ad2e8123ea110d1ec956dab4ab038eab665614adba04b6c3370",
+   "sourceUrl": "https://huggingface.co/bartowski/Qwen2.5-1.5B-Instruct-GGUF/resolve/9eadc66189c7641e1ddd226b8267a9119b2ce2d4/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf"
+  },
+  {
+   "id": "qwen3-4b-instruct-2507-q4km",
+   "sha256": "3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597",
+   "sourceUrl": "https://huggingface.co/unsloth/Qwen3-4B-Instruct-2507-GGUF/resolve/a06e946bb6b655725eafa393f4a9745d460374c9/Qwen3-4B-Instruct-2507-Q4_K_M.gguf"
+  },
+  {
+   "id": "bge-small-en-v1.5-q8",
+   "sha256": "ec38e8da142596baa913124ae50550de284b6916bf59577ef2f0cb9660c2f514",
+   "sourceUrl": "https://huggingface.co/CompendiumLabs/bge-small-en-v1.5-gguf/resolve/d32f8c040ea3b516330eeb75b72bcc2d3a780ab7/bge-small-en-v1.5-q8_0.gguf"
+  }
+ ],
+ "places": {
+  "id": "places (OSM tiles per city + world gazetteer)",
+  "license": "ODbL 1.0 (OpenStreetMap contributors)",
+  "gold_snapshots": {
+   "food-001": "2026-09-26T20:22:51Z",
+   "food-002": "2026-09-26T20:23:48Z",
+   "food-006": "2026-09-26T20:24:49Z"
+  },
+  "device_tiles_pin": "UNKNOWN (downloaded at run time by city name; not pinned in the scored rows)"
+ },
+ "configs": {
+  "boar-iphone-P3": {
+   "device": "iPhone 13",
+   "model": "qwen2.5-1.5b-instruct-q4km",
+   "installed_packs": [
+    "boar-crypto",
+    "boar-wikivoyage-en",
+    "wiki-vital5"
+   ],
+   "base_corpus_tier": "UNKNOWN (rows do not record installed packs)"
+  },
+  "device-proxies": "device-run proxies: models, contexts source and harness are recorded in the research repository"
+ }
+}

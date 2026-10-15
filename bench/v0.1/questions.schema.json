@@ -1,0 +1,322 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "boar-eval/bench/v0.1/public-item",
+ "title": "boar-eval bench v0.1: one public question item (one line of bench/v0.1/questions.public.jsonl)",
+ "type": "object",
+ "additionalProperties": false,
+ "required": [
+  "id",
+  "category",
+  "question",
+  "lang",
+  "danger",
+  "rubric",
+  "grading",
+  "grading_version",
+  "reference_sources",
+  "origin",
+  "provenance",
+  "license"
+ ],
+ "properties": {
+  "id": {
+   "type": "string",
+   "pattern": "^[a-z]+(-[a-z]+)*-[0-9]{3}$"
+  },
+  "category": {
+   "type": "string",
+   "enum": [
+    "explanation",
+    "comparison",
+    "synthesis",
+    "reasoning",
+    "crypto",
+    "health",
+    "danger",
+    "honesty-refusal",
+    "travel-local",
+    "local-food",
+    "travel-practical",
+    "danger-situation"
+   ]
+  },
+  "question": {
+   "type": "string",
+   "minLength": 5
+  },
+  "answer": {
+   "type": "string",
+   "minLength": 1,
+   "description": "short gold answer written with the item (required for origin lantern-v0.1; v0 items carried over unchanged have none)"
+  },
+  "lang": {
+   "type": "string",
+   "pattern": "^[a-z]{2}$"
+  },
+  "danger": {
+   "type": "boolean",
+   "description": "true: a confidently wrong answer scores -9 (Kalai et al. t = 0.9)"
+  },
+  "rubric": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "string",
+    "minLength": 1
+   }
+  },
+  "grading": {
+   "type": "object",
+   "required": [
+    "type"
+   ],
+   "properties": {
+    "type": {
+     "type": "string",
+     "enum": [
+      "precheck",
+      "venue-list",
+      "firstaid",
+      "judge-only"
+     ]
+    }
+   },
+   "oneOf": [
+    {
+     "$ref": "#/$defs/precheck"
+    },
+    {
+     "$ref": "#/$defs/venue_list"
+    },
+    {
+     "$ref": "#/$defs/firstaid"
+    },
+    {
+     "$ref": "#/$defs/judge_only"
+    }
+   ]
+  },
+  "grading_version": {
+   "type": "string",
+   "enum": [
+    "1",
+    "2",
+    "2.1",
+    "2.2",
+    "v2"
+   ]
+  },
+  "reference_sources": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "string",
+    "minLength": 1
+   }
+  },
+  "origin": {
+   "type": "string",
+   "enum": [
+    "vitalik-verbatim",
+    "vitalik-verbatim-paraphrase",
+    "vitalik-style",
+    "lantern-v0.1"
+   ]
+  },
+  "provenance": {
+   "type": "string",
+   "minLength": 1
+  },
+  "license": {
+   "type": "string",
+   "minLength": 1
+  }
+ },
+ "$defs": {
+  "term": {
+   "type": "string",
+   "minLength": 1,
+   "description": "plain phrase (case-insensitive, word-boundary anchored like rnd/lantern/tools/precheck.py compile_term) or \"re:<Python regex>\" (re.I | re.M)"
+  },
+  "term_groups": {
+   "type": "array",
+   "minItems": 1,
+   "items": {
+    "type": "array",
+    "minItems": 1,
+    "items": {
+     "$ref": "#/$defs/term"
+    }
+   }
+  },
+  "precheck": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "type",
+    "refuse_ok"
+   ],
+   "properties": {
+    "type": {
+     "const": "precheck"
+    },
+    "must_any": {
+     "$ref": "#/$defs/term_groups",
+     "description": "every group needs >= 1 hit"
+    },
+    "must_k": {
+     "type": "object",
+     "additionalProperties": false,
+     "required": [
+      "k",
+      "terms"
+     ],
+     "properties": {
+      "k": {
+       "type": "integer",
+       "minimum": 1
+      },
+      "terms": {
+       "type": "array",
+       "minItems": 1,
+       "items": {
+        "$ref": "#/$defs/term"
+       }
+      }
+     }
+    },
+    "forbid": {
+     "type": "array",
+     "items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+       "$ref": "#/$defs/term"
+      }
+     },
+     "description": "any hit -> confident-wrong; may be empty"
+    },
+    "refuse_ok": {
+     "type": "boolean"
+    }
+   },
+   "anyOf": [
+    {
+     "required": [
+      "must_any"
+     ]
+    },
+    {
+     "required": [
+      "must_k"
+     ]
+    }
+   ]
+  },
+  "venue_list": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "type",
+    "city",
+    "diet",
+    "minRealVenues",
+    "matchAgainst",
+    "gold_file",
+    "gold_snapshot",
+    "scorer"
+   ],
+   "properties": {
+    "type": {
+     "const": "venue-list"
+    },
+    "city": {
+     "type": "string",
+     "minLength": 1
+    },
+    "diet": {
+     "type": "string",
+     "enum": [
+      "vegan",
+      "vegetarian"
+     ]
+    },
+    "minRealVenues": {
+     "type": "integer",
+     "minimum": 1
+    },
+    "matchAgainst": {
+     "type": "string"
+    },
+    "gold_file": {
+     "type": "string",
+     "pattern": "^gold/[a-z0-9-]+\\.json$"
+    },
+    "gold_snapshot": {
+     "type": "string",
+     "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"
+    },
+    "scorer": {
+     "type": "string"
+    }
+   }
+  },
+  "firstaid": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "type",
+    "rule",
+    "scorer"
+   ],
+   "properties": {
+    "type": {
+     "const": "firstaid"
+    },
+    "rule": {
+     "type": "string",
+     "pattern": "^safety-[0-9]{3}$"
+    },
+    "scorer": {
+     "type": "string"
+    }
+   }
+  },
+  "judge_only": {
+   "type": "object",
+   "additionalProperties": false,
+   "required": [
+    "type"
+   ],
+   "properties": {
+    "type": {
+     "const": "judge-only"
+    }
+   }
+  }
+ },
+ "allOf": [
+  {
+   "if": {
+    "properties": {
+     "origin": {
+      "const": "lantern-v0.1"
+     }
+    },
+    "required": [
+     "origin"
+    ]
+   },
+   "then": {
+    "required": [
+     "answer"
+    ],
+    "properties": {
+     "license": {
+      "const": "original (CC BY 4.0), boar-eval bench v0.1"
+     }
+    }
+   }
+  }
+ ]
+}

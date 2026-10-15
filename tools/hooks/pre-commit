@@ -1,0 +1,83 @@
+#!/bin/sh
+# Blocks blind plaintext from any commit (bench v0.3 spec §6 R3; hardened 2026-10-13 after PIPELINE-AUDIT F3).
+# Install: git config core.hooksPath tools/hooks. Test: tools/hooks/test-pre-commit.sh.
+# Public re-issue: the refs pattern is limited to bench/v0.3+ so the published v0.1 references (bench/v0.1/refs/refs.jsonl) stay committable.
+# 1. Paths (case-insensitive, non-ASCII names unquoted): any blind/ dir, questions[._-]v0N*, bench/v0.N*/questions*.jsonl,
+#    refs/refs*.jsonl, refs/web__*.jsonl, refs/raw/.
+# 2. Added lines: blind-style ids = (v0[3-9]p?|vit|hf|es|chat|meta)-<slug>-<1-3 digits>, any case.
+#    BLOCK a line holding "question" and such an id anywhere (any key order), and BLOCK a file whose added lines hold
+#    an "id": "<blind-style id>" field and a "question": key on different lines (pretty-printed JSON).
+#    Allowed: the format-only worked examples v03-<category>-98 / -99 (docs/contrib/writer-prompts.md;
+#    real ids stop at 21), and JSON lines whose every string under a question/paraphrase/para/rewrite/rewritten/variant key is a public bench/v0.1 question
+#    (the v0.1 file is pinned by sha256, so v0.1 dev requests/traces stay committable; V-para paraphrases are not public text).
+bad=$(git -c core.quotePath=false diff --cached --name-only --diff-filter=ACMR | grep -iE '(^|/)blind/|questions[._-]?v0[2-9]|(^|/)bench/v0\.?[2-9][^/]*/questions[^/]*\.jsonl|(^|/)bench/v0\.?[3-9][^/]*/refs/(refs|web__)[^/]*\.jsonl|refs/raw/')
+[ -n "$bad" ] && { echo "BLOCKED blind plaintext path: $bad"; exit 1; }
+command -v python3 >/dev/null 2>&1 || { echo "BLOCKED: the blind-plaintext hook needs python3"; exit 1; }
+PY_SRC=$(cat <<'PY'
+import hashlib, json, os, re, sys
+top = sys.argv[1]
+ID = r'(?:v0[3-9]p?|vit|hf|es|chat|meta)-[a-z0-9-]+-[0-9]{1,3}'
+ANY = re.compile(r'(?:^|[^a-z0-9])' + ID, re.I)
+IDF = re.compile(r'"id"\s*:\s*"' + ID, re.I)
+QW = re.compile(r'"question"', re.I)
+QK = re.compile(r'"question"\s*:', re.I)
+EX = re.compile(r'v03-[a-z-]+-9[89](?![0-9a-z])', re.I)
+KEY = re.compile(r'^(question|paraphrase|para|rewrite|rewritten|variant)$', re.I)
+PUB_SHA = '568b3ececd8afe5cad63a7f39bffe414e6dd45bcef9d03ef112faecad2981b18'
+def public():
+    for p in (os.environ.get('BOAR_V01_PUBLIC', ''), os.path.join(top, 'bench/v0.1/questions.public.jsonl'),
+              os.path.join(top, '../boar-eval/bench/v0.1/questions.public.jsonl')):
+        if p and os.path.isfile(p):
+            b = open(p, 'rb').read()
+            if hashlib.sha256(b).hexdigest() == PUB_SHA:
+                return {json.loads(l)['question'] for l in b.decode('utf-8').splitlines() if l.strip()}
+    return set()
+PUB = None
+def strs(o, k=None):
+    if isinstance(o, dict):
+        for kk, v in o.items():
+            yield from strs(v, kk)
+    elif isinstance(o, list):
+        for v in o:
+            yield from strs(v, k)
+    elif isinstance(o, str) and k is not None and KEY.search(k):
+        yield o
+def exempt(line):
+    global PUB
+    try:
+        o = json.loads(line)
+    except ValueError:
+        return False
+    qs = list(strs(o))
+    if not qs:
+        return False
+    if PUB is None:
+        PUB = public()
+    return all(q in PUB for q in qs)
+hits = []; f = None; fid = {}; fq = {}
+for raw in sys.stdin.buffer:
+    s = raw.decode('utf-8', 'replace').rstrip('\n')
+    if s.startswith('+++ '):
+        f = s[4:]; f = f[2:] if f.startswith('b/') else f; continue
+    if not s.startswith('+') or f is None:
+        continue
+    line = EX.sub('', s[1:])
+    a, i, q = bool(ANY.search(line)), bool(IDF.search(line)), bool(QK.search(line))
+    if not (a or q):
+        continue
+    if (a and QW.search(line)) or i or q:
+        if exempt(s[1:]):
+            continue
+    if a and QW.search(line):
+        hits.append(f)
+    if i: fid[f] = 1
+    if q: fq[f] = 1
+hits += [x for x in fid if x in fq]
+if hits:
+    print('BLOCKED: blind-style item text staged (question + id) in: ' + ', '.join(sorted(set(hits))))
+    sys.exit(1)
+PY
+)
+top=$(git rev-parse --show-toplevel) || exit 1
+git -c core.quotePath=false diff --cached -U0 --no-color --no-ext-diff --diff-filter=ACMR | python3 -I -c "$PY_SRC" "$top" || exit 1
+exit 0

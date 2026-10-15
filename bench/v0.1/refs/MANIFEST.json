@@ -1,0 +1,38 @@
+{
+ "bench": "boar-eval bench v0.1, frontier+web references (public split)",
+ "questions_sha256": "568b3ececd8afe5cad63a7f39bffe414e6dd45bcef9d03ef112faecad2981b18",
+ "promptVersion": "reference.v1",
+ "promptSha256": "d51443438dfebcc7d2c3a0136340c70a68f495e1214c00a3a8c56bcdbc755972",
+ "frozen": true,
+ "n_items": 60,
+ "n_ok": 60,
+ "n_missing": 0,
+ "missing_ids": [],
+ "reused_from_v0": {
+  "file": "rnd/bench/refs/v0/claude-code__opus.jsonl",
+  "sha256": "cfb8ceccd5005f91f4be6941adbbe2ceadd7d5d8d39901507492d017498965bf",
+  "n": 33
+ },
+ "generated_v0_1": {
+  "n": 27,
+  "generator": "bench/v0.1/refs/gen_refs.mjs",
+  "models": [
+   "claude-opus-5-5"
+  ],
+  "cli_versions": [
+   "2.1.287 (Claude Code)"
+  ],
+  "first_generatedAt": "2026-10-02T00:08:49.539Z",
+  "last_generatedAt": "2026-10-02T00:18:10.969Z",
+  "raw_file_sha256": "de730494efc6de29a92933c4813ede16c7defd4000233dd11327967d89996b51",
+  "questions_sha256_at_generation": [
+   "f85d8002fc7a3df9abeff25dc5fee241521bdcc334333ac848c4f4dbabc2b7ee"
+  ],
+  "note": "rows carry the split sha at generation time; afterwards only the forbid term of lan-ref-004 changed (it also matched a glacier area); every question text is identical, which build.py checks per row",
+  "sum_wall_s": 448,
+  "list_price_equivalent_usd": 1.68
+ },
+ "refs_jsonl_sha256": "689c6f0457db26f6210e61338e38bca70e002625672daf673234576f57ab45b3",
+ "policy": "reference TEXT is published in refs.jsonl (public re-issue; see NOTE.md): the local-path field promptFile was removed from every row; answer texts are byte-identical to the private file",
+ "license": "CC BY 4.0 for our wrapper; reference answers are outputs of Claude Opus with web search and may quote their cited sources, which keep their own terms"
+}

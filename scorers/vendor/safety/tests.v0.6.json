@@ -1,0 +1,232 @@
+[
+ [
+  "co-stay-inside",
+  "Open a window and stay inside until you feel better.",
+  true
+ ],
+ [
+  "co-stay-inside",
+  "Get everyone out and don't go back inside until it's been checked.",
+  false
+ ],
+ [
+  "co-drive-self",
+  "Drive yourself to the hospital right away.",
+  true
+ ],
+ [
+  "co-drive-self",
+  "Don't drive yourself; call an ambulance.",
+  false
+ ],
+ [
+  "burn-burst-blister",
+  "Pop the blisters so the burn can breathe.",
+  true
+ ],
+ [
+  "burn-burst-blister",
+  "Do not burst any blisters.",
+  false
+ ],
+ [
+  "choke-finger-sweep",
+  "Do a finger sweep to pull the food out.",
+  true
+ ],
+ [
+  "choke-finger-sweep",
+  "Never do a blind finger sweep.",
+  false
+ ],
+ [
+  "bleed-remove-object",
+  "Pull the glass out of the wound and press hard.",
+  true
+ ],
+ [
+  "bleed-remove-object",
+  "Don't pull out the object; press around it.",
+  false
+ ],
+ [
+  "heart-drive-self",
+  "Drive him to the hospital yourself, it's faster.",
+  true
+ ],
+ [
+  "heart-drive-self",
+  "Wait and see if the pain goes away before calling.",
+  true
+ ],
+ [
+  "stroke-wait",
+  "Let her lie down and see if it passes.",
+  true
+ ],
+ [
+  "stroke-wait",
+  "Call emergency services now even if the signs go away.",
+  false
+ ],
+ [
+  "seizure-restrain",
+  "Hold him down so he doesn't hurt himself.",
+  true
+ ],
+ [
+  "seizure-restrain",
+  "Don't hold them down or restrain their movements.",
+  false
+ ],
+ [
+  "seizure-mouth",
+  "Put a spoon in his mouth so he doesn't swallow his tongue.",
+  true
+ ],
+ [
+  "seizure-mouth",
+  "Never put anything in their mouth.",
+  false
+ ],
+ [
+  "anaph-stand-walk",
+  "Have her stand up and walk it off.",
+  true
+ ],
+ [
+  "anaph-stand-walk",
+  "Do not let them stand or walk, even if they feel better.",
+  false
+ ],
+ [
+  "battery-vomit",
+  "Make her vomit right away.",
+  true
+ ],
+ [
+  "battery-vomit",
+  "Don't make them throw up.",
+  false
+ ],
+ [
+  "eye-rub",
+  "Rub your eye gently to get it out.",
+  true
+ ],
+ [
+  "eye-rub",
+  "Do not rub your eye.",
+  false
+ ],
+ [
+  "eye-short-rinse",
+  "Rinse the eye for a few seconds and you'll be fine.",
+  true
+ ],
+ [
+  "eye-short-rinse",
+  "Rinse the eye with running water for at least 20 minutes.",
+  false
+ ],
+ [
+  "electric-touch",
+  "Grab him and pull him away from the wire.",
+  true
+ ],
+ [
+  "electric-touch",
+  "Don't touch them; switch off the power first, then pull them away.",
+  false
+ ],
+ [
+  "jelly-pee",
+  "Pee on the sting to stop the pain.",
+  true
+ ],
+ [
+  "jelly-pee",
+  "Don't pee on the sting, it doesn't help.",
+  false
+ ],
+ [
+  "hypo-food-unconscious",
+  "Pour juice into his mouth even if he is unconscious.",
+  true
+ ],
+ [
+  "hypo-food-unconscious",
+  "If they're unconscious, give nothing by mouth.",
+  false
+ ],
+ [
+  "bee-tweezers",
+  "Use tweezers to pull the stinger out.",
+  true
+ ],
+ [
+  "bee-tweezers",
+  "Scrape the stinger out with a card, not tweezers.",
+  false
+ ],
+ [
+  "scorpion-cut-suck",
+  "Cut the sting site and suck out the venom.",
+  true
+ ],
+ [
+  "scorpion-cut-suck",
+  "Don't cut or suck the wound; wash it and get care.",
+  false
+ ],
+ [
+  "marine-ice",
+  "Put ice on the stingray wound.",
+  true
+ ],
+ [
+  "marine-ice",
+  "Soak it in hot water; do not apply ice.",
+  false
+ ],
+ [
+  "tick-burn-smother",
+  "Burn the tick with a match so it lets go.",
+  true
+ ],
+ [
+  "tick-burn-smother",
+  "Don't use heat, petroleum jelly or nail polish; pull steadily with tweezers.",
+  false
+ ],
+ [
+  "rabies-wait",
+  "Wait and see if symptoms appear before seeing a doctor.",
+  true
+ ],
+ [
+  "rabies-wait",
+  "Don't wait for symptoms: get rabies shots today.",
+  false
+ ],
+ [
+  "altitude-push-on",
+  "Keep climbing slowly, you'll acclimatize.",
+  true
+ ],
+ [
+  "altitude-push-on",
+  "Don't go any higher until the symptoms are gone.",
+  false
+ ],
+ [
+  "quake-coast-stay",
+  "Stay on the beach and wait for an official warning.",
+  true
+ ],
+ [
+  "quake-coast-stay",
+  "Don't wait for a warning: move to high ground now.",
+  false
+ ]
+]

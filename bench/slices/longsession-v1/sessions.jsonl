@@ -1,0 +1,10 @@
+{"session": "ls01", "shape": "coref", "topic": "travel", "turns": ["ls01-t1", "ls01-t2", "ls01-t3", "ls01-t4", "ls01-t5"]}
+{"session": "ls02", "shape": "coref", "topic": "crypto", "turns": ["ls02-t1", "ls02-t2", "ls02-t3", "ls02-t4", "ls02-t5", "ls02-t6", "ls02-t7", "ls02-t8", "ls02-t9", "ls02-t10", "ls02-t11", "ls02-t12", "ls02-t13", "ls02-t14", "ls02-t15"]}
+{"session": "ls03", "shape": "coref", "topic": "health", "turns": ["ls03-t1", "ls03-t2", "ls03-t3", "ls03-t4", "ls03-t5"]}
+{"session": "ls04", "shape": "coref", "topic": "geography", "turns": ["ls04-t1", "ls04-t2", "ls04-t3", "ls04-t4", "ls04-t5"]}
+{"session": "ls05", "shape": "switch", "topic": "crypto", "turns": ["ls05-t1", "ls05-t2", "ls05-t3", "ls05-t4", "ls05-t5"]}
+{"session": "ls06", "shape": "switch", "topic": "travel", "turns": ["ls06-t1", "ls06-t2", "ls06-t3", "ls06-t4", "ls06-t5", "ls06-t6", "ls06-t7", "ls06-t8", "ls06-t9", "ls06-t10", "ls06-t11", "ls06-t12", "ls06-t13", "ls06-t14", "ls06-t15"]}
+{"session": "ls07", "shape": "switch", "topic": "crypto", "turns": ["ls07-t1", "ls07-t2", "ls07-t3", "ls07-t4", "ls07-t5"]}
+{"session": "ls08", "shape": "deepen", "topic": "travel", "turns": ["ls08-t1", "ls08-t2", "ls08-t3", "ls08-t4", "ls08-t5", "ls08-t6", "ls08-t7", "ls08-t8", "ls08-t9", "ls08-t10", "ls08-t11", "ls08-t12", "ls08-t13", "ls08-t14", "ls08-t15"]}
+{"session": "ls09", "shape": "deepen", "topic": "crypto", "turns": ["ls09-t1", "ls09-t2", "ls09-t3", "ls09-t4", "ls09-t5"]}
+{"session": "ls10", "shape": "deepen", "topic": "health", "turns": ["ls10-t1", "ls10-t2", "ls10-t3", "ls10-t4", "ls10-t5"]}
