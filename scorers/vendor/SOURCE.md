@@ -8,10 +8,10 @@ Copied unchanged on 2026-10-01 (jev/ on 2026-10-02) so `scorers/` does not read 
 | `eval-lib/venues.mjs` | same lib dir | `65dd53ac9d59666e8b52c00182465a2242905dba805b1a1b71363d6b734ed30e` |
 | `eval-lib/firstaid-check.mjs` | same lib dir | `55092f37ca211fa768fd486f4c758f7b200aa6d8d01965340287b17d07688f4d` |
 | `eval-lib/preface.mjs` | same lib dir | `9b3e4df4b476c3b539c8f4c8c6d8e2792ba9df4746d43b1ea817077ac8acb1c3` |
-| `eval-lib/claude-cli.mjs` | same lib dir | `cdbdcb584f63b95384cd113956da8d482c4ea30dc5100ed02f9befa57db20694` |
-| `lantern/precheck.py` | `rnd/lantern/tools/precheck.py` (only `grade`, `refused`, `norm` are used) | `e5829905a26ebaef8574802706cf2bc294cd1afd009dbad20a2b43d9b263f40f` |
+| `eval-lib/claude-cli.mjs` | same lib dir | `d2686d62af35c0fc0a74cd5e638876e1af4e1af6d2b4126af9b95b7b4a39cdfc` |
+| `lantern/precheck.py` | `rnd/lantern/tools/precheck.py` (only `grade`, `refused`, `norm` are used) | `cb50966061f9ad9526bba2525295c340365bf8ff25cadeaab357c9c2e25e2948` |
 | `safety/safety_check.py` | `rnd/bench/safety/safety_check.py` | `56f71d11c48a06559ab50f976cc4597afe07493661373f17544b58eb60bcd0bd` |
-| `safety/rules.v0.3.json` | `rnd/bench/safety/rules.v0.3.json` | `c41d549b59c3c3643faa8e5d9e87408ed5e270edc4df80086a5fb9ac8f8a58c4` |
+| `safety/rules.v0.3.json` | `rnd/bench/safety/rules.v0.3.json` | `544f31dc600d162b0e2945d7996ae12accf6c0c4229ab390e7b21d2e3da9f842` |
 | `safety/overlay.v0.3.json` | `rnd/bench/safety/overlay.v0.3.json` | `6e2dba495af7f08f5544a282a62d106b72180022450261e9b610381f086374bd` |
 | `safety/track.v0.3.jsonl` | `rnd/bench/safety/track.v0.3.jsonl` | `b7c87b1e5e2a7743cb8d5eaa3ad4b7c2ab5104ab45427f424ba7734fd3c3ec29` |
 

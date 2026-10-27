@@ -1,1 +1,15 @@
-{ "name": "boar-eval", "private": true, "type": "module", "scripts": { "test": "pnpm -r test", "typecheck": "pnpm -r typecheck" } }
+{
+  "name": "boar-bench",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "test:py": "python3 -m unittest discover -s scorers/tests -t . && python3 -m unittest discover -s harness/tests -t .",
+    "test:node": "node --test harness/tests/judge-codex.test.mjs",
+    "test:hooks": "bash tools/hooks/test-pre-commit.sh",
+    "verify": "python3 bench/v0.1/validate.py --skip-heldout && python3 tools/verify-pins.py",
+    "test:all": "pnpm test && pnpm test:py && pnpm test:node && pnpm test:hooks && pnpm verify"
+  }
+}

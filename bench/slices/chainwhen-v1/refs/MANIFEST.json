@@ -1,0 +1,19 @@
+{
+ "bench": "slice-chainwhen-v1",
+ "frozen": true,
+ "n_items": 150,
+ "n_ok": 150,
+ "questions_sha256": "4d40769f839ac4e2a66dea1872ec9ffdfd410c9fbdb40c76e0fe070a5d01e1c6",
+ "jsonl_sha256": "c40b1a90b3917661eebc8172d8ea9f116dfeaaf0e66fbb633e7a7e44ada1c4c9",
+ "sources": [
+  "bench/selftest/boar-factbook",
+  "bench/selftest/boar-firstaid-en",
+  "bench/selftest/boar-medlineplus-en",
+  "bench/selftest/boar-simplewiki-en",
+  "bench/selftest/qa-bitcoin-se",
+  "bench/selftest/qa-ethereum-se",
+  "bench/selftest/qa-health-se",
+  "bench/selftest/qa-outdoors-se",
+  "bench/selftest/qa-travel-se"
+ ]
+}

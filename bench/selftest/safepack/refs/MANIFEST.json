@@ -1,0 +1,12 @@
+{
+ "bench": "selftest-safepack",
+ "frozen": true,
+ "n_items": 30,
+ "n_ok": 30,
+ "source_sha256": {
+  "usgov.jsonl": "e281e70647afb37794f46d59ae7ed6cfb87c37b181f170319249c1cadec56ba7",
+  "army-manual.jsonl": "1ee2f1d6647115b4682f818efaf315ec6567f6db76cfd80506d3ee95891a28ec"
+ },
+ "questions_sha256": "362d22a469ec3ad3197494170fb036e1f3753b5c6652f88e46b4a11cd12b2a59",
+ "jsonl_sha256": "dfdf40c3c7a42324fdc5d45f5c214e27e5a7e6021b29aaa9b31621af2c43a9fa"
+}

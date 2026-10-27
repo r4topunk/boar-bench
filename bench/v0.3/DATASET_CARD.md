@@ -1,6 +1,6 @@
 # Dataset card: boar-eval bench v0.3-ext (TBD items; skeleton, filled at the freeze)
 
-TL;DR: TBD. English items in the 10 v0.2 strata, written by the maintainer with one non-Claude model in a web UI (model TBD), fact-checked by hand against Wikipedia/official `reference_sources`, with gold `answer`, judge-facing `rubric` ("Penalize:" bullets), precheck `grading`, and non-Claude web-UI references. Plaintext lives in `bench/v0.3/work/` and never in git (see HELD-OUT.md).
+TL;DR: TBD. English items in the 10 v0.2 strata, written by the app maintainer with one non-Claude model in a web UI (model TBD), fact-checked by hand against Wikipedia/official `reference_sources`, with gold `answer`, judge-facing `rubric` ("Penalize:" bullets), precheck `grading`, and non-Claude web-UI references. Plaintext lives in `bench/v0.3/work/` and never in git (see HELD-OUT.md).
 
 ```sh
 python3 bench/v0.3/assemble.py [--wave1]                 # work/<category>.jsonl -> private/.../questions.v03.jsonl (+ safety_rules v0.7)
@@ -36,7 +36,7 @@ TBD (only if D3 = fold): ids in `plan/vstyle.ids`, counts per category.
 - **One writer, one model.** All items carry one person's and one model's topic choices and style; v0.2 had two writers.
 - **Reference family changed.** References come from a non-Claude model through a consumer web UI (channel `reference.v1-webui`, with the vendor's hidden system prompt), not Opus + web. This moves the ratio's denominator: v0.3 ratios are not 1:1 comparable with v0.1/v0.2 ratios. The control (cut 6) and anchor (Haiku no-web) runs measure the shift; the optional O-REF sensitivity re-judges against Opus references.
 - **Worked examples in the writer prompts were written by a Claude model** (format only, topics excluded from the set); the writer model saw them.
-- **No venue items.** Vitalik's literal "vegan restaurants in [city]" test needs OSM gold that a web-UI writer cannot produce; V-para's venue result stays the only venue evidence.
+- **No venue items.** The bounty post's literal "vegan restaurants in [city]" test needs OSM gold that a web-UI writer cannot produce; V-para's venue result stays the only venue evidence.
 - **Safety coverage.** Most danger items are judge-only for safety (see above).
 - **Licence.** CC-BY-4.0 on model-assisted items assumes the vendor's consumer terms leave output rights with the user; not checked.
 - **Model-assisted facts.** Every gold fact was checked by hand on a cited page, but the fact-check is one person's; no second human review.

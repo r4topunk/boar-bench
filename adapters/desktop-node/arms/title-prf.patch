@@ -1,0 +1,275 @@
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..3994e0f4 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -216,6 +216,7 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
++    ...(h.leadSim !== undefined ? { leadSimilarity: h.leadSim } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.url.test.ts b/src/rag/packs.url.test.ts
+index 96a716c4..7f472853 100644
+--- a/src/rag/packs.url.test.ts
++++ b/src/rag/packs.url.test.ts
+@@ -27,3 +27,11 @@ describe("pack hits as retrieved chunks", () => {
+     expect(packHitToChunk("prep", { ...hit, section: "Prevention", action: false }).action).toBe(false);
+   });
+ });
++
++describe("pack hits carry their article-lead cosine (title PRF)", () => {
++  it("maps leadSim to leadSimilarity, and leaves it out when unknown", () => {
++    const hit = { articleId: 1, chunkId: 2, title: "Altitude sickness", section: "Treatment", text: "Descend.", start: 0, end: 8, score: 1, via: "bm25" as const, source: "enwikivoyage" as const, views: 0, lead: false, action: true };
++    expect(packHitToChunk("wv", { ...hit, leadSim: 0.65 }).leadSimilarity).toBe(0.65);
++    expect(packHitToChunk("wv", hit)).not.toHaveProperty("leadSimilarity");
++  });
++});
+diff --git a/src/rag/retrieve.types.ts b/src/rag/retrieve.types.ts
+index 945fdbb9..e5af9cfc 100644
+--- a/src/rag/retrieve.types.ts
++++ b/src/rag/retrieve.types.ts
+@@ -15,4 +15,9 @@ export interface RetrievedChunk extends ChunkRecord {
+    * false for a lead or a background section; absent for sources without sections.
+    */
+   action?: boolean;
++  /**
++   * Large (format-2) pack passages only: cosine of the question to the passage's ARTICLE lead (the pack's shipped
++   * lead vectors), when the pack has one. Not used for ranking; the answer's lexical stages read it (title PRF).
++   */
++  leadSimilarity?: number;
+ }
+diff --git a/src/rag/wikiPack.leadsim.test.ts b/src/rag/wikiPack.leadsim.test.ts
+new file mode 100644
+index 00000000..ebf0936d
+--- /dev/null
++++ b/src/rag/wikiPack.leadsim.test.ts
+@@ -0,0 +1,42 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { decompress } from "fzstd";
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { WikiPack } from "./wikiPack";
++
++
++// Made-up, test-only guides; 4-dim int8 lead vectors stand in for bge-small (question vector [1, 0, 0, 0]).
++const pad = "\n\n## Notes\n\n" + Array.from({ length: 6 }, (_, i) => `Filler line ${i} about nothing in particular.`).join(" ");
++const ARTICLES = [
++  { page_id: 1, title: "Altitude sickness", views: 0, source: "enwikivoyage", text: "# Altitude sickness\n\nAltitude sickness hits climbers. Treatment: descend to a lower altitude." + pad },
++  { page_id: 2, title: "Hilltown", views: 0, source: "enwikivoyage", text: "# Hilltown\n\nHilltown roads are steep; climbers feel the altitude." + pad },
++];
++let pack: WikiPack;
++
++beforeAll(async () => {
++  const dir = mkdtempSync(join(tmpdir(), "boar-leadsim-"));
++  writeFileSync(join(dir, "a.jsonl"), ARTICLES.map((a) => JSON.stringify(a)).join("\n") + "\n");
++  const out = join(dir, "p.sqlite");
++  execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", out, "--shards", join(dir, "a.jsonl"), "--no-embed", "--chunk-chars", "300"], { stdio: "pipe" });
++  const db = new DatabaseSync(out);
++  db.exec("CREATE TABLE IF NOT EXISTS lead_vecs (article_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++  const id = (t: string) => (db.prepare("SELECT id FROM articles WHERE title = ?").get(t) as { id: number }).id;
++  db.prepare("INSERT INTO lead_vecs VALUES (?, 1, ?)").run(id("Altitude sickness"), new Uint8Array(new Int8Array([100, 75, 0, 0]).buffer));
++  db.close();
++  pack = await WikiPack.open(nodeSqliteDatabase(out), decompress);
++}, 60000);
++
++describe("lead cosine on pack hits (title PRF input)", () => {
++  it("is attached per hit when searched with a question vector, absent without a vector or a lead", async () => {
++    const hits = await pack.search("climbers altitude", { k: 6, queryVec: new Float32Array([1, 0, 0, 0]) });
++    const alt = hits.find((h) => h.title === "Altitude sickness")!;
++    expect(alt.leadSim).toBeCloseTo(0.8, 2);
++    expect(hits.find((h) => h.title === "Hilltown")?.leadSim).toBeUndefined();
++    expect((await pack.search("climbers altitude", { k: 6 })).every((h) => h.leadSim === undefined)).toBe(true);
++  });
++});
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..f7b55c00 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -75,6 +75,8 @@ export interface PackHit {
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** Cosine of the question to this article's lead vector, when searched with a queryVec and the pack has one. */
++  leadSim?: number;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -923,7 +925,14 @@ export class WikiPack {
+         hits = [...hits, ...more.filter((h) => !seen.has(h.chunkId))];
+       }
+     }
+-    return { hits: hits.slice(0, limit + lay), stems };
++    const out = hits.slice(0, limit + lay);
++    // The question's cosine to each hit's article lead (no effect on ranking): the answer's lexical stages use it to
++    // recognise a source whose subject the question describes in other words (title PRF, answer.ts).
++    if (queryVec && out.length) {
++      const lead = await this.leadSimilarity(out.map((h) => h.articleId), queryVec);
++      for (const h of out) if (lead.has(h.articleId)) h.leadSim = lead.get(h.articleId);
++    }
++    return { hits: out, stems };
+   }
+ 
+   private async titleHits(ids: number[], stems: Stem[], ranks = 5, action = false, explain = false): Promise<PackHit[]> {
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..689024b4 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1906,3 +1906,32 @@ describe("answer(): multi-pass answer language", () => {
+     expect(seen).toEqual([PT_ANSWER_LANGUAGE, undefined]);
+   });
+ });
++
++describe("answer(): title PRF keeps a source whose subject the question describes in other words (vit-hlt-002)", () => {
++  // Without "in the Andes": a proper noun of the question must still be in the source (onTopic), PRF or not.
++  const q = "I'm at 4,000 m with a headache and nausea. What should I do?";
++  const sikkim = () => chunk("sk", "Wikivoyage: North Sikkim", "Stay safe: The roads are steep and winding and nausea is very common. Carry water.");
++  const altitude = (lead?: number) => ({
++    ...chunk("as", "Wikivoyage: Altitude sickness", "Treatment: The most important treatment is to descend to a lower altitude as soon as possible. Rest and do not go higher until symptoms are gone."),
++    ...(lead !== undefined ? { leadSimilarity: lead } : {}),
++  });
++  const run = async (retrieved: RetrievedChunk[]) => {
++    f = makeFake();
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    f.retrieved = retrieved;
++    const { events, result } = await collect(q);
++    const sources = ((events.find((e) => e.type === "sources") as any)?.sources ?? []) as RetrievedChunk[];
++    return { titles: sources.map((s) => s.title), codes: result.receipt.reasonCodes };
++  };
++  it("without a lead cosine (today) the condition's guide shares no word with the question and is cut", async () => {
++    const { titles, codes } = await run([altitude(), sikkim()]);
++    expect(titles).not.toContain("Wikivoyage: Altitude sickness");
++    expect(codes).not.toContain("context:title-prf");
++  });
++  it("with its lead at 0.65 the guide's title joins the match and it reaches the prompt", async () => {
++    const { titles, codes } = await run([altitude(0.65), sikkim()]);
++    expect(titles).toContain("Wikivoyage: Altitude sickness");
++    expect(codes).toContain("context:title-prf");
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..6cd86224 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -62,6 +62,7 @@ import {
+   onHealthTopic,
+   riskyHealthInstruction,
+   termCoverage,
++  titlePrfQuery,
+ } from "./context";
+ import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
+ import { englishNamesIn } from "../rag/ptLexicon";
+@@ -786,6 +787,8 @@ export function createAnswerer(deps: AnswerDeps) {
+       // ML-KEM page lost to "Jump flooding algorithm" in compression (Sextant cry-018-pt, gate bc7db6d).
+       const acronyms = [...new Set(req.query.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b|\b[A-Z]{2,}[0-9]*\b/g) ?? [])];
+       const matchQuery = english ?? (names.length ? [...names, ...ids, ...acronyms].join(" ") : req.query);
++      /** What compression and the topic filter match against: matchQuery + title PRF terms, set once sources are retrieved. */
++      let lexicalQuery = matchQuery;
+       // Lexicon names are article titles: a source must be titled by one ("Season", not "Hurricane Season ...").
+       const onSubject = (c: RetrievedChunk) =>
+         history
+@@ -794,7 +797,7 @@ export function createAnswerer(deps: AnswerDeps) {
+             ? // Or the question's own words: identifiers and English terms a PT question uses as written
+               // ("EIP-1559", "proof of stake"); with weak names (["Ethereum"]) the EIP sources were dropped.
+               namedByLexicon(names, c) || onTopic(req.query, c)
+-            : onTopic(matchQuery, c);
++            : onTopic(lexicalQuery, c);
+       // The packs lift an article's Treatment/Management section only when the query asks what to
+       // do (Bramble b03c959); the article name alone ("snakebite") brought back "Signs and symptoms".
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.
+@@ -840,7 +843,11 @@ export function createAnswerer(deps: AnswerDeps) {
+       // A retrieved page of an identifier the question names always gets a place, first (Boar, dddd8a8).
+       const pinned = new Set(ids.length ? raw.filter((c) => titleHasIdentifier(c.title, ids)).map((c) => c.chunkId) : []);
+       if (pinned.size) reasonCodes.push(`context:pinned-${pinned.size}`);
+-      const compressed = compressContext(matchQuery, raw, { tokenBudget: budget, pinned });
++      // Title PRF: the titles of sources close to the question in meaning join the words compression and the topic
++      // filter look for (vit-hlt-002: symptoms, no condition name; Altitude sickness §Treatment scored 0 and was cut).
++      if (!history) lexicalQuery = titlePrfQuery(matchQuery, raw);
++      if (lexicalQuery !== matchQuery) reasonCodes.push("context:title-prf");
++      const compressed = compressContext(lexicalQuery, raw, { tokenBudget: budget, pinned });
+       let sources = compressed.chunks;
+       reasonCodes.push(`context:${compressed.tokensBefore}->${compressed.tokensAfter}`);
+ 
+diff --git a/src/routing/context.test.ts b/src/routing/context.test.ts
+index d160f388..aa57af50 100644
+--- a/src/routing/context.test.ts
++++ b/src/routing/context.test.ts
+@@ -35,8 +35,7 @@ import {
+   mergeSources,
+   scoreSentences,
+   selectInstant,
+-  splitSentences,
+-} from "./context";
++  splitSentences, titlePrfQuery } from "./context";
+ 
+ const chunk = (chunkId: string, title: string, body: string, score = 1): RetrievedChunk => ({
+   chunkId,
+@@ -849,3 +848,28 @@ describe("isHealthQuestion: health for the content, translation for the form (Se
+     expect(isHealthQuestion("Como se diz obrigado em tailandês, e muda se eu for homem ou mulher?")).toBe(false);
+   });
+ });
++
++describe("titlePrfQuery (title pseudo-relevance feedback)", () => {
++  const q = "I'm at 4,000 m in the Andes with a headache and nausea. What should I do?";
++  it("adds the lowercased main title of sources at cos >= 0.60 (format-2 lead cosine first, else the chunk's)", () => {
++    expect(
++      titlePrfQuery(q, [
++        { title: "Wikivoyage: Altitude sickness", leadSimilarity: 0.65, similarity: undefined },
++        { title: "Wikivoyage: North Sikkim", leadSimilarity: 0.41 },
++        { title: "Mountain sickness (medicine)", similarity: 0.72 },
++        { title: "Headache", similarity: 0.9 }, // already a question word
++        { title: "Wikivoyage: Altitude sickness", leadSimilarity: 0.65 },
++      ])
++    ).toBe(`${q} altitude sickness mountain sickness`);
++  });
++  it("leaves the question alone without a close source, and never adds a title it already contains", () => {
++    expect(titlePrfQuery(q, [{ title: "Wikivoyage: Andes", leadSimilarity: 0.5 }])).toBe(q);
++    expect(titlePrfQuery("What is the Andes?", [{ title: "Wikivoyage: Andes", leadSimilarity: 0.8 }])).toBe("What is the Andes?");
++    expect(titlePrfQuery(q, [{ title: "Untitled" }])).toBe(q);
++  });
++  it("a PRF title never becomes a proper noun the topic filter requires", () => {
++    const prf = titlePrfQuery("How do I treat a headache?", [{ title: "Wikivoyage: Altitude sickness", leadSimilarity: 0.7 }]);
++    const c = { chunkId: "x", docId: "x", title: "Headache", body: "A headache is pain in the head. Rest and drink water.", score: 1, matchType: "lexical" as const };
++    expect(onTopic(prf, c)).toBe(onTopic("How do I treat a headache?", c));
++  });
++});
+diff --git a/src/routing/context.ts b/src/routing/context.ts
+index 44d473a6..44e951a8 100644
+--- a/src/routing/context.ts
++++ b/src/routing/context.ts
+@@ -516,6 +516,28 @@ function mainTitle(title: string): string {
+   return title.replace(/^(Wikipedia|Wikibooks|Wikivoyage|US government|Appropedia|ethereum\.org|Ethereum EIPs\/ERCs|Ethereum specs|Bitcoin BIPs):\s*/, "").split(/:\s+/)[0];
+ }
+ 
++/** Question↔source cosine above which a retrieved source's title words join the lexical match (p99 random lead 0.53). */
++export const TITLE_PRF_MIN_SIMILARITY = 0.6;
++
++/**
++ * Title pseudo-relevance feedback (Sonar, onsubject-gold-drops-diagnosis option B): the question extended with the
++ * main titles of the retrieved sources that are semantically close to it (a format-2 passage's article-lead cosine,
++ * else the chunk's own cosine), lowercased so they never count as the question's proper nouns. Compression and the
++ * topic filter match words; "headache and nausea at 4,000 m" shares none with "Altitude sickness > Treatment",
++ * whose lead is at 0.65 from the question. Retrieval is unchanged.
++ */
++export function titlePrfQuery(query: string, sources: Pick<RetrievedChunk, "title" | "similarity" | "leadSimilarity">[]): string {
++  const have = query.toLowerCase();
++  const extra: string[] = [];
++  for (const c of sources) {
++    const sim = c.leadSimilarity ?? c.similarity;
++    if (sim === undefined || sim < TITLE_PRF_MIN_SIMILARITY) continue;
++    const t = mainTitle(c.title).replace(/\s*\(.*\)$/, "").trim().toLowerCase();
++    if (t && !have.includes(t) && !extra.includes(t)) extra.push(t);
++  }
++  return extra.length ? `${query} ${extra.join(" ")}` : query;
++}
++
+ /** Every word of one title segment is a question term ("Monsoon"; "Ethereum EIPs/ERCs: EIP-4844: …" by its "EIP-4844" part). */
+ function titleSegmentNamed(title: string, q: Set<string>): boolean {
+   return title.split(/:\s+/).some((seg) => {

@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-boar-medlineplus-en",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "3ec97ffee9d68532c7990f904b5299b5930db980cc36a9bf9dd71c96a1cc7527",
+ "questions_sha256": "e8c222cf8750e3eb74ef0d10fb4a50dee426a63ffc9096b32b91a623612b8587",
+ "jsonl_sha256": "f5bf857085dd81b3448c34a65ea6e3588576130b235f8b62461c603703ca2a85"
+}

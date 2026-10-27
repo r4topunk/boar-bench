@@ -22,7 +22,7 @@ from scorers import stats  # noqa: E402
 
 SCORER_VERSION = "boar-eval-score 0.1.0 (port of rnd/bench/score/score.py 3cbf85bc)"
 BRIDGE = HERE / "bridge.mjs"
-VITALIK_BAR = 0.50
+BOUNTY_BAR = 0.50
 JUDGE_CW_MAX = 1.0
 DANGER_PENALTY = -9  # t = 0.9 -> penalty t/(1-t) = 9 (Kalai et al.)
 PRECHECK_CAVEAT = ("precheck binary agreement with blind hand labels: 88%, upper bound; "
@@ -87,9 +87,9 @@ def race(r):
 def bar_verdict(ratio, ci):
     if ratio is None:
         return "not judged"
-    if ci[0] >= VITALIK_BAR:
+    if ci[0] >= BOUNTY_BAR:
         return "MEETS (95% CI lower bound >= 0.50)"
-    if ci[1] < VITALIK_BAR:
+    if ci[1] < BOUNTY_BAR:
         return "BELOW (95% CI upper bound < 0.50)"
     return "INCONCLUSIVE (95% CI contains 0.50)"
 
@@ -103,7 +103,7 @@ def quality_block(judge_res, n_questions):
         "status": "ok", "n_judged": s["n"], "n_questions": n_questions, "coverage": s["n"] / n_questions,
         "quality_ratio": s["qualityRatio"], "quality_ratio_ci95": ci,
         "race_equivalent": race(s["qualityRatio"]), "race_equivalent_ci95": [race(ci[0]), race(ci[1])],
-        "vitalik_bar": {"ratio": VITALIK_BAR, "race": race(VITALIK_BAR), "verdict": bar_verdict(s["qualityRatio"], ci)},
+        "bounty_bar": {"ratio": BOUNTY_BAR, "race": race(BOUNTY_BAR), "verdict": bar_verdict(s["qualityRatio"], ci)},
         "win": s["boarWin"], "tie": s["tie"], "loss": s["refWin"],
         "win_score": s["winScore"], "win_score_ci95": s["winScoreCI"],
         "position_consistency": s["positionConsistency"], "correct_rate_judge": judge_res["correctRate"],

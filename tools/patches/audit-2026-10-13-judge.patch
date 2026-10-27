@@ -1,0 +1,179 @@
+--- a/boar-eval/harness/judge.mjs
++++ b/boar-eval/harness/judge.mjs
+@@ -8,10 +8,16 @@
+ // Errored traces (t.error) are dropped with a WARN naming the count (FAILCLOSED-2026-10-11); --strict makes that (and any id without a trace or
+ // reference) exit 5 before any call; --floor-errored keeps them and appends, without any LLM call, a floor-score row per order (boar 1/1/1 on the
+ // 1-5 rubric, winner "ref", reference scores imputed from this file's judged rows, fields error/floorScored/refImputed) so the item stays in the ratio.
++// Resume provenance (PIPELINE-AUDIT 2026-10-13 F1): an ok row already in --out is reused only if its tracesSha256, questionsSha256,
++// refsSha256, judgeVersion and requested model match this run (legacy rows without requestedModel: judgeModel must contain the
++// requested --judge-model). Otherwise exit 7 before any call, naming the stale rows, unless --allow-splice declares the splice
++// (multi-set files, the verdict copy for byte-identical answers, hybrid files); new rows carry requestedModel.
++// F4: floor rows are not "done" once the item's trace is no longer errored (they are dropped from --out and the item is judged).
++// F9: --ids entries are trimmed; ids not in the questions file are named on stderr (exit 5 with --strict).
+ //
+ // Usage: node harness/judge.mjs --traces T.jsonl --out J.jsonl [--bench DIR] [--refs FILE] [--ids a,b] [--limit CALLS]
+-//          [--seed 7] [--gap-ms 5000] [--judge-model opus] [--system NAME] [--dry-run] [--floor-errored] [--strict]
+-import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync } from "node:fs";
++//          [--seed 7] [--gap-ms 5000] [--judge-model opus] [--system NAME] [--dry-run] [--floor-errored] [--strict] [--allow-splice]
++import { appendFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, writeFileSync } from "node:fs";
+ import { createHash } from "node:crypto";
+ import { execFileSync } from "node:child_process";
+ import { basename, dirname, join, resolve } from "node:path";
+@@ -74,7 +80,9 @@
+ const ref = Object.fromEntries(readJsonl(refPath).filter((r) => r.ok).map((r) => [r.id, r]));
+ const t0r = Object.values(traces).find((t) => !t.error) ?? Object.values(traces)[0];
+ const system = get("--system", `${t0r?.engine?.arm ?? "system"}@${t0r?.engine?.commit ?? "?"}`);
+-const onlyIds = get("--ids") ? new Set(get("--ids").split(",")) : null;
++const onlyIds = get("--ids") ? new Set(get("--ids").split(",").map((x) => x.trim()).filter(Boolean)) : null;
++const unknownIds = onlyIds ? [...onlyIds].filter((id) => !questions[id]) : [];
++if (unknownIds.length) { console.error(`WARN --ids: ${unknownIds.length} ids not in the questions file (${qPath}): ${unknownIds.join(",")}`); if (STRICT) process.exit(5); }
+ let ids = Object.keys(questions).filter((id) => questions[id].grading?.type !== "venue-list" && (!onlyIds || onlyIds.has(id)));
+ const droppedErrored = ids.filter((id) => erroredIds.has(id) && !FLOOR_ERRORED && ref[id]);
+ if (droppedErrored.length) console.warn(`WARN dropped ${droppedErrored.length} errored traces (item left out of the ratio; use --floor-errored to score at the floor): ${droppedErrored.join(",")}`);
+@@ -86,13 +94,35 @@
+ const SPEND = join(REPO, "runs", "judge-spend.jsonl"); mkdirSync(dirname(SPEND), { recursive: true });
+ const floorIds = FLOOR_ERRORED ? ids.filter((id) => traces[id].error) : [];
+ ids = ids.filter((id) => !traces[id].error);
+-const done = new Set(existsSync(out) ? readJsonl(out).filter((r) => r.ok).map((r) => `${r.queryId}|${r.order}`) : []);
++const tracesSha = sha(tracesPath); const ALLOW_SPLICE = a.includes("--allow-splice");
++let prev = existsSync(out) ? readJsonl(out) : [];
++// F4: a floor row stops counting as done once its trace is no longer errored (dropped from --out below, the item is judged instead)
++const supersededFloor = prev.filter((r) => r.ok && r.floorScored && traces[r.queryId] && !traces[r.queryId].error);
++if (supersededFloor.length) {
++  console.warn(`floor rows superseded (trace no longer errored): ${supersededFloor.length} rows (${[...new Set(supersededFloor.map((r) => r.queryId))].join(",")})` + (dryRun ? "; would be dropped" : "; dropped from " + out));
++  prev = prev.filter((r) => !supersededFloor.includes(r));
++  if (!dryRun) { writeFileSync(out + ".tmp", prev.map((r) => JSON.stringify(r) + "\n").join("")); renameSync(out + ".tmp", out); }
++}
++// F1: resume reuses an ok row only when its provenance matches this run (or the splice is declared with --allow-splice)
++const planned = new Set([...ids, ...floorIds].flatMap((id) => ["boarA", "boarB"].map((o) => `${id}|${o}`)));
++const modelOk = (r) => (r.requestedModel !== undefined ? r.requestedModel === judgeModel : r.floorScored || String(r.judgeModel ?? "").includes(judgeModel));
++const PROV = [["tracesSha256", (r) => r.tracesSha256 === tracesSha], ["questionsSha256", (r) => r.questionsSha256 === qSha], ["refsSha256", (r) => r.refsSha256 === refsSha],
++              ["judgeVersion", (r) => r.judgeVersion === JUDGE_VERSION], ["model", modelOk]];
++const stale = prev.filter((r) => r.ok && planned.has(`${r.queryId}|${r.order}`)).map((r) => [r, PROV.filter(([, f]) => !f(r)).map(([k]) => k)]).filter(([, bad]) => bad.length);
++if (stale.length) {
++  const by = {}; for (const [, bad] of stale) for (const k of bad) by[k] = (by[k] ?? 0) + 1;
++  const msg = `${stale.length} ok rows in ${out} differ in provenance from this run (${Object.entries(by).map(([k, v]) => `${k}: ${v}`).join(", ")}; ` +
++    `this run: traces ${tracesSha.slice(0, 12)} questions ${qSha.slice(0, 12)} refs ${refsSha.slice(0, 12)} ${JUDGE_VERSION} model ${judgeModel}); first: ${stale.slice(0, 5).map(([r]) => `${r.queryId}|${r.order}`).join(",")}`;
++  if (!ALLOW_SPLICE) { console.error(`STALE: ${msg}. Refusing to resume (exit 7, no call): use a new --out, or pass --allow-splice to declare the splice.`); process.exit(7); }
++  console.warn(`SPLICE (--allow-splice): reusing ${msg}`);
++}
++const done = new Set(prev.filter((r) => r.ok).map((r) => `${r.queryId}|${r.order}`));
+ const todo = ids.flatMap((id) => ["boarA", "boarB"].map((o) => `${id}|${o}`)).filter((k) => !done.has(k));
+ console.log(`judge: ${ids.length} items, ${todo.length} calls to do (${done.size} done), refs ${refsSha.slice(0, 12)}, questions ${qSha.slice(0, 12)}` + (FLOOR_ERRORED ? `, ${floorIds.length} errored items to floor-score` : ""));
+ if (dryRun) process.exit(0);
+ 
+ const cliVersion = execFileSync("claude", ["--version"], { env: cleanEnv(), encoding: "utf8" }).trim();
+-const first = firstOrders(ids, seed); const tracesSha = sha(tracesPath);
++const first = firstOrders(ids, seed);
+ let calls = 0; const t0 = Date.now();
+ for (const id of ids) {
+   const q = questions[id]; const notes = (q.rubric ?? []).join(" / "); const tr = traces[id];
+@@ -111,7 +141,7 @@
+     if (!ok) { console.error(`API/verdict ERROR at ${id}/${order}: ${r.error ?? "no structured_output"}. Stopped (no retry); rerun resumes.`); process.exit(4); }
+     const row = { queryId: id, category: q.category, order, ok, verdict, mapped: mapVerdict(verdict, boarIsA), system,
+                   reference: `${basename(dirname(refPath))} ${basename(refPath, ".jsonl")}`, runId: tr.runId, commit: tr.engine.commit, arm: tr.engine.arm,
+-                  judgeModel: r.json ? Object.keys(r.json.modelUsage ?? {})[0] : undefined, judgeVersion: JUDGE_VERSION, seed,
++                  judgeModel: r.json ? Object.keys(r.json.modelUsage ?? {})[0] : undefined, requestedModel: judgeModel, judgeVersion: JUDGE_VERSION, seed,
+                   durationMs: r.json?.duration_ms, listPriceEquivalentUsd: r.json?.total_cost_usd, cliVersion, tracesSha256: tracesSha,
+                   refsSha256: refsSha, questionsSha256: qSha, createdAt: new Date().toISOString() };
+     appendFileSync(out, JSON.stringify(row) + "\n");
+@@ -128,7 +158,7 @@
+     const err = typeof e === "string" ? e : `${e.code ?? "error"}: ${e.message ?? JSON.stringify(e)}`;
+     const row = { queryId: id, category: questions[id].category, order, ok: true, verdict: null, mapped: { winner: "ref", boar: Object.fromEntries(K.map((k) => [k, 1])), ref: refMean },
+                   floorScored: true, refImputed: true, error: `errored trace scored at the rubric floor (1/1/1): ${err}`, system, runId: tr.runId, commit: tr.engine?.commit, arm: tr.engine?.arm,
+-                  judgeModel: "none (floor)", judgeVersion: JUDGE_VERSION, seed, tracesSha256: tracesSha, refsSha256: refsSha, questionsSha256: qSha, createdAt: new Date().toISOString() };
++                  judgeModel: "none (floor)", requestedModel: judgeModel, judgeVersion: JUDGE_VERSION, seed, tracesSha256: tracesSha, refsSha256: refsSha, questionsSha256: qSha, createdAt: new Date().toISOString() };
+     appendFileSync(out, JSON.stringify(row) + "\n"); n++;
+   }
+   console.log(`floor-errored: ${n} rows for ${floorIds.length} errored items (${floorIds.join(",")})`);
+--- a/rnd/research/coordinator/arms/deepthink/tools/shard_judge.sh
++++ b/rnd/research/coordinator/arms/deepthink/tools/shard_judge.sh
+@@ -6,19 +6,25 @@
+ # FAIL CLOSED (2026-10-11): exits non-zero unless every shard exited 0 AND every id has both orders judged.
+ #   rc 0 ok | 1 incomplete (ids named on stderr, listed in <out>.missing) | 3 a shard failed (rc in <out>.shards/shard-K.rc) | 4 STOP file present
+ #   (<out>.shards/STOP or <out>.STOP: refuses to start; also checked before every shard rerun; touched after 2 dies) | 5 output locked (mkdir lock <out>.lock).
+-# Env: BOAR_EVAL_DIR (default boar-eval), JUDGE_CMD (default "node harness/judge.mjs"; tests stub it), JUDGE_FLOOR_ERRORED=1 -> pass --floor-errored.
++# Env: BOAR_EVAL_DIR (default boar-eval), JUDGE_CMD (default "node harness/judge.mjs"; tests stub it), JUDGE_FLOOR_ERRORED=1 -> errored traces are
++#   floor-scored in one final judge.mjs --floor-errored pass over the concatenated output (0 calls; reference mean pooled over all shards, not per shard),
++#   ALLOW_SPLICE=1 -> pass --allow-splice (judge.mjs resumes rows of other provenance) and skip the one-tracesSha256 check below.
++# PIPELINE-AUDIT 2026-10-13: F1 the final check also asserts one judgeModel (floor rows aside), requestedModel = this run's model when present, and
++#   (unless ALLOW_SPLICE=1) every row's tracesSha256 = sha256 of <traces>; F4 floor pass as above; F6 INT/TERM kill the shards before the lock is released.
+ set -u
+ abs() { case $1 in /*) echo "$1";; *) echo "$PWD/$1";; esac; }
+ TR=$(abs "$1"); OUT=$(abs "$2"); BENCH=$(abs "$3"); IDF=$(abs "$4"); SYS=$5; N=${6:-4}; MODEL=${7:-haiku}
+ EVAL=${BOAR_EVAL_DIR:-<workspace>/boar-eval}; read -r -a JC <<< "${JUDGE_CMD:-node harness/judge.mjs}"
+ if [ "$MODEL" = opus ]; then JM=(--judge-model opus); else JM=(--judge-model claude-haiku-5-5 --effort low); fi
+-[ "${JUDGE_FLOOR_ERRORED:-0}" = 1 ] && JM+=(--floor-errored)
++[ "${ALLOW_SPLICE:-0}" = 1 ] && JM+=(--allow-splice)
+ D="${OUT%.jsonl}.shards"; MISSING="${OUT%.jsonl}.missing"
+ for st in "$OUT.STOP" "$D/STOP"; do [ -e "$st" ] && { echo "STOP file present ($st): refusing to run; remove it after fixing the cause" >&2; exit 4; }; done
+ LK="$OUT.lock"; mkdir -p "$(dirname "$OUT")"
+ mkdir "$LK" 2>/dev/null || { echo "LOCKED: $LK is held ($(cat "$LK/owner" 2>/dev/null)); another judge run owns $OUT. If that run is dead, rm -r $LK" >&2; exit 5; }
+ echo "pid=$$ started=$(date '+%F %T') host=$(hostname -s)" > "$LK/owner"
+-trap 'rm -rf "$LK"' EXIT; trap 'exit 130' INT TERM
++trap 'rm -rf "$LK"' EXIT
++on_sig() { local j; for j in $(jobs -p); do pkill -TERM -P "$j" 2>/dev/null; kill "$j" 2>/dev/null; done; wait; exit 130; }   # F6: shards die before the lock goes
++trap on_sig INT TERM
+ cd "$EVAL" || exit 2
+ mkdir -p "$D"; rm -f "$D"/shard-*.rc
+ IDS=(); while read -r x; do [ -n "$x" ] && IDS+=("$x"); done < "$IDF"; n=${#IDS[@]}
+@@ -36,10 +42,19 @@
+ s=$(date +%s); for k in $(seq 0 $((N-1))); do shard "$k" & done; wait
+ cat "$D"/shard-*.jsonl > "$OUT" 2>/dev/null || : > "$OUT"
+ bad=0; for k in $(seq 0 $((N-1))); do r=$(cat "$D/shard-$k.rc" 2>/dev/null || echo "?"); [ "$r" = 0 ] || { echo "shard $k failed rc=$r (see $D/shard-$k.log)" >&2; bad=1; }; done
+-node -e 'const fs=require("fs");const [out,idf,miss]=process.argv.slice(1);const r=fs.readFileSync(out,"utf8").split("\n").filter(Boolean).map(JSON.parse);const ids=fs.readFileSync(idf,"utf8").split("\n").map(x=>x.trim()).filter(Boolean);
++if [ $bad = 0 ] && [ "${JUDGE_FLOOR_ERRORED:-0}" = 1 ]; then   # F4: floor-score errored traces once, over all shards' rows (pooled reference mean)
++  "${JC[@]}" --traces "$TR" --out "$OUT" --bench "$BENCH" --ids "$(IFS=,; echo "${IDS[*]}")" "${JM[@]}" --floor-errored --gap-ms 0 --seed 7 --system "$SYS" >>"$D/floor.log" 2>&1 \
++    || { echo "floor pass failed rc=$? (see $D/floor.log)" >&2; bad=1; }; fi
++TSHA=$(shasum -a 256 "$TR" | cut -d' ' -f1); RQM=${JM[1]}
++node -e 'const fs=require("fs");const [out,idf,miss,tsha,rqm,splice]=process.argv.slice(1);const r=fs.readFileSync(out,"utf8").split("\n").filter(Boolean).map(JSON.parse);const ids=fs.readFileSync(idf,"utf8").split("\n").map(x=>x.trim()).filter(Boolean);
+ const k=new Set(r.map(x=>x.queryId+"|"+x.order)),ok=new Set(r.filter(x=>x.ok).map(x=>x.queryId+"|"+x.order));const m=ids.filter(i=>!ok.has(i+"|boarA")||!ok.has(i+"|boarB"));fs.writeFileSync(miss,m.map(x=>x+"\n").join(""));
+ console.log(`rows ${r.length} unique ${k.size} ok ${r.filter(x=>x.ok).length} model ${[...new Set(r.map(x=>x.judgeModel))]} expected ${2*ids.length}`);
+ if(m.length)console.error(`MISSING ${m.length} of ${ids.length} ids (no ok judgment in both orders): ${m.join(",")}`);
+-process.exit(r.length===2*ids.length&&k.size===r.length&&!m.length?0:1)' "$OUT" "$IDF" "$MISSING"; chk=$?
++const okr=r.filter(x=>x.ok),jm=[...new Set(okr.filter(x=>!x.floorScored).map(x=>String(x.judgeModel)))],rq=[...new Set(okr.map(x=>x.requestedModel).filter(x=>x!==undefined))],ts=[...new Set(okr.map(x=>x.tracesSha256).filter(x=>x!==undefined))];let prov=true;
++if(jm.length>1){console.error(`PROVENANCE: ${jm.length} judge models in ${out}: ${jm.join(",")}`);prov=false}
++const lg=[...new Set(okr.filter(x=>!x.floorScored&&x.requestedModel===undefined&&x.tracesSha256!==undefined).map(x=>String(x.judgeModel)))].filter(x=>!x.includes(rqm));
++if(rq.some(x=>x!==rqm)||lg.length){console.error(`PROVENANCE: requested model ${[...rq,...lg].join(",")} != this run ${rqm}`);prov=false}
++if(splice!=="1"&&ts.some(x=>x!==tsha)){console.error(`PROVENANCE: tracesSha256 ${ts.map(x=>x.slice(0,12)).join(",")} != traces ${tsha.slice(0,12)} (ALLOW_SPLICE=1 declares a splice)`);prov=false}
++process.exit(r.length===2*ids.length&&k.size===r.length&&!m.length&&prov?0:1)' "$OUT" "$IDF" "$MISSING" "$TSHA" "$RQM" "${ALLOW_SPLICE:-0}"; chk=$?
+ echo "wall $(( $(date +%s) - s )) s; first log line: $(head -1 "$D/shard-0.log" 2>/dev/null | cut -c1-120)"
+ [ $bad -ne 0 ] && exit 3; exit $chk
+--- a/rnd/research/coordinator/arms/_lib/tests/run.sh
++++ b/rnd/research/coordinator/arms/_lib/tests/run.sh
+@@ -146,6 +146,35 @@
+ sed -n 11,20p $W/pc/ids > $W/pc/ids_unch; $LIB/arm.sh $W/arm.conf precheck $W/pc/mk.jsonl $W/pc/ctl.jsonl $W/pc/ids_unch > $W/pc/o4 2>&1; r=$?; [ $r = 8 ] && grep -q "n=10 changed=0" $W/pc/o4 && grep -q "^unchanged: " $W/pc/o4; ok "precheck idsFile restricted to unchanged items: rc=$r (expect 8), ids listed" $?
+ $LIB/arm.sh $W/arm.conf precheck $W/pc/mk.jsonl $W/pc/ctl.jsonl --min 0.6 > $W/pc/o5 2>&1; r=$?; [ $r = 8 ]; ok "precheck --min 0.6 on 50%: rc=$r (expect 8)" $?
+ 
++echo "T9 resume provenance (audit F1): rows from other traces / another judge model are refused unless the splice is declared (0 judge calls)"
++SJ=$ARMS/deepthink/tools/shard_judge.sh
++cp $A.judgments.jsonl $W/t9.jsonl; PATH=$W/bin:$PATH node $EVAL/harness/judge.mjs --traces $B.traces.jsonl --out $W/t9.jsonl --bench $W/bench --refs $W/bench/refs.jsonl --judge-model claude-haiku-5-5 --dry-run > $W/t9a.out 2>&1; r=$?
++[ $r = 7 ] && grep -q "^STALE: $((2*N)) ok rows" $W/t9a.out; s_=$?; ok "Repro A (deep35 Opus rows, bmoe traces, Haiku requested): rc=$r (expect 7): $(head -c 110 $W/t9a.out)" $s_
++PATH=$W/bin:$PATH node $EVAL/harness/judge.mjs --traces $B.traces.jsonl --out $W/t9.jsonl --bench $W/bench --refs $W/bench/refs.jsonl --judge-model claude-haiku-5-5 --dry-run --allow-splice > $W/t9b.out 2>&1; r=$?
++[ $r = 0 ] && grep -q "^SPLICE" $W/t9b.out && grep -q "0 calls to do" $W/t9b.out; s_=$?; ok "--allow-splice declares it: rc=$r, SPLICE warning, 0 calls" $s_
++mkdir -p $W/bench9/refs; cp $W/bench/questions.jsonl $W/bench9/; cp $W/bench/refs.jsonl $W/bench9/refs/refs.jsonl   # shard_judge passes no --refs
++export BOAR_EVAL_DIR=$EVAL; unset JUDGE_CMD; mkdir -p $W/t9s/out.shards; cp $A.judgments.jsonl $W/t9s/out.shards/shard-0.jsonl; : > $W/claude.calls
++PATH=$W/bin:$PATH $SJ $B.traces.jsonl $W/t9s/out.jsonl $W/bench9 $W/ids t9 1 opus > $W/t9c.out 2>&1; r=$?
++[ $r = 3 ] && grep -q "### exit 7" $W/t9s/out.shards/shard-0.log && grep -q "PROVENANCE: tracesSha256" $W/t9c.out && [ ! -s $W/claude.calls ]; s_=$?; ok "Repro B (shard-0 = deep35 rows, bmoe traces): shard_judge rc=$r (expect 3; shard exit 7 + PROVENANCE), 0 calls" $s_
++rm -rf $W/t9s; mkdir -p $W/t9s/out.shards; cp $A.judgments.jsonl $W/t9s/out.shards/shard-0.jsonl
++JUDGE_CMD=true ALLOW_SPLICE=1 $SJ $B.traces.jsonl $W/t9s/out.jsonl $W/bench9 $W/ids t9 1 haiku > $W/t9d.out 2>&1; r=$?; [ $r = 1 ] && grep -q "PROVENANCE: requested model" $W/t9d.out; s_=$?; ok "ALLOW_SPLICE=1 still refuses another judge model: rc=$r (expect 1)" $s_
++JUDGE_CMD=true ALLOW_SPLICE=1 $SJ $B.traces.jsonl $W/t9s/out.jsonl $W/bench9 $W/ids t9 1 opus > $W/t9e.out 2>&1; r=$?; ok "ALLOW_SPLICE=1 + same model: declared splice accepted, rc=$r" $r
++unset BOAR_EVAL_DIR
++echo "T10 floor rows vs fixed traces (audit F4) and --ids hygiene (F9)"
++PATH=$W/bin:$PATH node $EVAL/harness/judge.mjs --traces $A.traces.jsonl --bench $W/bench --refs $W/bench/refs.jsonl --system t3 --out $W/t3.fl.jsonl --dry-run --allow-splice > $W/t10a.out 2>&1; r=$?
++grep -q "floor rows superseded (trace no longer errored): 2 rows ($ERR)" $W/t10a.out && grep -q " 2 calls to do" $W/t10a.out; s_=$?; ok "trace fixed: the 2 floor rows of $ERR no longer count as done (2 calls to do), rc=$r" $s_
++node $EVAL/harness/judge.mjs --traces $A.traces.jsonl --bench $W/bench --refs $W/bench/refs.jsonl --out $W/t10.jsonl --ids "$(sed -n 1p $W/ids), $(sed -n 2p $W/ids),zz-0O5" --dry-run > $W/t10b.out 2>&1; r=$?
++grep -q "WARN --ids: 1 ids not in the questions file" $W/t10b.out && grep -q "judge: 2 items" $W/t10b.out; s_=$?; ok "--ids trimmed (2 items) and the unknown id named, rc=$r" $s_
++node $EVAL/harness/judge.mjs --traces $A.traces.jsonl --bench $W/bench --refs $W/bench/refs.jsonl --out $W/t10.jsonl --ids "zz-0O5" --dry-run --strict > /dev/null 2>&1; r=$?; [ $r = 5 ]; s_=$?; ok "--ids unknown id with --strict: rc=$r (expect 5)" $s_
++echo "T11 SIGTERM (audit F6): shards are killed before the lock is released"
++export BOAR_EVAL_DIR=$W JUDGE_CMD=$TD/stub-judge.sh; mkdir -p $W/t11
++STUB_SLEEP=5 $SJ $W/out/p-s42.traces.jsonl $W/t11/out.jsonl $W/bench $W/ids8 t11 2 opus > $W/t11.out 2>&1 & P1=$!
++for i in $(seq 1 40); do [ -d $W/t11/out.jsonl.lock ] && [ -s $W/t11/out.shards/shard-0.log ] || pgrep -f "stub-judge.sh.*$W/t11/" > /dev/null && break; sleep 0.1; done; sleep 0.5
++kill -TERM $P1; wait $P1; r=$?; sleep 0.3; alive=$(pgrep -f "stub-judge.sh.*$W/t11/" | wc -l | tr -d ' ')
++[ $r = 130 ] && [ "$alive" = 0 ] && [ ! -d $W/t11/out.jsonl.lock ]; s_=$?; ok "SIGTERM: rc=$r (expect 130), stub judges alive $alive (expect 0), lock released" $s_
++sleep 5; [ -z "$(cat $W/t11/out.shards/shard-*.jsonl 2>/dev/null)" ]; s_=$?; ok "no shard row written after the kill" $s_
++unset BOAR_EVAL_DIR JUDGE_CMD
++
+ echo; echo "RESULT: $PASS passed, $FAIL failed (scratch $W)"; echo "T1 sha256 old/new:"; echo "  paired.mjs       $(sha $W/p.old)  $(sha $W/p.new)"; echo "  floor_metrics.py $(sha $W/f.old)  $(sha $W/f.new)"; echo "  L2 scales stage  $L2O  $L2N"
+ rm -f $LEG/arm.run.sh; [ "${KEEP:-0}" = 1 ] || rm -rf "$W"
+ [ $FAIL = 0 ]

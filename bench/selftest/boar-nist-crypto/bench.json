@@ -1,0 +1,6 @@
+{
+ "bench": "selftest-boar-nist-crypto",
+ "questions": "questions.jsonl",
+ "refs": "refs/refs.jsonl",
+ "_note": "public pack self-test (T-K4b), agent-written gold answers as the reference side; dev only, never pooled with bench/claim rows"
+}

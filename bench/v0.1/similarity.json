@@ -1,194 +1,194 @@
 {
- "about": "Word-Jaccard (normalized token sets, same normalization as the denylist) of each new question against: the 31 Field Atlas test-case questions; every other question in this split and in the safety track v0.3; the 30 held-out questions (numbers only). Threshold: < 0.5 for Field Atlas and bench; < 0.8 (v0 rule) for held-out.",
- "max_vs_fieldatlas": 0.3,
+ "about": "Word-Jaccard (normalized token sets, same normalization as the denylist) of each new question against: the 31 competitor test-case questions; every other question in this split and in the safety track v0.3; the 30 held-out questions (numbers only). Threshold: < 0.5 for competitor and bench; < 0.8 (v0 rule) for held-out.",
+ "max_vs_competitor": 0.3,
  "max_vs_bench": 0.2857,
  "max_vs_heldout": 0.3333,
  "items": [
   {
    "id": "lan-exp-001",
-   "max_jaccard_vs_fieldatlas": 0.1667,
+   "max_jaccard_vs_competitor": 0.1667,
    "max_jaccard_vs_bench": 0.2727,
    "nearest_bench_id": "lan-exp-006",
    "max_jaccard_vs_heldout": 0.2
   },
   {
    "id": "lan-exp-002",
-   "max_jaccard_vs_fieldatlas": 0.15,
+   "max_jaccard_vs_competitor": 0.15,
    "max_jaccard_vs_bench": 0.2143,
    "nearest_bench_id": "lan-exp-001",
    "max_jaccard_vs_heldout": 0.2381
   },
   {
    "id": "lan-rsn-001",
-   "max_jaccard_vs_fieldatlas": 0.1579,
+   "max_jaccard_vs_competitor": 0.1579,
    "max_jaccard_vs_bench": 0.2273,
    "nearest_bench_id": "vit-trv-004",
    "max_jaccard_vs_heldout": 0.2727
   },
   {
    "id": "lan-cmp-001",
-   "max_jaccard_vs_fieldatlas": 0.1333,
+   "max_jaccard_vs_competitor": 0.1333,
    "max_jaccard_vs_bench": 0.1538,
    "nearest_bench_id": "trv-002",
    "max_jaccard_vs_heldout": 0.2727
   },
   {
    "id": "lan-cmp-002",
-   "max_jaccard_vs_fieldatlas": 0.2,
+   "max_jaccard_vs_competitor": 0.2,
    "max_jaccard_vs_bench": 0.1538,
    "nearest_bench_id": "lan-cmp-003",
    "max_jaccard_vs_heldout": 0.0769
   },
   {
    "id": "lan-rsn-002",
-   "max_jaccard_vs_fieldatlas": 0.0909,
+   "max_jaccard_vs_competitor": 0.0909,
    "max_jaccard_vs_bench": 0.1379,
    "nearest_bench_id": "lan-rsn-005",
    "max_jaccard_vs_heldout": 0.0769
   },
   {
    "id": "lan-ref-001",
-   "max_jaccard_vs_fieldatlas": 0.1667,
+   "max_jaccard_vs_competitor": 0.1667,
    "max_jaccard_vs_bench": 0.1429,
    "nearest_bench_id": "food-006",
    "max_jaccard_vs_heldout": 0.1538
   },
   {
    "id": "lan-hlt-001",
-   "max_jaccard_vs_fieldatlas": 0.2,
+   "max_jaccard_vs_competitor": 0.2,
    "max_jaccard_vs_bench": 0.087,
    "nearest_bench_id": "lan-rsn-003",
    "max_jaccard_vs_heldout": 0.0556
   },
   {
    "id": "lan-hlt-002",
-   "max_jaccard_vs_fieldatlas": 0.0,
+   "max_jaccard_vs_competitor": 0.0,
    "max_jaccard_vs_bench": 0.1154,
    "nearest_bench_id": "vit-cry-003",
    "max_jaccard_vs_heldout": 0.0952
   },
   {
    "id": "lan-hlt-003",
-   "max_jaccard_vs_fieldatlas": 0.0667,
+   "max_jaccard_vs_competitor": 0.0667,
    "max_jaccard_vs_bench": 0.1304,
    "nearest_bench_id": "lan-rsn-003",
    "max_jaccard_vs_heldout": 0.1053
   },
   {
    "id": "lan-ref-002",
-   "max_jaccard_vs_fieldatlas": 0.3,
+   "max_jaccard_vs_competitor": 0.3,
    "max_jaccard_vs_bench": 0.1667,
    "nearest_bench_id": "lan-ref-005",
    "max_jaccard_vs_heldout": 0.1
   },
   {
    "id": "lan-ref-003",
-   "max_jaccard_vs_fieldatlas": 0.1429,
+   "max_jaccard_vs_competitor": 0.1429,
    "max_jaccard_vs_bench": 0.1111,
    "nearest_bench_id": "vit-cry-009",
    "max_jaccard_vs_heldout": 0.1333
   },
   {
    "id": "lan-rsn-003",
-   "max_jaccard_vs_fieldatlas": 0.08,
+   "max_jaccard_vs_competitor": 0.08,
    "max_jaccard_vs_bench": 0.1923,
    "nearest_bench_id": "lan-rsn-006",
    "max_jaccard_vs_heldout": 0.1667
   },
   {
    "id": "lan-cmp-003",
-   "max_jaccard_vs_fieldatlas": 0.3,
+   "max_jaccard_vs_competitor": 0.3,
    "max_jaccard_vs_bench": 0.1538,
    "nearest_bench_id": "lan-cmp-002",
    "max_jaccard_vs_heldout": 0.2
   },
   {
    "id": "lan-rsn-004",
-   "max_jaccard_vs_fieldatlas": 0.1304,
+   "max_jaccard_vs_competitor": 0.1304,
    "max_jaccard_vs_bench": 0.1515,
    "nearest_bench_id": "lan-exp-007",
    "max_jaccard_vs_heldout": 0.1739
   },
   {
    "id": "lan-ref-004",
-   "max_jaccard_vs_fieldatlas": 0.1667,
+   "max_jaccard_vs_competitor": 0.1667,
    "max_jaccard_vs_bench": 0.1429,
    "nearest_bench_id": "lan-exp-006",
    "max_jaccard_vs_heldout": 0.2
   },
   {
    "id": "lan-exp-003",
-   "max_jaccard_vs_fieldatlas": 0.1053,
+   "max_jaccard_vs_competitor": 0.1053,
    "max_jaccard_vs_bench": 0.1724,
    "nearest_bench_id": "lan-exp-001",
    "max_jaccard_vs_heldout": 0.087
   },
   {
    "id": "lan-exp-004",
-   "max_jaccard_vs_fieldatlas": 0.1333,
+   "max_jaccard_vs_competitor": 0.1333,
    "max_jaccard_vs_bench": 0.25,
    "nearest_bench_id": "lan-exp-006",
    "max_jaccard_vs_heldout": 0.2222
   },
   {
    "id": "lan-exp-005",
-   "max_jaccard_vs_fieldatlas": 0.2,
+   "max_jaccard_vs_competitor": 0.2,
    "max_jaccard_vs_bench": 0.25,
    "nearest_bench_id": "lan-rsn-007",
    "max_jaccard_vs_heldout": 0.2727
   },
   {
    "id": "lan-exp-006",
-   "max_jaccard_vs_fieldatlas": 0.2,
+   "max_jaccard_vs_competitor": 0.2,
    "max_jaccard_vs_bench": 0.2857,
    "nearest_bench_id": "vit-cry-004",
    "max_jaccard_vs_heldout": 0.3333
   },
   {
    "id": "lan-cmp-004",
-   "max_jaccard_vs_fieldatlas": 0.1579,
+   "max_jaccard_vs_competitor": 0.1579,
    "max_jaccard_vs_bench": 0.1429,
    "nearest_bench_id": "vit-sci-002",
    "max_jaccard_vs_heldout": 0.1875
   },
   {
    "id": "lan-cmp-005",
-   "max_jaccard_vs_fieldatlas": 0.1667,
+   "max_jaccard_vs_competitor": 0.1667,
    "max_jaccard_vs_bench": 0.1538,
    "nearest_bench_id": "lan-ref-005",
    "max_jaccard_vs_heldout": 0.1538
   },
   {
    "id": "lan-rsn-005",
-   "max_jaccard_vs_fieldatlas": 0.1667,
+   "max_jaccard_vs_competitor": 0.1667,
    "max_jaccard_vs_bench": 0.1786,
    "nearest_bench_id": "vit-hum-006",
    "max_jaccard_vs_heldout": 0.1739
   },
   {
    "id": "lan-rsn-006",
-   "max_jaccard_vs_fieldatlas": 0.2105,
+   "max_jaccard_vs_competitor": 0.2105,
    "max_jaccard_vs_bench": 0.2174,
    "nearest_bench_id": "lan-rsn-007",
    "max_jaccard_vs_heldout": 0.2273
   },
   {
    "id": "lan-rsn-007",
-   "max_jaccard_vs_fieldatlas": 0.15,
+   "max_jaccard_vs_competitor": 0.15,
    "max_jaccard_vs_bench": 0.25,
    "nearest_bench_id": "lan-exp-005",
    "max_jaccard_vs_heldout": 0.2
   },
   {
    "id": "lan-ref-005",
-   "max_jaccard_vs_fieldatlas": 0.1818,
+   "max_jaccard_vs_competitor": 0.1818,
    "max_jaccard_vs_bench": 0.1667,
    "nearest_bench_id": "lan-ref-002",
    "max_jaccard_vs_heldout": 0.1
   },
   {
    "id": "lan-exp-007",
-   "max_jaccard_vs_fieldatlas": 0.1154,
+   "max_jaccard_vs_competitor": 0.1154,
    "max_jaccard_vs_bench": 0.2188,
    "nearest_bench_id": "lan-exp-001",
    "max_jaccard_vs_heldout": 0.1923

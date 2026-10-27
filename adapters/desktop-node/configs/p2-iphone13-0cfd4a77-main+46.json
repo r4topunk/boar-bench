@@ -1,0 +1,24 @@
+{
+  "commit": "0cfd4a77",
+  "arm": "main+46",
+  "modelId": "qwen2.5-1.5b-instruct-q4km",
+  "settings": {
+    "quickFirst": true,
+    "alwaysComplete": false
+  },
+  "kit": [
+    {
+      "id": "boar-crypto",
+      "sha256": "ae9fbd2c7a46a46a815d46d0283e7b192adb4c342b38a2adc4881e8f9d8831fb"
+    },
+    {
+      "id": "boar-wikivoyage-en",
+      "sha256": "ff8595e32f56b8b84e20464afd8bf88532d47d2d82d799e3df8489440004b66e"
+    }
+  ],
+  "device": {
+    "platform": "ios",
+    "ramGb": 4
+  },
+  "seed": 42
+}

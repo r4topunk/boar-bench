@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-money-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "aa386eb5566940f0f5ff4fe463a3f8c2a560638aa446bc1ee23ad3d001b18bd5",
+ "questions_sha256": "f08be9aa1ed777a550dec3c85715c057140eac318a1792f2dd15c66571bddbb6",
+ "jsonl_sha256": "9cd5b1869fafcf06f99e375325f6d93ec4c2c265c227f48ba0313e8a6b3e0278"
+}

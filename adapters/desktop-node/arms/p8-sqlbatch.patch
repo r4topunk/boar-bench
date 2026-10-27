@@ -1,0 +1,148 @@
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..68fe72de 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -43,6 +43,8 @@ export interface Candidate {
+   score: number;
+ }
+ 
++type ArticleRow = { title: string; source: number; views: number; block_id: number; off: number; len: number };
++
+ export interface Article {
+   id: number;
+   title: string;
+@@ -424,6 +426,9 @@ export class WikiPack {
+   tuning: PackTuning = { ...DEFAULT_TUNING };
+   private blocks = new Lru<number, Uint8Array>(BLOCK_CACHE);
+   private articles = new Lru<number, Article>(ARTICLE_CACHE);
++  private titlePrefetch: Map<string, number | null> | null = null;
++  private rowPrefetch = new Map<number, ArticleRow>();
++  private metaPrefetch = new Map<number, { url: string | null; license: string | null } | null>();
+   private resolved = new Lru<string, number | null>(512);
+ 
+   private constructor(
+@@ -497,16 +502,18 @@ export class WikiPack {
+   async article(id: number): Promise<Article> {
+     const hit = this.articles.get(id);
+     if (hit) return hit;
+-    const a = await this.db.getFirstAsync<{ title: string; source: number; views: number; block_id: number; off: number; len: number }>(
+-      "SELECT title, source, views, block_id, off, len FROM articles WHERE id = ?",
+-      [id]
+-    );
++    const a =
++      this.rowPrefetch.get(id) ??
++      (await this.db.getFirstAsync<ArticleRow>("SELECT title, source, views, block_id, off, len FROM articles WHERE id = ?", [id]));
+     if (!a) throw new Error(`pack article ${id} missing`);
+     const block = await this.block(a.block_id);
+     const text = utf8(block.subarray(a.off, a.off + a.len));
+-    const m = this.hasMeta
+-      ? await this.db.getFirstAsync<{ url: string | null; license: string | null }>("SELECT url, license FROM article_meta WHERE article_id = ?", [id])
+-      : null;
++    const pm = this.metaPrefetch.get(id);
++    const m = !this.hasMeta
++      ? null
++      : pm !== undefined
++        ? pm
++        : await this.db.getFirstAsync<{ url: string | null; license: string | null }>("SELECT url, license FROM article_meta WHERE article_id = ?", [id]);
+     return this.articles.put(id, {
+       id,
+       title: a.title,
+@@ -528,6 +535,12 @@ export class WikiPack {
+     const key = `${fuzzy ? "f" : "x"}:${source}:${title}`;
+     if (this.resolved.has(key)) return this.resolved.get(key)!;
+     const src = SOURCES.indexOf(source);
++    // Exact lookups for the current question's title candidates come from one prefetch query (prefetchTitles).
++    const pre = fuzzy ? undefined : this.titlePrefetch?.get(`${src}:${title.toLowerCase()}`);
++    if (pre !== undefined) {
++      this.resolved.put(key, pre);
++      return pre;
++    }
+     let id =
+       (await this.db.getFirstAsync<{ id: number }>(
+         "SELECT id FROM articles WHERE title = ? COLLATE NOCASE AND source = ? ORDER BY views DESC LIMIT 1",
+@@ -697,7 +710,66 @@ export class WikiPack {
+    * about an actor is a side mention, "Fort Naroa" in "Where was Fort Naroa?"
+    * is the subject.
+    */
++  /**
++   * One query per table for all of a question's title candidates and their singulars, every source, so that
++   * resolveTitle's exact lookups don't cost a bridge call each (~140 per question on a phone). Same answer as the
++   * single-row queries: most-viewed article for (title, source), ties to the lowest id; else the most-viewed redirect.
++   */
++  private async prefetchTitles(cands: string[]): Promise<void> {
++    const titles = [...new Set(cands.flatMap((c) => [c, singularTitle(c)].filter((t): t is string => !!t)))];
++    const map = new Map<string, number | null>();
++    if (titles.length) {
++      const ph = titles.map(() => "?").join(",");
++      const best = new Map<string, { id: number; views: number }>();
++      const keep = (m: Map<string, { id: number; views: number }>, k: string, id: number, views: number) => {
++        const b = m.get(k);
++        if (!b || views > b.views || (views === b.views && id < b.id)) m.set(k, { id, views });
++      };
++      for (const r of await this.db.getAllAsync<{ id: number; title: string; source: number; views: number }>(
++        `SELECT id, title, source, views FROM articles WHERE title COLLATE NOCASE IN (${ph})`,
++        titles
++      ))
++        keep(best, `${r.source}:${r.title.toLowerCase()}`, r.id, r.views);
++      const viaRedirect = new Map<string, { id: number; views: number }>();
++      if (this.hasRedirects)
++        for (const r of await this.db.getAllAsync<{ title: string; article_id: number; source: number; views: number }>(
++          `SELECT r.title, r.article_id, a.source, a.views FROM redirects r JOIN articles a ON a.id = r.article_id WHERE r.title IN (${ph})`,
++          titles
++        ))
++          keep(viaRedirect, `${r.source}:${r.title.toLowerCase()}`, r.article_id, r.views);
++      for (const t of titles)
++        for (let src = 0; src < SOURCES.length; src++) {
++          const k = `${src}:${t.toLowerCase()}`;
++          map.set(k, best.get(k)?.id ?? viaRedirect.get(k)?.id ?? null);
++        }
++    }
++    this.titlePrefetch = map;
++  }
++
++  /** Article rows and meta for a question's keyword candidates, one query each, read by article(). */
++  private async prefetchArticles(ids: number[]): Promise<void> {
++    const need = [...new Set(ids)].filter((id) => !this.articles.has(id));
++    for (let i = 0; i < need.length; i += 500) {
++      const part = need.slice(i, i + 500);
++      const ph = part.map(() => "?").join(",");
++      for (const r of await this.db.getAllAsync<ArticleRow & { id: number }>(
++        `SELECT id, title, source, views, block_id, off, len FROM articles WHERE id IN (${ph})`,
++        part
++      ))
++        this.rowPrefetch.set(r.id, r);
++      if (this.hasMeta) {
++        for (const id of part) this.metaPrefetch.set(id, null);
++        for (const r of await this.db.getAllAsync<{ article_id: number; url: string | null; license: string | null }>(
++          `SELECT article_id, url, license FROM article_meta WHERE article_id IN (${ph})`,
++          part
++        ))
++          this.metaPrefetch.set(r.article_id, { url: r.url, license: r.license });
++      }
++    }
++  }
++
+   async titlesInQuestion(query: string, stems: Stem[], max = 4): Promise<Array<{ id: number; share: number }>> {
++    await this.prefetchTitles(titleCandidates(query));
+     const rare = new Set(stems.filter((s) => s.idf >= Math.log(1 / 0.002)).map((s) => s.stem));
+     // Portuguese/Spanish function words carry no subject; some packs index them (Appropedia's pages in those languages).
+     // Nor do the words that only say the question wants steps ("nosebleed stop", "burn treat").
+@@ -822,6 +894,10 @@ export class WikiPack {
+   /** search(), plus the question's stems (for scoring sentences with the same term weights). */
+   async searchDetailed(query: string, opts: PackSearchOptions = {}): Promise<{ hits: PackHit[]; stems: Stem[] }> {
+     const { k = 6, titles = [], expand, minHits = 2, queryVec } = opts;
++    // Prefetches hold only this question's rows.
++    this.titlePrefetch = null;
++    this.rowPrefetch.clear();
++    this.metaPrefetch.clear();
+     const stems = await this.stems(query);
+     // Only a name that carries enough of the question goes first; side mentions compete in BM25.
+     const ids = (await this.titlesInQuestion(query, stems)).filter((t) => t.share >= this.tuning.namedMinShare).map((t) => t.id);
+@@ -838,6 +914,7 @@ export class WikiPack {
+     let keyword: Candidate[] | null = null;
+     if (hits.length < limit) {
+       keyword = await this.bm25Candidates(stems);
++      await this.prefetchArticles(keyword.map((c) => c.articleId));
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {

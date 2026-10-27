@@ -1,0 +1,262 @@
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..3994e0f4 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -216,6 +216,7 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
++    ...(h.leadSim !== undefined ? { leadSimilarity: h.leadSim } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.url.test.ts b/src/rag/packs.url.test.ts
+index 96a716c4..c3cf97a4 100644
+--- a/src/rag/packs.url.test.ts
++++ b/src/rag/packs.url.test.ts
+@@ -26,4 +26,9 @@ describe("pack hits as retrieved chunks", () => {
+     expect(packHitToChunk("prep", hit).action).toBe(true);
+     expect(packHitToChunk("prep", { ...hit, section: "Prevention", action: false }).action).toBe(false);
+   });
++  it("carry a keyword hit's question <-> lead cosine as leadSimilarity (Sonar G1+), and nothing when it has none", () => {
++    const hit = { articleId: 1, chunkId: 2, title: "PeerDAS", section: "", text: "t", start: 0, end: 1, score: 1, via: "bm25" as const, source: "ethspecs" as const, views: 0, lead: true, action: false };
++    expect(packHitToChunk("crypto", { ...hit, leadSim: 0.761 }).leadSimilarity).toBe(0.761);
++    expect("leadSimilarity" in packHitToChunk("crypto", hit)).toBe(false);
++  });
+ });
+diff --git a/src/rag/retrieve.g1plus.test.ts b/src/rag/retrieve.g1plus.test.ts
+new file mode 100644
+index 00000000..99fa59bd
+--- /dev/null
++++ b/src/rag/retrieve.g1plus.test.ts
+@@ -0,0 +1,76 @@
++import { describe, it, expect, vi } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++// Sonar G1+ (bigpack-relevance-gate): large-pack keyword hits (no cosine gate, max-normalized BM25 ~1.0) vs candidates
++// that passed a relevance check: a format-1 chunk at cos >= 0.70, or a keyword hit whose article lead is >= 0.70.
++vi.mock("./packs", () => {
++  const TEXTS: Record<number, string> = {
++    1: "The redback spider is a venomous spider native to Australia.",
++    2: "BitTorrent is a peer-to-peer file sharing protocol.",
++    3: "PeerDAS lets nodes sample blob data from their peers.",
++    4: "The Nobel Prize in Literature is awarded annually by the Swedish Academy.",
++    5: "Alfred Nobel's will of 1895 established the prizes, first given in 1901.",
++    6: "Laureates receive a gold medal, a diploma and a sum of money in Stockholm.",
++    7: "Berlin is the capital of Germany and its largest city.",
++    8: "Paris is the capital of France, on the Seine.",
++    9: "Germany's capital moved from Bonn to Berlin after reunification.",
++  };
++  const hit = (articleId: number, chunkId: number, title: string, via: "title" | "bm25", score: number, leadSim?: number, source = "enwiki") => ({
++    articleId, chunkId, title, section: "", text: TEXTS[chunkId], start: 0, end: 1, score, via, source, views: 0, lead: true, action: false,
++    ...(leadSim !== undefined ? { leadSim } : {}),
++  });
++  // The real packHitToChunk carries leadSim as leadSimilarity (packs.ts); the mock does the same.
++  const packHitToChunk = (packId: string, h: any) => ({
++    chunkId: `pack:${packId}:${h.chunkId}`, docId: `pack:${packId}:a${h.articleId}`, title: h.title, body: h.text, score: h.score,
++    matchType: "lexical", ...(h.leadSim !== undefined ? { leadSimilarity: h.leadSim } : {}),
++  });
++  const v5 = (id: string, title: string, sim: number) => ({ chunkId: `v5:${id}`, docId: `v5:${title}`, title, body: `${title} body ${id}`, source: "Wikipedia", score: sim, similarity: sim, matchType: "semantic" as const });
++  return {
++    packHitToChunk,
++    searchWikiPacks: async (q: string) => {
++      if (/spider/.test(q))
++        // Keyword noise with the top BM25 and no lead vector; a crypto hit promoted by its lead cosine (0.76).
++        return [
++          { packId: "en", hits: [hit(1, 1, "Redback spider", "bm25", 9), hit(2, 2, "BitTorrent", "bm25", 8)] },
++          { packId: "crypto", hits: [hit(3, 3, "PeerDAS", "bm25", 2, 0.761, "ethspecs")] },
++        ];
++      if (/Nobel/.test(q)) return [{ packId: "en", hits: [4, 5, 6].map((i) => hit(1, i, "Nobel Prize in Literature", "title", 1)) }];
++      if (/compare/i.test(q))
++        return [{ packId: "en", hits: [hit(7, 7, "Berlin", "title", 1), hit(7, 9, "Berlin", "title", 1), hit(8, 8, "Paris", "title", 1), hit(8, 6, "Paris", "title", 1)] }];
++      // Only unverified keyword hits (one below the lead bar): nothing is removed, they still fill the slots.
++      return [{ packId: "en", hits: [hit(1, 1, "Redback spider", "bm25", 9, 0.69), hit(2, 2, "BitTorrent", "bm25", 8)] }];
++    },
++    searchPacks: async (q: string) => ({
++      lexical: [],
++      semantic: /spider/.test(q)
++        ? [v5("snake", "Snakebite", 0.72)]
++        : /Nobel/.test(q)
++          ? [v5("ki", "Kazuo Ishiguro", 0.8)]
++          : [],
++    }),
++  };
++});
++
++import { retrieve } from "./retrieve";
++
++describe("retrieve: Sonar G1+ verified-first ordering", () => {
++  it("verified candidates (cos-gated chunk, keyword hit with lead cos >= 0.70) go before ungated keyword hits", async () => {
++    const out = await retrieve("What should I do after a spider bite?", 3);
++    expect(out.map((c) => c.title)).toEqual(["Snakebite", "PeerDAS", "Redback spider"]);
++    expect(out[1].leadSimilarity).toBeCloseTo(0.761);
++  });
++  it("named passages first, at most 2 per article; the freed slot goes to the verified candidate", async () => {
++    const out = await retrieve("Who received the Nobel Prize in Literature in 2017?", 3);
++    expect(out.map((c) => c.title)).toEqual(["Nobel Prize in Literature", "Nobel Prize in Literature", "Kazuo Ishiguro"]);
++  });
++  it("several named articles keep 2 passages each, past top-K (both sides of a comparison)", async () => {
++    const out = await retrieve("Compare Berlin and Paris", 3);
++    expect(out.map((c) => c.chunkId)).toEqual(["pack:en:7", "pack:en:9", "pack:en:8", "pack:en:6"]);
++  });
++  it("removes nothing: with no verified candidate, keyword hits (lead cos 0.69 included) still fill the slots", async () => {
++    const out = await retrieve("Tell me about venom", 3);
++    expect(out.map((c) => c.title)).toEqual(["Redback spider", "BitTorrent"]);
++  });
++});
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..3d15d04c 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -1,18 +1,20 @@
+ import { getDb } from "./db";
+ import { embeddingEngine } from "./embed";
+ import {
++  ANSWER_MIN_SIMILARITY,
+   buildLexicalQuery,
+   cosineSimilarity,
+   filterByMinScore,
+   filterByTermCoverage,
+   fuseRetrievalResults,
+   gateByRelevance,
++  MAX_CHUNKS_PER_ARTICLE,
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+ import { packHitToChunk, searchPacks, searchWikiPacks } from "./packs";
+ import { englishNamesIn, looksPortuguese, type Lexicon } from "./ptLexicon";
+-import { ACTION_INTENT, LAY_SOURCES } from "./wikiPack";
++import { ACTION_INTENT, LAY_SOURCES, SEMANTIC_KEEP } from "./wikiPack";
+ import { EXPLAIN_INTENT } from "./explain";
+ import { identifiersIn, titleHasIdentifier } from "./identifiers";
+ import { ptLexicon } from "./ptLexiconAsset";
+@@ -184,19 +186,36 @@ async function retrieveOne(
+   // Large-pack passages from articles the question names come first, in the
+   // pack's own order; its keyword hits compete with everything else.
+   // A named disambiguation page is a list of links, not a source to put first (any pack, any language).
++  // Sonar G1+ (i): at most MAX_CHUNKS_PER_ARTICLE passages per named article, as the fusion caps every other article
++  // (#6b's rule): with k = 3 one named article from a large pack ("Nobel Prize in Literature" x3) took every slot.
++  const perArticle = new Map<string, number>();
+   const named = wiki
+     .flatMap((w) => w.hits.filter((h) => h.via === "title").map((h) => packHitToChunk(w.packId, h)))
+-    .filter((c) => !isDisambiguation(c));
++    .filter((c) => !isDisambiguation(c))
++    .filter((c) => {
++      const n = perArticle.get(c.docId) ?? 0;
++      perArticle.set(c.docId, n + 1);
++      return n < MAX_CHUNKS_PER_ARTICLE;
++    });
++  const namedArticles = new Set(named.map((c) => c.docId)).size;
+   const wikiLexical = wiki.flatMap((w) => w.hits.filter((h) => h.via !== "title").map((h) => packHitToChunk(w.packId, h)));
+   // The bundled corpus and format-1 packs pass the relevance gate first (their chunks carry the
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+   // take the top-K or per-article slots before the gate sees the rest. Large-pack hits have their
+   // own ranking and no similarity, so they aren't gated here.
+-  const fused = fuseRetrievalResults(
++  // Sonar G1+ (bigpack-relevance-gate): verified candidates first, then the large packs' keyword hits fill what is
++  // left. Fused WITHOUT the early top-K cut (the per-title cap still applies inside), so ungated keyword hits, ranked
++  // by their own max-normalized BM25 (~1.0 for the best of a bad lot), can't push a verified candidate out before the
++  // reordering. Verified = passed the cosine gate (similarity >= ANSWER_MIN_SIMILARITY: bundled and format-1 chunks),
++  // or a large-pack keyword hit whose article lead is >= SEMANTIC_KEEP from the question. Nothing is removed.
++  const fusedAll = fuseRetrievalResults(
+     [...gateByRelevance([...lexical, ...packs.lexical]), ...wikiLexical],
+     gateByRelevance([...semantic, ...packs.semantic]),
+-    topK
++    topK * 3
+   );
++  const isVerified = (c: RetrievedChunk) =>
++    (c.similarity ?? -1) >= ANSWER_MIN_SIMILARITY || (c.leadSimilarity ?? -1) >= SEMANTIC_KEEP;
++  const fused = [...fusedAll.filter(isVerified), ...fusedAll.filter((c) => !isVerified(c))];
+   // A what-to-do question: a pack section that says what to do (the preparedness pack's "During an earthquake") comes
+   // right after the named articles, instead of competing in the fusion with keyword noise from the bundled corpus.
+   const action = opts.action ?? ACTION_INTENT.test(query);
+@@ -211,7 +230,7 @@ async function retrieveOne(
+   const result = dedupeArticleCopies([
+     ...first.filter((c, i) => first.findIndex((x) => x.chunkId === c.chunkId) === i),
+     ...fused.filter((c) => !seen.has(c.chunkId)),
+-  ]).slice(0, Math.max(topK, named.length));
++  ]).slice(0, namedArticles <= 1 ? topK : Math.max(topK, named.length));
+   // A what-to-do question: the lay sources the pack search added past its limit (a first-aid manual next to the
+   // clinical article) must reach the answer, not be cut here with the rest of the keyword hits.
+   if (action) {
+diff --git a/src/rag/retrieve.types.ts b/src/rag/retrieve.types.ts
+index 945fdbb9..813e8210 100644
+--- a/src/rag/retrieve.types.ts
++++ b/src/rag/retrieve.types.ts
+@@ -15,4 +15,10 @@ export interface RetrievedChunk extends ChunkRecord {
+    * false for a lead or a background section; absent for sources without sections.
+    */
+   action?: boolean;
++  /**
++   * Format-2 packs' keyword hits only: cosine between the question and the hit's article lead embedding (bge-small),
++   * when the pack has a lead vector for that article. retrieveOne counts a hit at >= SEMANTIC_KEEP as verified
++   * (Sonar G1+); kept apart from `similarity`, so nothing downstream changes meaning.
++   */
++  leadSimilarity?: number;
+ }
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..7be054b5 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -75,6 +75,8 @@ export interface PackHit {
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** Keyword hits: the question <-> article lead cosine searchDetailed already computed (absent without a lead vector). */
++  leadSim?: number;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -836,9 +838,16 @@ export class WikiPack {
+     const topic = titles.length ? await this.stems(titles.join(" ")) : stems;
+     const seen = new Set(hits.map((h) => h.chunkId));
+     let keyword: Candidate[] | null = null;
++    let leadSims: Map<number, number> | null = null;
++    // The lead cosine computed below, carried on the keyword hit (Sonar G1+: retrieveOne's verified tier).
++    const withLead = (h: PackHit, articleId: number): PackHit => {
++      const s = leadSims?.get(articleId);
++      return s === undefined ? h : { ...h, leadSim: s };
++    };
+     if (hits.length < limit) {
+       keyword = await this.bm25Candidates(stems);
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
++      leadSims = sem;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {
+         // Only the most-read articles have embeddings: one without gets the candidates' median
+@@ -870,13 +879,13 @@ export class WikiPack {
+             // found ("Treatment > Nasal packing") brings its article's main one ("Treatment") first.
+             if (acts.length && acts[0].chunkId !== h.chunkId) {
+               for (const act of acts.slice(0, 3 - perArticle)) {
+-                hits.push({ ...act, via: "bm25", score: h.score });
++                hits.push(withLead({ ...act, via: "bm25", score: h.score }, c.articleId));
+                 seen.add(act.chunkId);
+               }
+               continue;
+             }
+           }
+-          hits.push(h);
++          hits.push(withLead(h, c.articleId));
+           seen.add(c.chunkId);
+         }
+       }
+@@ -894,7 +903,7 @@ export class WikiPack {
+           if (h.source !== "usgov" || coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) < 0.5) continue;
+           const acts = (await this.articlePassages(c.articleId, stems, 3, true)).filter((p) => p.action && !seen.has(p.chunkId)).slice(0, 2);
+           if (!acts.length) continue;
+-          hits.splice(Math.min(1, hits.length), 0, ...acts.map((p) => ({ ...p, via: "bm25" as const })));
++          hits.splice(Math.min(1, hits.length), 0, ...acts.map((p) => withLead({ ...p, via: "bm25" as const }, c.articleId)));
+           for (const p of acts) seen.add(p.chunkId);
+           lay += acts.length;
+           break;
+@@ -909,7 +918,7 @@ export class WikiPack {
+           const h = await this.materialize(c);
+           if (!LAY_SOURCES.has(h.source) || coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) < 0.5) continue;
+           if (hits.some((x) => nearDuplicate(x.text, h.text))) continue;
+-          hits.push(h);
++          hits.push(withLead(h, c.articleId));
+           seen.add(c.chunkId);
+           lay++;
+         }

@@ -1,0 +1,159 @@
+diff --git a/src/rag/packs.ts b/src/rag/packs.ts
+index d577b142..3994e0f4 100644
+--- a/src/rag/packs.ts
++++ b/src/rag/packs.ts
+@@ -216,6 +216,7 @@ export function packHitToChunk(packId: string, h: PackHit): RetrievedChunk {
+     score: h.score,
+     matchType: "lexical",
+     action: h.action,
++    ...(h.leadSim !== undefined ? { leadSimilarity: h.leadSim } : {}),
+   };
+ }
+ 
+diff --git a/src/rag/packs.url.test.ts b/src/rag/packs.url.test.ts
+index 96a716c4..c3cf97a4 100644
+--- a/src/rag/packs.url.test.ts
++++ b/src/rag/packs.url.test.ts
+@@ -26,4 +26,9 @@ describe("pack hits as retrieved chunks", () => {
+     expect(packHitToChunk("prep", hit).action).toBe(true);
+     expect(packHitToChunk("prep", { ...hit, section: "Prevention", action: false }).action).toBe(false);
+   });
++  it("carry a keyword hit's question <-> lead cosine as leadSimilarity (Sonar G1+), and nothing when it has none", () => {
++    const hit = { articleId: 1, chunkId: 2, title: "PeerDAS", section: "", text: "t", start: 0, end: 1, score: 1, via: "bm25" as const, source: "ethspecs" as const, views: 0, lead: true, action: false };
++    expect(packHitToChunk("crypto", { ...hit, leadSim: 0.761 }).leadSimilarity).toBe(0.761);
++    expect("leadSimilarity" in packHitToChunk("crypto", hit)).toBe(false);
++  });
+ });
+diff --git a/src/rag/retrieve.types.ts b/src/rag/retrieve.types.ts
+index 945fdbb9..813e8210 100644
+--- a/src/rag/retrieve.types.ts
++++ b/src/rag/retrieve.types.ts
+@@ -15,4 +15,10 @@ export interface RetrievedChunk extends ChunkRecord {
+    * false for a lead or a background section; absent for sources without sections.
+    */
+   action?: boolean;
++  /**
++   * Format-2 packs' keyword hits only: cosine between the question and the hit's article lead embedding (bge-small),
++   * when the pack has a lead vector for that article. retrieveOne counts a hit at >= SEMANTIC_KEEP as verified
++   * (Sonar G1+); kept apart from `similarity`, so nothing downstream changes meaning.
++   */
++  leadSimilarity?: number;
+ }
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..7be054b5 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -75,6 +75,8 @@ export interface PackHit {
+   /** The source page and its license, when the pack records them (otherwise derive from title and source). */
+   url?: string;
+   license?: string;
++  /** Keyword hits: the question <-> article lead cosine searchDetailed already computed (absent without a lead vector). */
++  leadSim?: number;
+ }
+ 
+ export interface PackSearchOptions {
+@@ -836,9 +838,16 @@ export class WikiPack {
+     const topic = titles.length ? await this.stems(titles.join(" ")) : stems;
+     const seen = new Set(hits.map((h) => h.chunkId));
+     let keyword: Candidate[] | null = null;
++    let leadSims: Map<number, number> | null = null;
++    // The lead cosine computed below, carried on the keyword hit (Sonar G1+: retrieveOne's verified tier).
++    const withLead = (h: PackHit, articleId: number): PackHit => {
++      const s = leadSims?.get(articleId);
++      return s === undefined ? h : { ...h, leadSim: s };
++    };
+     if (hits.length < limit) {
+       keyword = await this.bm25Candidates(stems);
+       const sem = queryVec ? await this.leadSimilarity(keyword.map((c) => c.articleId), queryVec) : null;
++      leadSims = sem;
+       const w = this.tuning.semanticWeight;
+       if (sem && sem.size && w > 0 && keyword.length) {
+         // Only the most-read articles have embeddings: one without gets the candidates' median
+@@ -870,13 +879,13 @@ export class WikiPack {
+             // found ("Treatment > Nasal packing") brings its article's main one ("Treatment") first.
+             if (acts.length && acts[0].chunkId !== h.chunkId) {
+               for (const act of acts.slice(0, 3 - perArticle)) {
+-                hits.push({ ...act, via: "bm25", score: h.score });
++                hits.push(withLead({ ...act, via: "bm25", score: h.score }, c.articleId));
+                 seen.add(act.chunkId);
+               }
+               continue;
+             }
+           }
+-          hits.push(h);
++          hits.push(withLead(h, c.articleId));
+           seen.add(c.chunkId);
+         }
+       }
+@@ -894,7 +903,7 @@ export class WikiPack {
+           if (h.source !== "usgov" || coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) < 0.5) continue;
+           const acts = (await this.articlePassages(c.articleId, stems, 3, true)).filter((p) => p.action && !seen.has(p.chunkId)).slice(0, 2);
+           if (!acts.length) continue;
+-          hits.splice(Math.min(1, hits.length), 0, ...acts.map((p) => ({ ...p, via: "bm25" as const })));
++          hits.splice(Math.min(1, hits.length), 0, ...acts.map((p) => withLead({ ...p, via: "bm25" as const }, c.articleId)));
+           for (const p of acts) seen.add(p.chunkId);
+           lay += acts.length;
+           break;
+@@ -909,7 +918,7 @@ export class WikiPack {
+           const h = await this.materialize(c);
+           if (!LAY_SOURCES.has(h.source) || coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) < 0.5) continue;
+           if (hits.some((x) => nearDuplicate(x.text, h.text))) continue;
+-          hits.push(h);
++          hits.push(withLead(h, c.articleId));
+           seen.add(c.chunkId);
+           lay++;
+         }
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..98dd0bc1 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -220,6 +220,16 @@ describe("answer(): grounding guard (Prism Q-1, E-1)", () => {
+     expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:off-topic-dropped-2", "grounding:no-good-source", "grounding:no-source-memory"]));
+   });
+ 
++  it("P-1 keep the key: a pack passage with lead cosine >= SEMANTIC_KEEP survives the topic filter; 0.69 does not", async () => {
++    f.installed = [lfm];
++    f.activeId = "lfm8";
++    // The same two sources Q-1 drops as off-topic, now carrying the pack's own lead-cosine verdict.
++    f.retrieved = [{ ...DEAN_LEE, leadSimilarity: 0.75 }, { ...PUBLIC_KEY, leadSimilarity: 0.69 }];
++    const { result } = await collect("Which signature algorithms are quantum resistant?");
++    expect(result.sources.map((c) => c.title)).toEqual(["Dean Lee"]);
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:off-topic-dropped-1"]));
++  });
++
+   it("drops an off-topic source when an on-topic one exists", async () => {
+     f.retrieved = [DEAN_LEE, CANBERRA];
+     const { events } = await collect("Why was Canberra chosen as the capital of Australia?");
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..0f431bf6 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -67,6 +67,7 @@ import { canonicalHealthTerms, englishSearchTerms } from "./ptQuery";
+ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
++import { SEMANTIC_KEEP } from "../rag/wikiPack";
+ import { attributeCitations, checkCitations } from "./citations";
+ import { calculate } from "./calculators";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+@@ -787,14 +788,18 @@ export function createAnswerer(deps: AnswerDeps) {
+       const acronyms = [...new Set(req.query.match(/\b[A-Z][A-Z0-9]*(?:-[A-Z0-9]+)+\b|\b[A-Z]{2,}[0-9]*\b/g) ?? [])];
+       const matchQuery = english ?? (names.length ? [...names, ...ids, ...acronyms].join(" ") : req.query);
+       // Lexicon names are article titles: a source must be titled by one ("Season", not "Hurricane Season ...").
++      // Sonar P-1 "keep the key": a large-pack passage the pack itself judged relevant (question <-> article lead cosine
++      // >= SEMANTIC_KEEP, searchDetailed's own keep rule) is not dropped by the lexical topic filter. Date articles
++      // (history) keep their own rule.
++      const packKept = (c: RetrievedChunk) => (c.leadSimilarity ?? -1) >= SEMANTIC_KEEP;
+       const onSubject = (c: RetrievedChunk) =>
+         history
+           ? history.isDateArticle(c.title)
+           : names.length
+             ? // Or the question's own words: identifiers and English terms a PT question uses as written
+               // ("EIP-1559", "proof of stake"); with weak names (["Ethereum"]) the EIP sources were dropped.
+-              namedByLexicon(names, c) || onTopic(req.query, c)
+-            : onTopic(matchQuery, c);
++              namedByLexicon(names, c) || onTopic(req.query, c) || packKept(c)
++            : onTopic(matchQuery, c) || packKept(c);
+       // The packs lift an article's Treatment/Management section only when the query asks what to
+       // do (Bramble b03c959); the article name alone ("snakebite") brought back "Signs and symptoms".
+       // Lexicon names aren't searched here: retrieve() already adds them to a PT question's search.

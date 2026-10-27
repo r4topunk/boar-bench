@@ -1,4 +1,4 @@
-// Runs `claude -p` headless on the user's Claude Code subscription (no API key, no gateway).
+// Runs `claude -p` headless on the user's own Claude Code CLI login (no API key, no gateway).
 // Isolation: empty temp cwd, no settings sources, no MCP, no session persistence, fixed system prompt.
 import { spawn } from "node:child_process";
 import { appendFileSync, existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
@@ -59,7 +59,7 @@ export function runClaude({ prompt, systemPrompt, model, tools, jsonSchema, time
   });
 }
 
-/** Usage summary kept per item: tokens, tool calls and the CLI's list-price equivalent (not a charge on a subscription). */
+/** Usage summary kept per item: tokens, tool calls and the CLI's reported call usage. */
 export function usageSummary(json) {
   const [modelId, mu] = Object.entries(json.modelUsage ?? {})[0] ?? [];
   return {
@@ -77,16 +77,16 @@ export function usageSummary(json) {
   };
 }
 
-// Stop signals: the subscription is shared by the whole team, so a rate/usage limit ends the run (no retry loop).
+// Stop signals: a rate/usage limit ends the run (no retry loop).
 export const isRateLimited = (r) => /rate.?limit|usage limit|429|overloaded|too many requests/i.test(`${r.error ?? ""} ${r.stderr ?? ""} ${r.json?.api_error_status ?? ""}`);
 
 export const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-/** Appends one consumption row to results/spend.jsonl (list-price equivalent, not a charge on a subscription). */
+/** Appends one consumption row to results/spend.jsonl (call usage ledger). */
 export function logSpend(file, purpose, r) {
   if (!r.json) return;
   const u = usageSummary(r.json);
-  appendFileSync(file, JSON.stringify({ at: new Date().toISOString(), purpose, via: "claude-code-subscription", model: u.modelId, listPriceEquivalentUsd: u.listPriceEquivalentUsd, costBasis: u.costBasis, inputTokens: u.inputTokens, cacheReadTokens: u.cacheReadTokens, cacheCreationTokens: u.cacheCreationTokens, outputTokens: u.outputTokens, durationMs: u.durationMs }) + "\n");
+  appendFileSync(file, JSON.stringify({ at: new Date().toISOString(), purpose, via: "claude-code", model: u.modelId, listPriceEquivalentUsd: u.listPriceEquivalentUsd, costBasis: u.costBasis, inputTokens: u.inputTokens, cacheReadTokens: u.cacheReadTokens, cacheCreationTokens: u.cacheCreationTokens, outputTokens: u.outputTokens, durationMs: u.durationMs }) + "\n");
 }
 
 export function totalSpend(file) {

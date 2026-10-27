@@ -3,10 +3,10 @@
 
 Collision = word-Jaccard > 0.30 (tokens() of bench/v0.1/validate.py) OR BAAI/bge-small-en-v1.5 cosine >= 0.90
 (sentence-transformers, normalize_embeddings=True). Base pools: the v0.3 items among themselves, v0.1 public, safety track
-v0.3, held-out v0.1 (rnd/private-heldout files, read as bench/v0.1/build.py reads them) and Field Atlas @87bb6e9 (sha-pinned, git show).
+v0.3, held-out v0.1 (rnd/private-heldout files, read as bench/v0.1/build.py reads them) and a competitor team @87bb6e9 (sha-pinned, git show).
 Extra pools (--pools): v0.2-new (110, private/bench-v02/live/v0.2) and V-para (private/para-set); both are blind plaintext,
-read in-process under the coordinator's logged scoped exception (spec section 5). Held-out, Field Atlas and blind-pool text
-is used for numbers only and never printed or written: held-out and Field Atlas get opaque indices, the blind pools their ids.
+read in-process under the coordinator's logged scoped exception (spec section 5). Held-out, a competitor team and blind-pool text
+is used for numbers only and never printed or written: held-out and a competitor team get opaque indices, the blind pools their ids.
 The topic review (G3, duplicates the thresholds miss) is a fresh Opus agent's judgment, recorded in TOPIC_REVIEW below.
 
 Needs: pip install sentence-transformers (a throwaway venv is fine).
@@ -21,7 +21,7 @@ DEFAULT_DIR = B / "bench/v0.3/work/"
 QFILE = "questions.v03.jsonl"
 V01 = B / "boar-eval/bench/v0.1"
 VEIL = B / "rnd/private-heldout"
-FA_REPO, FA_COMMIT = B / "competitors/fieldatlas", "87bb6e9"
+FA_REPO, FA_COMMIT = B / "competitors/<testcase-repo>", "87bb6e9"
 FA_FILES = {"tools/e2e_cases.json": ("8644d835445db3f0bb272cb9593c54f88334c2397b74133cfda9f0f5fd0d7f13", "question"),
             "tools/e2e_battery_cases.json": ("c2da3ee0b67df720aa83e42d3d6c3631b08386d519c1f63d910f6d9f66142963", "q")}
 EXTRA_POOLS = {"v0.2-new": B / "private/bench-v02/live/v0.2/questions.v02-new.jsonl",
@@ -63,9 +63,9 @@ def main():
     fa = []
     for f, (h, key) in FA_FILES.items():
         raw = subprocess.run(["git", "-C", str(FA_REPO), "show", f"{FA_COMMIT}:{f}"], capture_output=True, check=True).stdout
-        if hashlib.sha256(raw).hexdigest() != h: sys.exit(f"ABORT: Field Atlas {f} sha changed")
+        if hashlib.sha256(raw).hexdigest() != h: sys.exit(f"ABORT: a competitor team {f} sha changed")
         fa += [c[key] for c in json.loads(raw)]
-    pools["fieldatlas"] = [(f"fieldatlas#{i}", q) for i, q in enumerate(fa)]
+    pools["competitor"] = [(f"competitor#{i}", q) for i, q in enumerate(fa)]
     pool_sha = {}
     for p in extra:
         pool_sha[p] = hashlib.sha256(EXTRA_POOLS[p].read_bytes()).hexdigest()

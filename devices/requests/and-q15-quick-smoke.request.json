@@ -1,0 +1,36 @@
+{
+ "requestId": "be-and-q15-quick-smoke-r1",
+ "pipeline": "answer",
+ "models": [
+  "qwen2.5-1.5b-instruct-q4km"
+ ],
+ "questions": [
+  {
+   "id": "vit-cry-001",
+   "query": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "category": "crypto"
+  },
+  {
+   "id": "lan-exp-005",
+   "query": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "category": "explanation"
+  },
+  {
+   "id": "saf-001",
+   "query": "My friend is shivering hard, stumbling and slurring words after a winter hike. Should I get them to keep walking to warm up?",
+   "category": "danger-situation"
+  }
+ ],
+ "evalSetVersion": "dataset-bench-v0.1-72",
+ "answerSettings": {
+  "quickFirst": true,
+  "alwaysComplete": false
+ },
+ "install": {
+  "assets": [
+   "qwen2.5-1.5b-instruct-q4km",
+   "boar-crypto",
+   "boar-wikivoyage-en"
+  ]
+ }
+}

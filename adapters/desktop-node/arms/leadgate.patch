@@ -1,0 +1,126 @@
+diff --git a/src/rag/wikiPack.leadgate.test.ts b/src/rag/wikiPack.leadgate.test.ts
+new file mode 100644
+index 00000000..93b83248
+--- /dev/null
++++ b/src/rag/wikiPack.leadgate.test.ts
+@@ -0,0 +1,67 @@
++/// <reference types="node" />
++import { describe, it, expect, beforeAll } from "vitest";
++import { execFileSync } from "node:child_process";
++import { mkdtempSync, writeFileSync } from "node:fs";
++import { tmpdir } from "node:os";
++import { join } from "node:path";
++import { DatabaseSync } from "node:sqlite";
++import { decompress } from "fzstd";
++import { nodeSqliteDatabase } from "./testing/nodeSqlite";
++import { WikiPack, leadGateApplies, passesLeadGate } from "./wikiPack";
++
++// Made-up, test-only articles. "Lakeland" and "Riverton" are travel guides whose text repeats the question's words
++// (population, census); "Census" is the encyclopedia article. Lead vectors are 4-dim int8 stand-ins: the question
++// vector is [1, 0, 0, 0]; Lakeland's lead is orthogonal (cos 0, an off-topic guide), Riverton's is close (cos ~0.8).
++const ARTICLES = [
++  { page_id: 1, title: "Census", views: 9000, text: "# Census\n\nA census is the official count of a population, the number of people living in a country." },
++  { page_id: 2, title: "Lakeland", views: 0, source: "enwikivoyage", text: "# Lakeland\n\nLakeland is a lake town. Its population at the last census was 40,000 people, a small country town." },
++  { page_id: 3, title: "Riverton", views: 0, source: "enwikivoyage", text: "# Riverton\n\nRiverton counts its population in every census; the country's people come for the river." },
++];
++// The builder skips texts under 200 characters: a neutral section pads each one.
++for (const a of ARTICLES) a.text += "\n\n## Notes\n\n" + Array.from({ length: 6 }, (_, i) => `Filler line ${i} about nothing in particular.`).join(" ");
++const Q = new Float32Array([1, 0, 0, 0]);
++let pack: WikiPack;
++
++beforeAll(async () => {
++  const dir = mkdtempSync(join(tmpdir(), "boar-leadgate-"));
++  const shard = join(dir, "a.jsonl");
++  writeFileSync(shard, ARTICLES.map((a) => JSON.stringify(a)).join("\n") + "\n");
++  const out = join(dir, "lg.sqlite");
++  execFileSync(process.execPath, ["scripts/build-wiki-pack.mjs", "--out", out, "--shards", shard, "--no-embed", "--chunk-chars", "300"], { stdio: "pipe" });
++  const db = new DatabaseSync(out);
++  db.exec("CREATE TABLE IF NOT EXISTS lead_vecs (article_id INTEGER PRIMARY KEY, scale REAL NOT NULL, vec BLOB NOT NULL)");
++  const id = (t: string) => (db.prepare("SELECT id FROM articles WHERE title = ?").get(t) as { id: number }).id;
++  const ins = db.prepare("INSERT INTO lead_vecs VALUES (?, 1, ?)");
++  ins.run(id("Census"), new Uint8Array(new Int8Array([120, 10, 0, 0]).buffer));
++  ins.run(id("Lakeland"), new Uint8Array(new Int8Array([0, 127, 0, 0]).buffer));
++  ins.run(id("Riverton"), new Uint8Array(new Int8Array([100, 75, 0, 0]).buffer));
++  db.close();
++  pack = await WikiPack.open(nodeSqliteDatabase(out), decompress);
++}, 60000);
++
++const titles = async (q: string, queryVec?: Float32Array) => (await pack.search(q, { k: 6, ...(queryVec ? { queryVec } : {}) })).map((h) => h.title);
++
++describe("Wikivoyage lead gate", () => {
++  it("drops a keyword-matched guide whose lead is far from a non-travel question", async () => {
++    const q = "How is the population of a country counted in a census?";
++    expect(await titles(q)).toContain("Lakeland"); // no question vector: today's behaviour
++    const gated = await titles(q, Q);
++    expect(gated).not.toContain("Lakeland");
++    expect(gated).toContain("Riverton"); // lead cos 0.8 >= 0.55
++    expect(gated).toContain("Census"); // encyclopedia sources are never gated
++  });
++  it("keeps guides for travel, what-to-do, health and Portuguese questions", async () => {
++    expect(await titles("Things to see in Lakeland: what is the population there?", Q)).toContain("Lakeland");
++    expect(leadGateApplies("Is tap water safe in Lakeland?", false)).toBe(false);
++    expect(leadGateApplies("What should I do in a flood?", true)).toBe(false);
++    expect(leadGateApplies("My friend has hypothermia, how do I warm him?", false)).toBe(false);
++    expect(leadGateApplies("Qual é a população do Brasil?", false)).toBe(false);
++    expect(leadGateApplies("How many people live in Brazil?", false)).toBe(true);
++  });
++  it("gates only Wikivoyage, at the app's 0.55 floor, and never a guide without a lead vector", () => {
++    expect(passesLeadGate("enwikivoyage", 0.54)).toBe(false);
++    expect(passesLeadGate("enwikivoyage", 0.55)).toBe(true);
++    expect(passesLeadGate("enwikivoyage", undefined)).toBe(true);
++    expect(passesLeadGate("enwiki", 0.1)).toBe(true);
++  });
++});
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..a7b4bcd9 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -15,7 +15,9 @@
+  * that's only used when the keyword search comes back thin.
+  */
+ 
+-import { cosineSimilarityInt8 } from "./pure";
++import { cosineSimilarityInt8, MIN_SEMANTIC_SIMILARITY } from "./pure";
++import { looksPortuguese } from "./ptLexicon";
++import { isHealthQuestion } from "../routing/context";
+ import { EXPLAIN_INTENT } from "./explain";
+ 
+ export interface PackSql {
+@@ -225,6 +227,23 @@ const QUESTION_WORDS = new Set([
+ /** Cosine (bge-small) of a lead that's about the question even without its words. */
+ export const SEMANTIC_KEEP = 0.7;
+ 
++/**
++ * Lead gate (Sonar card `wikivoyage-lead-gate`): a Wikivoyage keyword hit for a question that isn't about travel
++ * must have a guide lead at least MIN_SEMANTIC_SIMILARITY (0.55) from the question, the floor every other
++ * semantic hit already meets. Travel prose shares words with many questions ("population", "bones", "world cup"),
++ * so guides like Saransk reached the sources of a World Cup question on keyword coverage alone.
++ * Not gated: travel questions (the guide is the source even when its lead is far from the wording), what-to-do and
++ * health questions (they keep their lay sources and the health route's own filter), a Portuguese question's first
++ * pass (its English-names search is gated with the English vector), and guides without a lead vector.
++ */
++export function leadGateApplies(query: string, action: boolean): boolean {
++  return !action && !isTravelQuestion(query) && !TRAVEL_INTENT.test(query) && !isHealthQuestion(query) && !looksPortuguese(query);
++}
++
++export function passesLeadGate(source: PackSource, leadSim: number | undefined): boolean {
++  return source !== "enwikivoyage" || leadSim === undefined || leadSim >= MIN_SEMANTIC_SIMILARITY;
++}
++
+ /** Monthly views below which a topic is "long tail": answer from the sources, not the model's memory. */
+ export const LONG_TAIL_VIEWS = 5000;
+ 
+@@ -849,11 +868,13 @@ export class WikiPack {
+         const blended = (c: Candidate) => (1 - w) * (c.score / max) + w * (sem.get(c.articleId) ?? median);
+         keyword = [...keyword].sort((a, b) => blended(b) - blended(a));
+       }
++      const gated = !!sem && leadGateApplies(query, action);
+       // Text is read only for candidates in rank order, until the result is full.
+       for (const c of keyword) {
+         if (hits.length >= limit) break;
+         if (seen.has(c.chunkId)) continue;
+         const h = await this.materialize(c);
++        if (gated && !passesLeadGate(h.source, sem!.get(c.articleId))) continue;
+         const relevant =
+           coverage(`${h.title} ${h.text}`, topic.length ? topic : stems) >= 0.5 || (sem?.get(c.articleId) ?? 0) >= SEMANTIC_KEEP;
+         // A what-to-do question: at most three passages per article, so a lay manual's steps (Wikibooks First Aid)

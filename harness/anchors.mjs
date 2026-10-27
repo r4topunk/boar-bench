@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Calibration anchors: Claude models answering bench items from memory (NO tools, NO web) as systems under test, so a
 // BOAR quality ratio can be read against "frontier model without web". Same recipe as the frozen Opus+web references
-// (bench/v0.1/refs/gen_refs.mjs: claude -p on the subscription via the vendored eval-lib runClaude, user prompt = the
+// (bench/v0.1/refs/gen_refs.mjs: claude -p (own CLI login, no API key) via the vendored eval-lib runClaude, user prompt = the
 // bare question, system prompt reference.v1) with the web removed: system prompt anchor.v1 = reference.v1 minus its
 // three web lines ("with web search", "Search the web…", "End with a line Sources:…"), tools []. The only differences
 // vs the reference are web access and the model. One answer per item per model, written as EvalTrace v1
@@ -83,7 +83,7 @@ for (const q of todo) {
   const trace = {
     protocol: "1.0.0", runId, itemId: q.id, question: q.question,
     engine: { commit: "n/a-anchor", arm: `anchor-${model}`, dirty: false },
-    runtime: { adapter: "reference-cli", host: "claude-code-subscription (claude -p, cleanEnv: no API key)", model: resolved, sampler: {},
+    runtime: { adapter: "reference-cli", host: "claude-code (claude -p, cleanEnv: no API key)", model: resolved, sampler: {},
                versions: { "claude-code": cliVersion, prompt: PROMPT_VERSION, promptSha256: promptSha, requestedModel: model, tools: "none" } },
     config: { commit: "n/a-anchor", arm: `anchor-${model}`, modelId: resolved, settings: { promptVersion: PROMPT_VERSION, tools: [], web: false }, kit: [], device: null },
     route: { task: null, tier: null, outcome: "answered", reasonCodes: [] },
@@ -96,7 +96,7 @@ for (const q of todo) {
     createdAt: new Date().toISOString(),
   };
   appendFileSync(out, JSON.stringify(trace) + "\n");
-  console.log(`${q.id} ok ${resolved} out=${usage.outputTokens}tok ${(r.wallMs / 1000).toFixed(1)}s declined=${trace.answer.declined} listUsd=${usage.listPriceEquivalentUsd?.toFixed(4)}`);
+  console.log(`${q.id} ok ${resolved} out=${usage.outputTokens}tok ${(r.wallMs / 1000).toFixed(1)}s declined=${trace.answer.declined}`);
 }
 const now = new Set(readJsonl(out).filter((t) => !t.error).map((t) => t.itemId));
-console.log(`progress ${items.filter((q) => now.has(q.id)).length}/${items.length}; cumulative list-price equivalent ${totalSpend(SPEND).toFixed(2)} USD (${SPEND}; subscription, not a charge)`);
+console.log(`progress ${items.filter((q) => now.has(q.id)).length}/${items.length}; usage ledger ${SPEND}`);

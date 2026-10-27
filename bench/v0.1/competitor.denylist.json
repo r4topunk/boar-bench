@@ -1,7 +1,7 @@
 {
- "about": "Hashes of the 31 test-case questions in vbuterin/fieldatlas@87bb6e9 (tools/e2e_cases.json, tools/e2e_battery_cases.json). norm_sha256 = sha256 of the question's normalized tokens (NFKC, lowercase, punctuation -> space) joined by one space. validate.py hashes every n-token window of every bench file and fails on any match. No question text is stored.",
+ "about": "Hashes of the 31 test-case questions in a competitor team's public test-case repo @87bb6e9 (tools/e2e_cases.json, tools/e2e_battery_cases.json). norm_sha256 = sha256 of the question's normalized tokens (NFKC, lowercase, punctuation -> space) joined by one space. validate.py hashes every n-token window of every bench file and fails on any match. No question text is stored.",
  "source": {
-  "repo": "vbuterin/fieldatlas (identical in 0x94t3z/fieldatlas)",
+  "repo": "a competitor team's public test-case repo (identical in a public fork)",
   "commit": "87bb6e9abd",
   "files": {
    "tools/e2e_cases.json": "8644d835445db3f0bb272cb9593c54f88334c2397b74133cfda9f0f5fd0d7f13",

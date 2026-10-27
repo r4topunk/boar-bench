@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-ethereum-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "918245931f05ab8f11e56a3c360b421731ac7be9fcbbf92941d3900a986a2024",
+ "questions_sha256": "183d3a7bdf93c8f9f117c327a0f814c2af311a63179b18e4eb5a16a3aee27e48",
+ "jsonl_sha256": "36f813a508eb426c9cc3a40cc065d59d35090e02849e7d50707d411c2864aaaa"
+}

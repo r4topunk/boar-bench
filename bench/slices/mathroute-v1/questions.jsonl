@@ -1,0 +1,26 @@
+{"id": "vit-sci-003", "group": "v01", "question": "My phone generates 10 tokens per second and processes the prompt at 30 tokens per second. With 1,300 tokens of sources and a 400-token answer, how long until the answer is finished?", "lang": "en"}
+{"id": "vit-trv-004", "group": "v01", "question": "How far is it to walk from Paris to Rome and back?", "lang": "en"}
+{"id": "mr-u01", "group": "unit", "question": "What is 25 °C in Fahrenheit?", "lang": "en"}
+{"id": "mr-u02", "group": "unit", "question": "Convert 98.6 °F to Celsius.", "lang": "en"}
+{"id": "mr-u03", "group": "unit", "question": "How many kilometres is 26.2 miles?", "lang": "en"}
+{"id": "mr-u04", "group": "unit", "question": "How many pounds is 70 kg?", "lang": "en"}
+{"id": "mr-u05", "group": "unit", "question": "What is -40 degrees Celsius in Fahrenheit?", "lang": "en"}
+{"id": "mr-u06", "group": "unit", "question": "How many litres are in 5 US gallons?", "lang": "en"}
+{"id": "mr-u07", "group": "unit", "question": "My tyre pressure gauge says 2.2 bar. What is that in psi?", "lang": "en"}
+{"id": "mr-u08", "group": "unit", "question": "How many feet is 3,000 metres?", "lang": "en"}
+{"id": "mr-a01", "group": "arith", "question": "My car uses 6.5 litres per 100 km. How many litres do I need for a 420 km trip?", "lang": "en"}
+{"id": "mr-a02", "group": "arith", "question": "A bus leaves at 9:40 and the trip takes 2 hours 35 minutes. What time does it arrive?", "lang": "en"}
+{"id": "mr-a03", "group": "arith", "question": "If 1 euro is 1.08 US dollars, how many euros do I get for 250 dollars?", "lang": "en"}
+{"id": "mr-a04", "group": "arith", "question": "My power bank is 20,000 mAh at 3.7 V. How many watt-hours is that?", "lang": "en"}
+{"id": "mr-a05", "group": "arith", "question": "Using Naismith's rule, how long does a 12 km hike with 600 m of ascent take?", "lang": "en"}
+{"id": "mr-a06", "group": "arith", "question": "A jacket costs $80 and is 35% off. What is the sale price?", "lang": "en"}
+{"id": "mr-a07", "group": "arith", "question": "I walk at 5 km/h. How long does it take to walk 18 km?", "lang": "en"}
+{"id": "mr-a08", "group": "arith", "question": "A 60 W bulb runs 5 hours a day for 30 days. How many kWh is that?", "lang": "en"}
+{"id": "mr-t01", "group": "trap", "question": "Is 30 °C hot? What is it in Fahrenheit?", "lang": "en"}
+{"id": "mr-t02", "group": "trap", "question": "I'm flying to the US and the forecast says 50 °F. What is that in Celsius, roughly?", "lang": "en"}
+{"id": "mr-t03", "group": "trap", "question": "The speed limit on Italian motorways is 130 km/h. What is that in mph?", "lang": "en"}
+{"id": "mr-t04", "group": "trap", "question": "My baby's thermometer reads 38.5 °C. What is that in Fahrenheit?", "lang": "en"}
+{"id": "mr-t05", "group": "trap", "question": "Mount Everest is 8,849 metres tall. How many feet is that?", "lang": "en"}
+{"id": "mr-t06", "group": "trap", "question": "Bitcoin's supply is capped at 21 million coins. If 19.8 million have been mined, what percentage is that?", "lang": "en"}
+{"id": "mr-t07", "group": "trap", "question": "Tokyo is 9 hours ahead of London. If it's 3 pm in London, what time is it in Tokyo?", "lang": "en"}
+{"id": "mr-t08", "group": "trap", "question": "The Eiffel Tower is 330 m tall. How many times taller is it than a 1.8 m person?", "lang": "en"}

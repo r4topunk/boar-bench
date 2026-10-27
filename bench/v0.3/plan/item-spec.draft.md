@@ -19,7 +19,7 @@ Base: reuse v0.1's method (`boar-eval/bench/v0.1/DATASET_CARD.md`): one item per
 4. **Phrasing mix inside each category:** about one-third first-person situational ("I'm in X and …"), one-third direct questions, one-third imperative ("Explain …", "Compare …"). Real users write all three; the classifier and routers react differently to each (situation-shape finding).
 5. **Two writers, if possible:** split the 110 slots 55/55 between the writer agent and a second blind writer (another agent instance with the same spec and no access to `rnd/`). Report the ratio per writer. A single writer's style can correlate with BOAR's strengths or weaknesses, and a split makes that visible.
 6. **Similarity gates before freezing:**
-   - word-Jaccard ≤ 0.30 against v0.1 public, the safety track, the held-out v0.1 split and the Field Atlas questions (as v0.1 did);
+   - word-Jaccard ≤ 0.30 against v0.1 public, the safety track, the held-out v0.1 split and the competitor questions (as v0.1 did);
    - **plus** a semantic check: bge-small cosine ≥ 0.90 against any of those → rewrite.
 7. **Blindness:** writers never see BOAR's packs, coverage tools, traces, failure lists, research cards, or these researchers' radars. No "coverage" field. Pack coverage is measured after the freeze, as a report (not used to drop items).
 8. **No item may be dropped after the freeze** for any reason except a factual error in the gold answer found by the reference step. Such drops are listed with reasons in the manifest.

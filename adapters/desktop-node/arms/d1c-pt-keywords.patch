@@ -1,0 +1,293 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..f269e25f 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1178,15 +1178,16 @@ describe("answer(): Sextant q7 (chat screen): 'O que causa o efeito estufa?'", (
+           expect(s.instant, q).not.toMatch(/Surface heating|host star/);
+           expect(s.instant, q).toMatch(/greenhouse/i);
+         }
+-        // Never an empty screen. The 1.5B's PT answer loses its [1] (CT-1 can't verify PT against English)
+-        // and declines honestly (gate 20e8c65: the cross-language exception let confident errors through).
++        // Never an empty screen. Decision 1 arm C: CT-1 now verifies the PT answer through the PT->EN lexicon
++        // ("efeito estufa" -> Greenhouse effect, "gases", "calor" -> Heat, "atmosfera" -> Atmosphere): the [1] stays.
+         expect(result.text.trim().length, q).toBeGreaterThan(0);
+         expect(s.done.finalText ?? result.text, q).not.toBe("");
+         expect(result.text, q).not.toMatch(/host star/);
++        expect(s.declined, q).toBe(false);
+         if (label === "1.5B" && q.startsWith("O que")) {
+-          expect(s.declined, q).toBe(true);
+-          expect(result.text, q).toBe("Os trechos encontrados não sustentam esta resposta.");
+-        } else expect(s.declined, q).toBe(false);
++          expect(result.text, q).toBe("O efeito estufa é causado por gases que retêm calor na atmosfera [1].");
++          expect(result.receipt.reasonCodes).toContain("citations:pt-en-lexicon-kept");
++        } else if (!q.startsWith("O que")) expect(result.receipt.reasonCodes.some((c) => c.startsWith("citations:pt-en")), q).toBe(false);
+       }
+     });
+   }
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..1c6d0cb3 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -1185,11 +1185,14 @@ export function createAnswerer(deps: AnswerDeps) {
+       // would shadow the full chunk whenever the synthesis cites the same one again.
+       const fullOf = (c: RetrievedChunk) =>
+         fullCited.find((r) => r.chunkId === c.chunkId) ?? raw.find((r) => r.chunkId === c.chunkId) ?? c;
++      // Decision 1, arm C: a PT question's answer is compared with the English sources through the PT->EN lexicon.
++      const citationLexicon = pt ? ptLexicon() : undefined;
+       // CT-1: a [n] stays only where source n supports its sentence.
+       let allCitationsRemoved = false;
+       if (/\[\d+\]/.test(text)) {
+         const cited = sources.map((c) => fullOf(c));
+-        const checked = checkCitations(text, cited);
++        const checked = checkCitations(text, cited, citationLexicon);
++        if (citationLexicon && checked.removed.join() !== checkCitations(text, cited).removed.join()) reasonCodes.push("citations:pt-en-lexicon-kept");
+         if (checked.removed.length) {
+           reasonCodes.push(`citations:removed-${checked.removed.join("-")}`);
+           text = checked.text;
+@@ -1239,7 +1242,8 @@ export function createAnswerer(deps: AnswerDeps) {
+       // Health answers are the source's excerpt or checked for risky lines: not here.
+       // P2: multi-pass answers too, now that the sources are checked in full (fullCitations): same 0.75 bar.
+       if (!health && sources.length && text.trim() && !stopRequested) {
+-        const attributed = attributeCitations(text, sources.map((c) => fullOf(c)));
++        const attributed = attributeCitations(text, sources.map((c) => fullOf(c)), citationLexicon);
++        if (citationLexicon && attributed.added.join() !== attributeCitations(text, sources.map((c) => fullOf(c))).added.join()) reasonCodes.push("citations:pt-en-lexicon-added");
+         if (attributed.added.length) {
+           reasonCodes.push(`citations:added-${attributed.added.join("-")}`);
+           text = attributed.text;
+diff --git a/src/routing/citations.pt.test.ts b/src/routing/citations.pt.test.ts
+new file mode 100644
+index 00000000..1cb36591
+--- /dev/null
++++ b/src/routing/citations.pt.test.ts
+@@ -0,0 +1,65 @@
++import { describe, it, expect } from "vitest";
++import type { RetrievedChunk } from "../rag/retrieve.types";
++import { attributeCitations, checkCitations, citationSupport, ptKeyUnits } from "./citations";
++import { ptLexicon } from "../rag/ptLexiconAsset";
++
++// Decision 1, arm C: PT answers compared with English sources through the PT->EN lexicon.
++const chunk = (chunkId: string, title: string, body: string): RetrievedChunk => ({ chunkId, docId: chunkId, title, body, score: 1, matchType: "hybrid" });
++const LEX = {
++  "prova de participação": "Proof of stake",
++  "prova de participacao": "Proof of stake",
++  "mineração": "Mining",
++  "mineracao": "Mining",
++  "energia": "Energy",
++  "capital": "Capital city",
++  "japão": "Japan",
++  "japao": "Japan",
++};
++const POS = chunk("p", "Proof of stake", "Proof of stake replaces mining: validators lock ether instead of spending energy.");
++
++describe("ptKeyUnits", () => {
++  it("longest lexicon run first; function words are not key units", () => {
++    expect(ptKeyUnits("A prova de participação substitui a mineração e foi adotada [1].", LEX)).toEqual([
++      { own: ["prova", "participacao"], english: ["proof", "stak"] },
++      { own: ["substitui"], english: null },
++      { own: ["mineracao"], english: ["min"] },
++      { own: ["adotada"], english: null },
++    ]);
++  });
++  it("plural via singularsPt; a qualifier-free English title; numbers and English words stay as they are", () => {
++    expect(ptKeyUnits("Energias do Ethereum em 2022", LEX)).toEqual([
++      { own: ["energia"], english: ["energy"] },
++      { own: ["ethereum"], english: null },
++      { own: ["2022"], english: null },
++    ]);
++  });
++});
++
++describe("checkCitations / attributeCitations with the lexicon (PT question)", () => {
++  const pt = "A prova de participação substitui a mineração e economiza energia [1].";
++  it("a faithful PT paraphrase keeps its [n] with the lexicon, loses it without (today's behaviour)", () => {
++    expect(checkCitations(pt, [POS]).removed).toEqual([1]);
++    expect(checkCitations(pt, [POS], LEX)).toEqual({ text: pt, removed: [] });
++    expect(citationSupport(pt, POS, LEX)).toBe(0.6); // prova de participação, mineração, energia of 5 units
++  });
++  it("a wrong PT claim still loses it: the lexicon only translates, the bar is unchanged", () => {
++    const wrong = "O Japão adotou a mineração como capital oficial em 1990 [1].";
++    expect(checkCitations(wrong, [POS], LEX).removed).toEqual([1]);
++  });
++  it("attribution: a supported PT sentence without [n] gets one with the lexicon only", () => {
++    // 3 of 4 units (usam is not in the source): 0.75, the attribution bar.
++    const s = "A prova de participação e a mineração usam energia.";
++    expect(attributeCitations(s, [POS]).added).toEqual([]);
++    expect(attributeCitations(s, [POS], LEX)).toEqual({ text: "A prova de participação e a mineração usam energia [1].", added: [1] });
++  });
++  it("English is untouched: no lexicon, identical results", () => {
++    const en = "Proof of stake replaces mining [1]. The Moon is made of cheese [1].";
++    expect(checkCitations(en, [POS])).toEqual(checkCitations(en, [POS], undefined));
++    expect(checkCitations(en, [POS]).removed).toEqual([1]);
++  });
++  it("the bundled lexicon maps everyday words (asset loaded)", () => {
++    const lex = ptLexicon();
++    const units = ptKeyUnits("O efeito estufa é causado por gases que retêm calor na atmosfera.", lex);
++    expect(units.find((u) => u.own.join(" ") === "efeito estufa")?.english).toEqual(["greenhous", "effect"]); // terms(): stemmed
++  });
++});
+diff --git a/src/routing/citations.ts b/src/routing/citations.ts
+index 448b1cd4..dde919e4 100644
+--- a/src/routing/citations.ts
++++ b/src/routing/citations.ts
+@@ -6,6 +6,7 @@
+  * pointing past the sources is always dropped. Pure.
+  */
+ import type { RetrievedChunk } from "../rag/retrieve.types";
++import { singularsPt, type Lexicon } from "../rag/ptLexicon";
+ import { tokenizeTerms } from "./context";
+ 
+ /** Share of a cited sentence's key words the source must contain. */
+@@ -47,13 +48,107 @@ function sentenceBefore(text: string, at: number): string {
+   return text.slice(start, j);
+ }
+ 
+-export function citationSupport(sentence: string, source: RetrievedChunk): number {
++export function citationSupport(sentence: string, source: RetrievedChunk, lexicon?: Lexicon): number {
++  if (lexicon) return ptCitationSupport(sentence, source, lexicon);
+   const key = keyTerms(sentence);
+   if (key.length < MIN_KEY_TERMS) return 1;
+   const have = terms(`${source.title} ${source.body}`);
+   return key.filter((k) => have.some((h) => same(h, k))).length / key.length;
+ }
+ 
++/**
++ * Decision 1, arm C (Kiln-2, 2026-10-01): a Portuguese answer against English sources shares almost no words with
++ * them, so every [n] went (all-citations-removed) and the compact model's answer was declined after it streamed.
++ * For a PT question only, each key word of the sentence is also looked up in the bundled PT->EN lexicon
++ * (assets/lexicon/pt-en.json, the one englishNamesIn uses), longest run of words first ("prova de participação" ->
++ * Proof of stake): a key unit is supported when its own words OR all the words of its English title are in the
++ * source. Portuguese function words ("foi", "também", "pelo") are not key words, as English stopwords aren't.
++ * The bars (CITATION_MIN_SUPPORT, ATTRIBUTION_MIN_SUPPORT, MIN_KEY_TERMS) are unchanged; English is untouched.
++ */
++const PT_FUNCTION = new Set(
++  (
++    "a ao aos as o os um uma uns umas de do da dos das em no na nos nas num numa nuns numas por pelo pela pelos pelas " +
++    "para pra com sem sob sobre entre ate apos desde contra que qual quais quem como quando onde porque pois se ja ainda " +
++    "tambem mais menos muito muita muitos muitas pouco pouca poucos poucas mesmo mesma mesmos mesmas outro outra outros " +
++    "outras todo toda todos todas cada algum alguma alguns algumas nenhum nenhuma tal tais isso isto aquilo esse essa " +
++    "esses essas este esta estes estas aquele aquela aqueles aquelas ele ela eles elas seu sua seus suas lhe lhes voce " +
++    "voces eu meu minha e ou mas nem nao sim sao era eram foi foram ser sendo sido sera serao seria estao estava " +
++    "estavam estar esteve tem tinha tinham ter tendo teve ha havia houve pode podem poderia deve devem cerca " +
++    "aproximadamente entao assim porem contudo entretanto alem apenas so bem aqui ali la"
++  ).split(" ")
++);
++const MAX_PT_RUN = 4;
++
++const foldPt = (w: string) => w.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
++
++export interface PtKeyUnit {
++  /** The unit's own key terms (as terms()). */
++  own: string[];
++  /** The key terms of the English title the lexicon gives the unit, or null. */
++  english: string[] | null;
++}
++
++/** A Portuguese sentence's key units: lexicon runs (longest first) and single content words. Pure. */
++export function ptKeyUnits(sentence: string, lexicon: Lexicon): PtKeyUnit[] {
++  const words = sentence.replace(/\[\d+\]/g, " ").match(/[\p{L}\p{N}]+(?:-[\p{L}\p{N}]+)*/gu) ?? [];
++  const lower = words.map((w) => w.normalize("NFC").toLowerCase());
++  const folded = words.map(foldPt);
++  const isFunction = (i: number) => PT_FUNCTION.has(folded[i]);
++  const lookup = (i: number, len: number): string | undefined => {
++    const hit = lexicon[lower.slice(i, i + len).join(" ")] ?? lexicon[folded.slice(i, i + len).join(" ")];
++    if (hit) return hit;
++    for (let j = i; j < i + len; j++) {
++      for (const s of singularsPt(folded[j])) {
++        const h = lexicon[[...folded.slice(i, j), s, ...folded.slice(j + 1, i + len)].join(" ")];
++        if (h) return h;
++      }
++    }
++    return undefined;
++  };
++  const units: PtKeyUnit[] = [];
++  const seen = new Set<string>();
++  const push = (u: PtKeyUnit) => {
++    const k = JSON.stringify(u);
++    if (seen.has(k)) return;
++    seen.add(k);
++    units.push(u);
++  };
++  for (let i = 0; i < words.length; ) {
++    if (isFunction(i)) {
++      i++;
++      continue;
++    }
++    let taken = 0;
++    for (let len = Math.min(MAX_PT_RUN, words.length - i); len >= 1; len--) {
++      // A run never ends on a function word ("prova de" is not a name), and one word must have 3+ letters.
++      if (isFunction(i + len - 1) || (len === 1 && folded[i].length < 3)) continue;
++      const title = lookup(i, len);
++      if (!title) continue;
++      const own = [...new Set(terms(words.slice(i, i + len).filter((_, k) => !isFunction(i + k)).join(" ")))].filter((t) => !FILLER.has(t));
++      const english = [...new Set(terms(title.replace(/\s*\([^)]*\)\s*$/, "")))].filter((t) => !FILLER.has(t));
++      if (own.length || english.length) push({ own, english: english.length ? english : null });
++      taken = len;
++      break;
++    }
++    if (!taken) {
++      const own = [...new Set(terms(words[i]))].filter((t) => !FILLER.has(t));
++      if (own.length) push({ own, english: null });
++      taken = 1;
++    }
++    i += taken;
++  }
++  return units;
++}
++
++function ptCitationSupport(sentence: string, source: RetrievedChunk, lexicon: Lexicon): number {
++  const units = ptKeyUnits(sentence, lexicon);
++  if (units.length < MIN_KEY_TERMS) return 1;
++  const have = terms(`${source.title} ${source.body}`);
++  const has = (t: string) => have.some((h) => same(h, t));
++  const supported = (u: PtKeyUnit) => (u.own.length > 0 && u.own.every(has)) || (!!u.english && u.english.every(has));
++  return units.filter(supported).length / units.length;
++}
++
+ export interface CheckedCitations {
+   text: string;
+   /** Source numbers removed, in order of appearance. */
+@@ -76,7 +171,8 @@ function paragraphBefore(text: string, at: number, end: number): string | null {
+   return (span.match(/[.!?](\s|$)/g) ?? []).length > 1 || /[.!?]\s+\S/.test(span.trim()) ? span : null;
+ }
+ 
+-export function checkCitations(answer: string, sources: RetrievedChunk[]): CheckedCitations {
++/** lexicon: arm C, a PT question's answer (see ptKeyUnits); omitted = English, unchanged. */
++export function checkCitations(answer: string, sources: RetrievedChunk[], lexicon?: Lexicon): CheckedCitations {
+   const removed: number[] = [];
+   const text = answer.replace(/\s?\[(\d+)\]/g, (whole, num: string, at: number) => {
+     const n = Number(num);
+@@ -85,8 +181,8 @@ export function checkCitations(answer: string, sources: RetrievedChunk[]): Check
+     const paragraph = source ? paragraphBefore(answer, bracket, at + whole.length) : null;
+     const keep =
+       !!source &&
+-      (citationSupport(sentenceBefore(answer, bracket), source) >= CITATION_MIN_SUPPORT ||
+-        (paragraph !== null && citationSupport(paragraph, source) >= ATTRIBUTION_MIN_SUPPORT));
++      (citationSupport(sentenceBefore(answer, bracket), source, lexicon) >= CITATION_MIN_SUPPORT ||
++        (paragraph !== null && citationSupport(paragraph, source, lexicon) >= ATTRIBUTION_MIN_SUPPORT));
+     if (keep) return whole;
+     removed.push(n);
+     return "";
+@@ -115,20 +211,20 @@ export const ATTRIBUTION_MIN_SUPPORT = 0.75;
+  * citation gets the [n] of the source that supports it, by the same measure at a higher bar. A sentence
+  * too short to judge never gets one (checkCitations keeps those; adding needs real support).
+  */
+-export function attributeCitations(answer: string, sources: RetrievedChunk[]): AttributedCitations {
++export function attributeCitations(answer: string, sources: RetrievedChunk[], lexicon?: Lexicon): AttributedCitations {
+   const added: number[] = [];
+   if (!sources.length) return { text: answer, added };
+   const text = answer.replace(/[^.!?\n]+[.!?]*/g, (sentence: string, at: number) => {
+     if (/\[\d+\]/.test(sentence)) return sentence;
+     // A citation right after the sentence's punctuation ("… Zone. [1]") is its own (Prism CIT-2: "[1]. [1]").
+     if (/^\s*\[\d+\]/.test(answer.slice(at + sentence.length))) return sentence;
+-    if (keyTerms(sentence).length < MIN_KEY_TERMS) return sentence;
++    if ((lexicon ? ptKeyUnits(sentence, lexicon) : keyTerms(sentence)).length < MIN_KEY_TERMS) return sentence;
+     // A heading or a bold title line ("## Greenhouse effect", "**Causes:**") names a topic, it claims nothing.
+     if (/^\s*(#{1,6}\s|\*\*[^*]+\*\*\s*:?\s*$)/.test(sentence)) return sentence;
+     let best = -1;
+     let bestSupport = 0;
+     sources.forEach((source, i) => {
+-      const support = citationSupport(sentence, source);
++      const support = citationSupport(sentence, source, lexicon);
+       if (support >= ATTRIBUTION_MIN_SUPPORT && support > bestSupport) {
+         best = i;
+         bestSupport = support;

@@ -1,12 +1,12 @@
 Creative Commons Attribution 4.0 International (CC BY 4.0)
 
 Applies to the BOAR bench questions, gold answers, rubrics, dataset cards, documentation and reference-answer wrappers in this repository,
-except the parts listed in NOTICE (which carry their own licence).
+(including the text documentation of the harness and the arm reports) except the parts listed in NOTICE (which carry their own licence).
 
 Full legal text: https://creativecommons.org/licenses/by/4.0/legalcode
 
 You are free to share and adapt the material for any purpose, even commercially, under these terms:
-- Attribution: give appropriate credit ("BOAR R&D bench"), provide a link to the licence, and indicate if changes were made.
+- Attribution: give appropriate credit ("BOAR bench, r4to, independent researcher"), provide a link to the licence, and indicate if changes were made.
 - No additional restrictions.
 
 Material from third parties (Wikipedia, Wikivoyage, Stack Exchange, OpenStreetMap, quoted posts and web sources) stays under its own licence; see NOTICE.

@@ -8,5 +8,5 @@
  "heldout_manifest": "heldout.manifest.json",
  "corpus_manifest": "corpus-manifest.json",
  "gold_sources": "gold/sources.json",
- "_note": "read by scorers/bench.py; paths relative to this directory. refs/refs.jsonl is private (gitignored): rebuild it with build.py after refs/gen_refs.mjs, or pass --refs."
+ "_note": "read by scorers/bench.py; paths relative to this directory. refs/refs.jsonl ships in this public repository (public re-issue, see refs/NOTE.md); build.py rebuilds it only from private inputs."
 }

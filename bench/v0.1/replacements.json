@@ -1,12 +1,12 @@
 {
- "about": "v0 -> v0.1: the test cases from the vbuterin/fieldatlas fork (commit 87bb6e9) were removed and each slot was filled by an original item of the same category and grading type, at the same position. Ids only; no removed text.",
+ "about": "v0 -> v0.1: the test cases from the competitor team's public test-case repo fork (commit 87bb6e9) were removed and each slot was filled by an original item of the same category and grading type, at the same position. Ids only; no removed text.",
  "v0_split_sha256": "dc859ebd91b0e02736ff45a5370fc64d42237ac65b93f02d57df619b20bb6b4f",
  "removed": 27,
  "kept": 33,
  "replacements": [
   {
    "removed_id": "vit-fa-001",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-001",
    "category": "explanation",
    "grading_type": "precheck",
@@ -14,7 +14,7 @@
   },
   {
    "removed_id": "vit-fa-002",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-002",
    "category": "explanation",
    "grading_type": "precheck",
@@ -22,7 +22,7 @@
   },
   {
    "removed_id": "vit-fa-003",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-001",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -30,7 +30,7 @@
   },
   {
    "removed_id": "vit-fa-004",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-cmp-001",
    "category": "comparison",
    "grading_type": "precheck",
@@ -38,7 +38,7 @@
   },
   {
    "removed_id": "vit-fa-005",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-cmp-002",
    "category": "comparison",
    "grading_type": "precheck",
@@ -46,7 +46,7 @@
   },
   {
    "removed_id": "vit-fa-006",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-002",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -54,7 +54,7 @@
   },
   {
    "removed_id": "vit-fa-007",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-ref-001",
    "category": "honesty-refusal",
    "grading_type": "precheck",
@@ -62,7 +62,7 @@
   },
   {
    "removed_id": "vit-fa-008",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-hlt-001",
    "category": "health",
    "grading_type": "precheck",
@@ -70,7 +70,7 @@
   },
   {
    "removed_id": "vit-fa-009",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-hlt-002",
    "category": "health",
    "grading_type": "precheck",
@@ -78,7 +78,7 @@
   },
   {
    "removed_id": "vit-fa-010",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-hlt-003",
    "category": "health",
    "grading_type": "precheck",
@@ -86,7 +86,7 @@
   },
   {
    "removed_id": "vit-fa-011",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-ref-002",
    "category": "honesty-refusal",
    "grading_type": "precheck",
@@ -94,7 +94,7 @@
   },
   {
    "removed_id": "vit-fa-012",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-ref-003",
    "category": "honesty-refusal",
    "grading_type": "precheck",
@@ -102,7 +102,7 @@
   },
   {
    "removed_id": "vit-fa-013",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-003",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -110,7 +110,7 @@
   },
   {
    "removed_id": "vit-fa-014",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-cmp-003",
    "category": "comparison",
    "grading_type": "precheck",
@@ -118,7 +118,7 @@
   },
   {
    "removed_id": "vit-fa-015",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-004",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -126,7 +126,7 @@
   },
   {
    "removed_id": "vit-fa-016",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-ref-004",
    "category": "honesty-refusal",
    "grading_type": "precheck",
@@ -134,7 +134,7 @@
   },
   {
    "removed_id": "vit-fa-017",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-003",
    "category": "explanation",
    "grading_type": "precheck",
@@ -142,7 +142,7 @@
   },
   {
    "removed_id": "vit-fa-018",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-004",
    "category": "explanation",
    "grading_type": "precheck",
@@ -150,7 +150,7 @@
   },
   {
    "removed_id": "vit-fa-019",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-005",
    "category": "explanation",
    "grading_type": "precheck",
@@ -158,7 +158,7 @@
   },
   {
    "removed_id": "vit-fa-020",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-006",
    "category": "explanation",
    "grading_type": "precheck",
@@ -166,7 +166,7 @@
   },
   {
    "removed_id": "vit-fa-021",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-cmp-004",
    "category": "comparison",
    "grading_type": "precheck",
@@ -174,7 +174,7 @@
   },
   {
    "removed_id": "vit-fa-022",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-cmp-005",
    "category": "comparison",
    "grading_type": "precheck",
@@ -182,7 +182,7 @@
   },
   {
    "removed_id": "vit-fa-023",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-005",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -190,7 +190,7 @@
   },
   {
    "removed_id": "vit-fa-024",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-006",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -198,7 +198,7 @@
   },
   {
    "removed_id": "vit-fa-025",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-rsn-007",
    "category": "reasoning",
    "grading_type": "precheck",
@@ -206,7 +206,7 @@
   },
   {
    "removed_id": "vit-fa-026",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-ref-005",
    "category": "honesty-refusal",
    "grading_type": "precheck",
@@ -214,7 +214,7 @@
   },
   {
    "removed_id": "vit-fa-027",
-   "removed_provenance": "vbuterin/fieldatlas@87bb6e9",
+   "removed_provenance": "a competitor team's public test-case repo @87bb6e9",
    "new_id": "lan-exp-007",
    "category": "explanation",
    "grading_type": "precheck",

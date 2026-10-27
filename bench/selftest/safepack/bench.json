@@ -1,0 +1,6 @@
+{
+ "bench": "selftest-safepack",
+ "questions": "questions.jsonl",
+ "refs": "refs/refs.jsonl",
+ "_note": "emergency-safety pack self-test, agent-written from boar-preparedness public-domain pages (Ready.gov / US federal, US Army FM 21-76); gold answers use only quoted pack text; must_say/must_not fields per item; AI-reviewed, not clinically reviewed; dev only, never pooled with bench/claim rows"
+}

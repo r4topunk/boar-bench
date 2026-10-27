@@ -1,0 +1,74 @@
+diff --git a/src/routing/classify.test.ts b/src/routing/classify.test.ts
+index b1c84888..69ad3163 100644
+--- a/src/routing/classify.test.ts
++++ b/src/routing/classify.test.ts
+@@ -1,5 +1,5 @@
+ import { describe, it, expect } from "vitest";
+-import { classifyTask, isRetrievalIrrelevant } from "./classify";
++import { classifyTask, isRetrievalIrrelevant, SITUATION_SHAPE } from "./classify";
+ 
+ describe("classifyTask", () => {
+   it("returns unknown for empty input", () => {
+@@ -210,3 +210,32 @@ describe("classifyTask yes/no questions (Sextant trv-009)", () => {
+     expect(classifyTask("Can you help me")).toBe("conversation");
+   });
+ });
++
++describe("classifyTask situation shape (Compass situation-shape-route, QUEUE #13)", () => {
++  it("a personal situation asking what to do is a lookup, EN and PT", () => {
++    for (const q of [
++      "My friend collapsed in the heat and is confused. What should I do?",
++      "I got stung on the beach and my arm is swelling, what do I do",
++      "The power went out and the stove smells of gas, what now",
++      "A wasp stung my son and his lips are puffy, how do I help him",
++      "Meu filho engoliu uma pilha, o que eu faço?",
++      "Minha mãe desmaiou na cozinha e não acorda, e agora",
++      "Caiu água sanitária no meu olho, como eu tiro isso",
++    ])
++      expect(classifyTask(q), q).toBe("lookup");
++  });
++  it("only rewrites chat: other types and greetings are unchanged", () => {
++    expect(classifyTask("hi")).toBe("greeting");
++    expect(classifyTask("tell me a joke")).toBe("conversation");
++    expect(classifyTask("Good morning!")).toBe("greeting");
++    expect(classifyTask("Why should I drink water after a run?")).toBe("research");
++    expect(classifyTask("Write a short poem about the sea")).toBe("chat");
++    expect(classifyTask("Obrigado pela ajuda")).toBe("chat");
++  });
++  it("Unicode word boundaries, as in the frozen Python regex", () => {
++    expect(SITUATION_SHAPE.test("Uma devoção antiga ao mar")).toBe(false);
++    expect(SITUATION_SHAPE.test("my shoulder hurts after the gym")).toBe(false);
++    expect(SITUATION_SHAPE.test("Devo ligar para alguém agora")).toBe(true);
++    expect(classifyTask("Uma devoção antiga ao mar, me conte")).toBe("chat");
++  });
++});
+diff --git a/src/routing/classify.ts b/src/routing/classify.ts
+index 03b89e3e..68a235f7 100644
+--- a/src/routing/classify.ts
++++ b/src/routing/classify.ts
+@@ -64,6 +64,16 @@ const CONVERSATION_RE =
+ const YES_NO =
+   /^(is|are|was|were|do|does|did|can|could|should|will|would|has|have|é|e|são|sao|era|foi|posso|pode|podem|devo|deve|precisa|preciso|tem|há|ha|existe|vale)(?![\p{L}])[^?]*\?\s*$/iu;
+ 
++/**
++ * Compass situation-shape route (rnd/research/compass/cards/situation-shape-route.md; regex SIT in
++ * exp/chat-route/situation.py, FROZEN combined sha256 7a73aeb9…1016): a personal situation asking what to do
++ * ("My friend collapsed in the heat… What should I do?"). As `chat` the compact model answers it from memory
++ * when nothing on topic is found; as a lookup it declines. Ported from Python, whose \b is Unicode-aware: the
++ * boundaries are lookarounds on letters/digits/underscore, so "devoção" does not match "devo".
++ */
++export const SITUATION_SHAPE =
++  /(?<![\p{L}\p{N}_])(what (should|do|can|must) (i|we) do|what do i do|what now|should i(?![\p{L}\p{N}_])|should we(?![\p{L}\p{N}_])|how do i (stop|treat|get rid|remove|help)|o que (eu |a gente )?(fa[çc]o|devo fazer|fazer)|devo(?![\p{L}\p{N}_])|como (eu )?(tiro|paro|trato|ajudo)|e agora)/iu;
++
+ export function classifyTask(query: string): TaskType {
+   const trimmed = query.trim();
+   if (!trimmed) return "unknown";
+@@ -86,6 +96,8 @@ export function classifyTask(query: string): TaskType {
+   // dar gorjeta…?"): as "chat" the compact model answered it from memory with no source (Sextant trv-009: "tão ou
+   // tãozinho, 10%"); as a lookup it declines when the library has nothing on topic. Unicode boundaries ("É").
+   if (YES_NO.test(trimmed)) return "lookup";
++  // Would be chat: a situation-shaped question is a lookup, so with no source the compact model declines.
++  if (SITUATION_SHAPE.test(trimmed)) return "lookup";
+   return "chat";
+ }
+ 

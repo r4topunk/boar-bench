@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-boar-visa-en",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "7dbaf7c1cfc9eb3718319a66fbcdff4ec4f00de564f9993b8dd06cee9ce2db1e",
+ "questions_sha256": "5ed5c489c14724d700a233f082eb63fc35d8200bb30b124b2c67b146edab1ba6",
+ "jsonl_sha256": "979cca7475ecf5b3eec5c320520519330c9ff3460b1a7d94439c7d15cb48c735"
+}

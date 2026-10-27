@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-boar-factbook",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "0508c44f75a0a4d949fd789a259afb57bdd58190782a45941c4fd8eb69e5226d",
+ "questions_sha256": "8f5c7cdecb2ee9db63c825fe48072226de1f458f0c58a965114a53461757f0fa",
+ "jsonl_sha256": "de460a68342bbfd557b48f1e829985997a77161c6085010348a12770c3b09763"
+}

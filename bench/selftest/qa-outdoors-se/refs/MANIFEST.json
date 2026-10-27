@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-outdoors-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "02bb2a257933ae21e7d804a392f244ee097d61f652f50590f6ff1629b4893c12",
+ "questions_sha256": "809198f75520d43c47cff68ae0a13705786c2468760dbde88d4e67b65ccc3a61",
+ "jsonl_sha256": "3eb0bc9eee5c4f3c1d2727617342f9581115477bc1448d941ef99eb91e1d6ae7"
+}

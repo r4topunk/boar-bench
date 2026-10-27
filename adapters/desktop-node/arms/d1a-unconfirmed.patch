@@ -1,0 +1,330 @@
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..8c5494af 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -706,13 +706,16 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     }
+   });
+ 
+-  it("gate 1724fd5: the compact model with a source in its prompt and no [n] declines (was Boar (B)); answerAnyway keeps it", async () => {
++  it("gate 1724fd5 + Decision 1 arm A: the compact model with a source in its prompt and no [n] is shown, labelled unconfirmed; answerAnyway keeps it", async () => {
+     f.retrieved = [CANBERRA];
+     f.deps.engine.generate = async () => "It was chosen by a referendum in 1911.";
+     const { events, result } = await collect("Why was Canberra chosen as the capital of Australia?");
+-    expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "weak_sources", declined: true, message: "The passages found don't support this answer." });
+-    expect(result.text).toBe("The passages found don't support this answer.");
+-    expect(result.receipt.reasonCodes).toContain("grounding:uncited-with-sources-declined-compact");
++    expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "unconfirmed" });
++    expect(events.some((e) => e.type === "warning" && (e as any).declined)).toBe(false);
++    expect(result.text).toMatch(/^Not confirmed by the sources: .*\n\nIt was chosen by a referendum in 1911\.\n\nFrom the source \[1\]: “.*Canberra.*”$/s);
++    expect(result.cited).toEqual([1]);
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:unconfirmed-shown", "grounding:unconfirmed-from-uncited-with-sources", "grounding:unconfirmed-snippet"]));
++    expect(result.receipt.reasonCodes).not.toContain("grounding:uncited-with-sources-declined-compact");
+     f = makeFake();
+     f.retrieved = [CANBERRA];
+     f.deps.engine.generate = async () => "It was chosen by a referendum in 1911.";
+@@ -721,15 +724,15 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     expect(r2.text).toMatch(/referendum/);
+   });
+ 
+-  it("gate 1724fd5, cry-011 PT: no [n] -> the decline; a valid [n] -> the answer stays", async () => {
++  it("gate 1724fd5, cry-011 PT: no [n] -> shown unconfirmed (arm A); a valid [n] -> the answer stays", async () => {
+     const EIP = chunk("e", "Ethereum EIPs/ERCs: EIP-1559: Fee market change for ETH 1.0 chain", "Abstract: A transaction pricing mechanism that includes fixed-per-block network fee that is burned and dynamically expands/contracts block sizes to deal with transient congestion.");
+     const q = "O que a EIP-1559 muda nas taxas de transação do Ethereum, e o que acontece com a taxa base?";
+     f.retrieved = [EIP];
+     f.deps.englishNames = () => ["Ethereum"];
+     f.deps.engine.generate = async () => "A EIP-1559 introduz uma taxa base que é queimada e ajusta o tamanho dos blocos.";
+     const without = await collect(q);
+-    expect(without.result.text).toBe("Os trechos encontrados não sustentam esta resposta.");
+-    expect(without.result.receipt.reasonCodes).toContain("grounding:uncited-with-sources-declined-compact");
++    expect(without.result.text).toMatch(/^Não confirmado pelas fontes: .*\n\nA EIP-1559 introduz uma taxa base que é queimada/s);
++    expect(without.result.receipt.reasonCodes).toContain("grounding:unconfirmed-from-uncited-with-sources");
+     f = makeFake();
+     f.retrieved = [EIP];
+     f.deps.englishNames = () => ["Ethereum"];
+@@ -797,7 +800,7 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+     expect((events2.find((e) => e.type === "warning") as any).declined).toBeUndefined();
+   });
+ 
+-  it("Boar (A): the compact model whose every citation CT-1 removes declines; answerAnyway and the 4B keep the answer", async () => {
++  it("Boar (A) + Decision 1 arm A: every citation removed -> shown unconfirmed, no decline; answerAnyway and the 4B keep the answer", async () => {
+     const run = async (setup: () => void, req: any = {}) => {
+       f = makeFake();
+       setup();
+@@ -808,10 +811,12 @@ describe("answer(): topic guard for every snippet (Prism RT-1)", () => {
+       return { events, result };
+     };
+     const compact = await run(() => {});
+-    expect(compact.events.find((e) => e.type === "warning")).toMatchObject({ code: "weak_sources", declined: true, message: "The passages found don't support this answer." });
++    expect(compact.events.find((e) => e.type === "warning")).toMatchObject({ code: "unconfirmed", message: expect.stringMatching(/^Not confirmed by the sources/) });
++    expect(compact.events.some((e) => e.type === "warning" && (e as any).declined)).toBe(false);
+     expect(compact.events.some((e) => e.type === "sources")).toBe(true);
+-    expect((compact.events.find((e) => e.type === "done") as any).finalText).toBe("The passages found don't support this answer.");
+-    expect(compact.result.receipt.reasonCodes).toContain("grounding:all-citations-removed-declined-compact");
++    expect((compact.events.find((e) => e.type === "done") as any).finalText).toMatch(/^Not confirmed by the sources: .*\n\nMold grows in damp bathrooms\./s);
++    expect(compact.result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:unconfirmed-shown", "grounding:unconfirmed-from-all-citations-removed"]));
++    expect(compact.result.receipt.reasonCodes).not.toContain("grounding:all-citations-removed-declined-compact");
+     const anyway = await run(() => {}, { answerAnyway: true });
+     expect(anyway.result.text).toBe("Mold grows in damp bathrooms.");
+     const big = await run(() => {
+@@ -1127,6 +1132,50 @@ describe("answer(): Sextant cry-020 / cry-012", () => {
+   });
+ });
+ 
++describe("answer(): Decision 1 arm A, what stays strict", () => {
++  const BURN = chunk(
++    "b",
++    "Burn",
++    "Burn first aid: Cool the burn with cool running water for 20 minutes. Do not apply ice or butter to a burn. Cover the burn loosely with a clean dressing."
++  );
++  it("saf-004: a safety question (isSafetyQuery, not isHealthQuestion) still declines an uncited compact answer", async () => {
++    f.retrieved = [BURN];
++    f.deps.engine.generate = async () => "Put butter on it to soothe the pain.";
++    const { events, result } = await collect("I burned my hand on a hot pan. Should I put ice or butter on it?");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:unconfirmed-shown");
++    expect(events.some((e) => e.type === "warning" && (e as any).code === "unconfirmed")).toBe(false);
++    expect(result.text).not.toMatch(/butter on it/);
++  });
++  it("a known-false claim without a citation still declines (no unconfirmed answer)", async () => {
++    f.retrieved = [chunk("pqc", "Post-quantum cryptography", "Open Quantum Safe project: The Open Quantum Safe (OQS) project has the goal of developing and prototyping quantum-resistant cryptography.")];
++    f.deps.engine.generate = async () => "Quantum-resistant signature algorithms include those based on elliptic curve cryptography (ECC), such as those in the Open Quantum Safe (OQS) project.";
++    const { result } = await collect("Which signature algorithms are quantum resistant?");
++    expect(result.text).toBe("The passages found don't support this answer.");
++    expect(result.receipt.reasonCodes).toContain("grounding:false-claim-declined-compact");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:unconfirmed-shown");
++  });
++  it("PT question, English source: the snippet carries the language lead and cites its source", async () => {
++    f.retrieved = [CANBERRA];
++    f.deps.englishNames = () => ["Canberra"];
++    f.deps.engine.generate = async () => "Canberra foi escolhida como um meio-termo entre Sydney e Melbourne.";
++    const { events, result } = await collect("Por que Canberra foi escolhida como capital da Austrália?");
++    expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "unconfirmed", message: expect.stringMatching(/^Não confirmado pelas fontes/) });
++    expect(result.text).toMatch(/^Não confirmado pelas fontes: .*\n\nCanberra foi escolhida como um meio-termo entre Sydney e Melbourne\.\n\nDa fonte offline \(em inglês\) \[1\]: “.*Canberra.*”$/s);
++    expect(result.cited).toEqual([1]);
++    expect(result.receipt.reasonCodes).toContain("grounding:unconfirmed-from-uncited-with-sources");
++  });
++  it("the streamed draft is never replaced by a decline: done.finalText keeps the model's words", async () => {
++    f.retrieved = [CANBERRA];
++    f.deps.engine.generate = async (opts) => {
++      opts.onToken?.("Mold grows in damp bathrooms [1].");
++      return "Mold grows in damp bathrooms [1].";
++    };
++    const { events } = await collect("Why was Canberra chosen as the capital of Australia?");
++    expect(events.some((e) => e.type === "token")).toBe(true);
++    expect((events.find((e) => e.type === "done") as any).finalText).toMatch(/Mold grows in damp bathrooms\./);
++  });
++});
++
+ describe("answer(): a known-false quantum claim (gate 394bf31)", () => {
+   const PQC = chunk("pqc", "Post-quantum cryptography", "Open Quantum Safe project: The Open Quantum Safe (OQS) project has the goal of developing and prototyping quantum-resistant cryptography.");
+   const seed5 = "Quantum-resistant signature algorithms include those based on elliptic curve cryptography (ECC) or lattice-based cryptography, such as those in the Open Quantum Safe (OQS) project.";
+@@ -1178,15 +1227,18 @@ describe("answer(): Sextant q7 (chat screen): 'O que causa o efeito estufa?'", (
+           expect(s.instant, q).not.toMatch(/Surface heating|host star/);
+           expect(s.instant, q).toMatch(/greenhouse/i);
+         }
+-        // Never an empty screen. The 1.5B's PT answer loses its [1] (CT-1 can't verify PT against English)
+-        // and declines honestly (gate 20e8c65: the cross-language exception let confident errors through).
++        // Never an empty screen. The 1.5B's PT answer loses its [1] (CT-1 can't verify PT against English);
++        // Decision 1 arm A: it stays, labelled unconfirmed, with no off-topic snippet ("host star") as "verification".
+         expect(result.text.trim().length, q).toBeGreaterThan(0);
+         expect(s.done.finalText ?? result.text, q).not.toBe("");
+         expect(result.text, q).not.toMatch(/host star/);
++        expect(s.declined, q).toBe(false);
+         if (label === "1.5B" && q.startsWith("O que")) {
+-          expect(s.declined, q).toBe(true);
+-          expect(result.text, q).toBe("Os trechos encontrados não sustentam esta resposta.");
+-        } else expect(s.declined, q).toBe(false);
++          expect(result.text, q).toBe(
++            "Não confirmado pelas fontes: os trechos encontrados não sustentam esta resposta. Confira antes de confiar nela.\n\nO efeito estufa é causado por gases que retêm calor na atmosfera."
++          );
++          expect(result.receipt.reasonCodes).not.toContain("grounding:unconfirmed-snippet");
++        }
+       }
+     });
+   }
+@@ -1209,14 +1261,14 @@ describe("answer(): arithmetic before places (Sextant 3ccf7c0, v2-pt math)", ()
+ });
+ 
+ describe("answer(): cry-014 PT, the 1.5B's unsupported EIP-7251 answer (gate 20e8c65)", () => {
+-  it("declines again, with the decline as the answer's text", async () => {
++  it("Decision 1 arm A: shown, labelled unconfirmed (the known risk: this is a confident error; the judge measures it)", async () => {
+     f.retrieved = [chunk("e", "Ethereum EIPs/ERCs: EIP-7251: Increase the MAX_EFFECTIVE_BALANCE", "Abstract: Increases the constant MAX_EFFECTIVE_BALANCE to 2048 ETH while keeping the minimum staking balance 32 ETH.")];
+     f.deps.englishNames = () => ["Ethereum"];
+     f.deps.engine.generate = async () => "O saldo efetivo máximo de um validador é de 32 ETH [1].";
+     const { events, result } = await collect("Qual é o saldo efetivo máximo de um validador do Ethereum depois da EIP-7251?");
+-    expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "weak_sources", declined: true });
+-    expect(result.text).toBe("Os trechos encontrados não sustentam esta resposta.");
+-    expect(result.receipt.reasonCodes).toContain("grounding:all-citations-removed-declined-compact");
++    expect(events.find((e) => e.type === "warning")).toMatchObject({ code: "unconfirmed" });
++    expect(result.text).toMatch(/^Não confirmado pelas fontes: .*\n\nO saldo efetivo máximo de um validador é de 32 ETH\./s);
++    expect(result.receipt.reasonCodes).toContain("grounding:unconfirmed-from-all-citations-removed");
+     expect(result.receipt.reasonCodes).not.toContain("grounding:all-citations-removed-kept-cross-language");
+   });
+ });
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..1ea1f76a 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -68,6 +68,7 @@ import { englishNamesIn } from "../rag/ptLexicon";
+ import { ptLexicon } from "../rag/ptLexiconAsset";
+ import { cleanPlaceName } from "../rag/poiPack";
+ import { attributeCitations, checkCitations } from "./citations";
++import { UNCONFIRMED_SHOWN, UnconfirmedFrom, unconfirmedAnswer, unconfirmedLabel } from "./unconfirmed";
+ import { calculate } from "./calculators";
+ import { emergencyNumbersAnswer } from "./emergencyNumbers";
+ import { isSnakebiteFirstAid, snakebiteFirstAidCard } from "./firstAidCards";
+@@ -878,6 +879,13 @@ export function createAnswerer(deps: AnswerDeps) {
+         emit({ type: "sources", answerId, tier: plan.instant !== "off" ? "instant" : genTier, sources });
+       }
+ 
++      /** A source sentence that may stand as "from the source": on-topic source, covers the question, names the subject. */
++      const snippetCovers = (source: RetrievedChunk, sentence: string) =>
++        onSubject(source) &&
++        termCoverage(matchQuery, `${source.title} ${sentence}`) >= MIN_TERM_COVERAGE &&
++        // The sentence itself names the subject, not only its page's title (Sextant q7, EN and PT).
++        sentenceNamesSubject(matchQuery, source.title, sentence);
++
+       // 2. Instant snippet (no LLM): only a sentence that covers the question. Not for an extractive
+       // health answer: its snippet is the excerpt below (EQ-2: the preview quoted "Do not run during
+       // the quake!" by word overlap, before the Drop, Cover and Hold On excerpt).
+@@ -888,12 +896,7 @@ export function createAnswerer(deps: AnswerDeps) {
+         const snip = pool.length ? selectInstant(matchQuery, pool) : null;
+         const sourceIndex = snip ? sources.findIndex((c) => c.chunkId === pool[snip.sourceIndex].chunkId) : -1;
+         // "From the source" only from an on-topic source (the same onTopic as the sources), and a sentence that covers the question.
+-        const covers =
+-          !!snip &&
+-          onSubject(pool[snip.sourceIndex]) &&
+-          termCoverage(matchQuery, `${pool[snip.sourceIndex].title} ${snip.text}`) >= MIN_TERM_COVERAGE &&
+-          // The sentence itself names the subject, not only its page's title (Sextant q7, EN and PT).
+-          sentenceNamesSubject(matchQuery, pool[snip.sourceIndex].title, snip.text);
++        const covers = !!snip && snippetCovers(pool[snip.sourceIndex], snip.text);
+         if (snip && sourceIndex >= 0 && !covers) reasonCodes.push("instant:off-topic");
+         if (snip && sourceIndex >= 0 && covers) {
+           markVisible();
+@@ -1247,7 +1250,29 @@ export function createAnswerer(deps: AnswerDeps) {
+         }
+       }
+       if (stopRequested) return finish(genTier, "stopped", text, sources, baseReceipt);
++      // Decision 1, arm A: where the citation check below would decline a compact answer that already streamed (the
++      // text "flashes and disappears"; a PT answer never shares words with an English source), the answer stays,
++      // labelled "not confirmed by the sources", with the best source's own sentence (the instant snippet) cited
++      // after it. Health, first aid and disasters (isSafetyQuery, a superset of isHealthQuestion) keep the decline;
++      // the known-false (falseQuantumClaims) and wrong-script declines above and the risky-health path are unchanged.
++      const showUnconfirmed = (from: UnconfirmedFrom): AnswerResult => {
++        reasonCodes.push(UNCONFIRMED_SHOWN, `grounding:unconfirmed-from-${from}`);
++        const full = sources.map((c) => fullOf(c));
++        const best = full.length ? selectInstant(matchQuery, full) : null;
++        // The same bar as the instant snippet: an off-topic sentence ("…such as a host star") is no verification.
++        const snip = best && snippetCovers(full[best.sourceIndex], best.text) ? best : null;
++        const shownText = unconfirmedAnswer(
++          text,
++          pt,
++          snip ? { text: snip.text, sourceNumber: snip.sourceIndex + 1, lead: sourceLanguageLead(pt, snip.text) } : null
++        );
++        if (snip) reasonCodes.push("grounding:unconfirmed-snippet");
++        emit({ type: "warning", answerId, code: "unconfirmed", message: unconfirmedLabel(pt) });
++        finalText = shownText;
++        return finish(genTier, "success", shownText, sources, baseReceipt);
++      };
+       if (allCitationsRemoved && !/\[\d+\]/.test(text) && !health && isCompactModel(genLlm) && !req.answerAnyway && gen.mode !== "multipass") {
++        if (!safety && text.trim()) return showUnconfirmed("all-citations-removed");
+         reasonCodes.push("grounding:all-citations-removed-declined-compact");
+         // Passages were found (and shown): "didn't find this" would be false (Quill 892c049).
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+@@ -1266,6 +1291,7 @@ export function createAnswerer(deps: AnswerDeps) {
+       // sources in its prompt and no [n] at all (after attribution) is treated like "every citation removed":
+       // the decline, unless asked to answer anyway. The 4B is unchanged.
+       if (!health && gen.mode !== "multipass" && sources.length && text.trim() && !/\[\d+\]/.test(text) && isCompactModel(genLlm) && !req.answerAnyway) {
++        if (!safety) return showUnconfirmed("uncited-with-sources");
+         reasonCodes.push("grounding:uncited-with-sources-declined-compact");
+         const message = pt ? "Os trechos encontrados não sustentam esta resposta." : "The passages found don't support this answer.";
+         emit({ type: "warning", answerId, code: "weak_sources", declined: true, message });
+diff --git a/src/routing/events.ts b/src/routing/events.ts
+index 57422a42..be6439df 100644
+--- a/src/routing/events.ts
++++ b/src/routing/events.ts
+@@ -249,7 +249,8 @@ export type AnswerEvent =
+       /** A model loaded but its weights stream from storage (see src/inference/memoryFit.ts). */
+       type: "warning";
+       /** weak_sources: no retrieved source covers the question well; show the sources as weak and suggest a knowledge pack. */
+-      code: "model_streams_from_storage" | "weak_sources";
++      /** unconfirmed (Decision 1, arm A): the compact model's answer is shown although the citation check couldn't confirm it. */
++      code: "model_streams_from_storage" | "weak_sources" | "unconfirmed";
+       message: string;
+       /**
+        * weak_sources only: true = the compact model did NOT answer (it would answer
+diff --git a/src/routing/unconfirmed.test.ts b/src/routing/unconfirmed.test.ts
+new file mode 100644
+index 00000000..71f588a1
+--- /dev/null
++++ b/src/routing/unconfirmed.test.ts
+@@ -0,0 +1,23 @@
++import { describe, it, expect } from "vitest";
++import { UNCONFIRMED_SHOWN, unconfirmedAnswer, unconfirmedLabel } from "./unconfirmed";
++
++describe("unconfirmedAnswer (Decision 1, arm A)", () => {
++  it("EN: label, draft, then the source's own sentence cited as [n]", () => {
++    expect(unconfirmedAnswer("  Kyoto was the capital.  ", false, { text: "Kyoto was the imperial capital for a thousand years.", sourceNumber: 2, lead: null })).toBe(
++      "Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.\n\nKyoto was the capital.\n\nFrom the source [2]: “Kyoto was the imperial capital for a thousand years.”"
++    );
++  });
++  it("PT with an English passage: the language lead, with the [n]", () => {
++    expect(unconfirmedAnswer("Quioto foi a capital.", true, { text: "Kyoto was the imperial capital.", sourceNumber: 1, lead: "Da fonte offline (em inglês):" })).toBe(
++      "Não confirmado pelas fontes: os trechos encontrados não sustentam esta resposta. Confira antes de confiar nela.\n\nQuioto foi a capital.\n\nDa fonte offline (em inglês) [1]: “Kyoto was the imperial capital.”"
++    );
++  });
++  it("PT without a lead, and no snippet at all", () => {
++    expect(unconfirmedAnswer("A.", true, { text: "B.", sourceNumber: 3, lead: null })).toMatch(/\n\nDa fonte \[3\]: “B\.”$/);
++    expect(unconfirmedAnswer("Draft.", false, null)).toBe(`${unconfirmedLabel(false)}\n\nDraft.`);
++    expect(unconfirmedAnswer("Draft.", false, { text: "  ", sourceNumber: 1, lead: null })).toBe(`${unconfirmedLabel(false)}\n\nDraft.`);
++  });
++  it("the reason code", () => {
++    expect(UNCONFIRMED_SHOWN).toBe("grounding:unconfirmed-shown");
++  });
++});
+diff --git a/src/routing/unconfirmed.ts b/src/routing/unconfirmed.ts
+new file mode 100644
+index 00000000..2fdb52c8
+--- /dev/null
++++ b/src/routing/unconfirmed.ts
+@@ -0,0 +1,40 @@
++/**
++ * Decision 1, arm A (Kiln-2, 2026-10-01): the compact model's answer that the citation check could not confirm
++ * (every [n] removed, or no [n] at all with sources in its prompt) is no longer erased after it streamed. It stays,
++ * under a "not confirmed by the sources" label, followed by a verbatim sentence of the best source (the instant
++ * snippet the engine already extracts), cited as that source's [n]. Health/danger questions and the known-false and
++ * risky-instruction patterns keep their strict path (answer.ts). Pure.
++ */
++
++/** Reason code: a compact answer the citation check would have declined is shown, labelled. */
++export const UNCONFIRMED_SHOWN = "grounding:unconfirmed-shown";
++
++/** Which check would have declined it (a second reason code, for the eval). */
++export type UnconfirmedFrom = "all-citations-removed" | "uncited-with-sources";
++
++export function unconfirmedLabel(pt: boolean): string {
++  return pt
++    ? "Não confirmado pelas fontes: os trechos encontrados não sustentam esta resposta. Confira antes de confiar nela."
++    : "Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.";
++}
++
++export interface VerifiedSnippet {
++  /** A source's own sentence(s), verbatim. */
++  text: string;
++  /** 1-based number of that source in the answer's sources. */
++  sourceNumber: number;
++  /** sourceLanguageLead(): "Da fonte offline (em inglês):" for an English passage under a PT question, else null. */
++  lead: string | null;
++}
++
++/** The label, the draft as the model wrote it (citations already removed), then the verified snippet when there is one. */
++export function unconfirmedAnswer(draft: string, pt: boolean, snippet: VerifiedSnippet | null): string {
++  const parts = [unconfirmedLabel(pt), draft.trim()];
++  if (snippet && snippet.text.trim()) {
++    const head = snippet.lead
++      ? `${snippet.lead.replace(/:\s*$/, "")} [${snippet.sourceNumber}]:`
++      : `${pt ? "Da fonte" : "From the source"} [${snippet.sourceNumber}]:`;
++    parts.push(`${head} “${snippet.text.trim()}”`);
++  }
++  return parts.join("\n\n");
++}

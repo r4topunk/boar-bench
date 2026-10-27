@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-cooking-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "3b20c58ea579579132976aff49e1a9d623d29ec9d711105ff8521cea188dd4ac",
+ "questions_sha256": "08b58c5589df3d11aea9c0f473c1aa03f177e2d8d6d2abcc5ee17df2c8469738",
+ "jsonl_sha256": "617f19ba30ec4c83164642fd4295af5b66a8249e5f7b459035c5ccd3553eaf41"
+}

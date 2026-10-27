@@ -1,0 +1,41 @@
+diff --git a/src/rag/wikiPack.destination.test.ts b/src/rag/wikiPack.destination.test.ts
+index f1a25228..99dbef5a 100644
+--- a/src/rag/wikiPack.destination.test.ts
++++ b/src/rag/wikiPack.destination.test.ts
+@@ -107,6 +107,19 @@ describe("Wikivoyage destination rule", () => {
+     ]) expect(isTravelQuestion(q), q).toBe(false);
+   });
+ 
++  it("P-5: a point-to-point trip ('get from X to Y', capitalized places) is a travel question; lowercase or non-trip 'from … to' is not", () => {
++    for (const q of [
++      "How do I get from Chiang Mai to Pai, and what should I know about the road?",
++      "What's the best way to travel from Lisbon to Porto?",
++      "Is it safe going from Hanoi to Sapa at night?",
++    ]) expect(isTravelQuestion(q), q).toBe(true);
++    for (const q of [
++      "How do I get from zero to one in a startup?",
++      "How did Rome change from Republic to Empire?",
++      "Convert from Celsius to Fahrenheit",
++    ]) expect(isTravelQuestion(q), q).toBe(false);
++  });
++
+   it("so those questions don't put the guide they happen to name first", async () => {
+     for (const q of ["Tips for learning Rust", "How do Rust sockets work?"]) {
+       const hit = await first(q);
+diff --git a/src/rag/wikiPack.ts b/src/rag/wikiPack.ts
+index 6cb269eb..b6d97be3 100644
+--- a/src/rag/wikiPack.ts
++++ b/src/rag/wikiPack.ts
+@@ -200,8 +200,11 @@ const TRIP_INTENT = /\b(visit|visiting|things to (see|do)|see and do|get (to|the
+  * A travel question: the only kind whose capitalized Wikivoyage destination goes first. Narrower than
+  * TRAVEL_INTENT, which only orders sources (the guide before the encyclopedia article).
+  */
++// Sonar P-5: point-to-point trips ("get from Chiang Mai to Pai"): capitalized origin and destination.
++const FROM_TO_TRIP = /\b(get|go|travel|getting|going) from \p{Lu}[\p{L}.' -]*? to \p{Lu}/u;
++
+ export function isTravelQuestion(query: string): boolean {
+-  return TRIP_INTENT.test(query) || TRAVEL_PRACTICAL.test(query);
++  return TRIP_INTENT.test(query) || TRAVEL_PRACTICAL.test(query) || FROM_TO_TRIP.test(query);
+ }
+ 
+ /** Words right before a place that make it where the traveller comes from, not where they go (EN, PT). */

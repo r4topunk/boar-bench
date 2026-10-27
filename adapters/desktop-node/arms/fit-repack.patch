@@ -1,0 +1,304 @@
+diff --git a/src/inference/LlamaEngine.test.ts b/src/inference/LlamaEngine.test.ts
+index 6ca7d853..e9f28a82 100644
+--- a/src/inference/LlamaEngine.test.ts
++++ b/src/inference/LlamaEngine.test.ts
+@@ -496,3 +496,39 @@ describe("answer prefix kept in the KV cache (iPhone 13: 4-5 s to the first toke
+     }
+   });
+ });
++
++describe("LlamaEngine: load without repack when only that fits (fit-estimate-repack)", () => {
++  const QWEN3_4B_Q4KM = {
++    "general.architecture": "qwen3",
++    "general.file_type": "15",
++    "qwen3.block_count": "36",
++    "qwen3.embedding_length": "2560",
++    "qwen3.attention.head_count": "32",
++    "qwen3.attention.head_count_kv": "8",
++    "qwen3.attention.key_length": "128",
++    "qwen3.attention.value_length": "128",
++    "qwen3.feed_forward_length": "9728",
++    "qwen3.vocab_size": "151936",
++  };
++
++  it("on a 7.2 GB phone the 4B Q4_K_M is repack-peak: initLlama gets no_extra_bufts, and the load succeeds", async () => {
++    header = QWEN3_4B_Q4KM;
++    fileSize = 2.5e9;
++    ram.total = 7.2 * GiB;
++    const engine = new LlamaEngine();
++    const result = await engine.load("models/qwen3-4b.gguf");
++    expect(result.fit?.verdict).toBe("repack-peak");
++    expect(initParams[0]).toMatchObject({ no_extra_bufts: true, use_mmap: true });
++    expect(engine.isLoaded).toBe(true);
++    expect(result.warning).toMatch(/without weight repacking/);
++  });
++
++  it("on a 12 GB phone the same model is resident and loads with repack (no no_extra_bufts)", async () => {
++    header = QWEN3_4B_Q4KM;
++    fileSize = 2.5e9;
++    const engine = new LlamaEngine();
++    const result = await engine.load("models/qwen3-4b.gguf");
++    expect(result.fit?.verdict).toBe("resident");
++    expect(initParams[0]).not.toHaveProperty("no_extra_bufts");
++  });
++});
+diff --git a/src/inference/LlamaEngine.ts b/src/inference/LlamaEngine.ts
+index 4d4dca4c..69709237 100644
+--- a/src/inference/LlamaEngine.ts
++++ b/src/inference/LlamaEngine.ts
+@@ -252,6 +252,11 @@ export class LlamaEngine {
+       throw new ModelLoadError(message, "memory", message);
+     }
+ 
++    // The repack load peak doesn't fit but a load without repack does (memoryFit.ts "repack-peak"): load without
++    // CPU_REPACK buffers instead of letting the OS kill the app mid-load (moto g75, Anvil fit-estimate-repack).
++    const noRepack = fit?.verdict === "repack-peak";
++    if (noRepack) console.warn(`[engine] ${modelFilename}: repack peak ${toGb(fit!.loadPeakBytes)}GB > budget ${toGb(fit!.availableBytes)}GB; loading without repack`);
++
+     let backend: BackendInfo = { kind: "default" };
+     // A caller without meta (the chat's preload, the catalog screen) still gets the model's id and label.
+     const known =
+@@ -274,6 +279,7 @@ export class LlamaEngine {
+           n_ctx: nCtx,
+           n_threads: nThreads,
+           n_gpu_layers: 0, // CPU-only for broad device compatibility; adjust per-device
++          ...(noRepack ? { no_extra_bufts: true } : {}),
+         },
+         { platform: Platform.OS, cpuDevices: () => cpuDeviceNames(getBackendDevicesInfo), log: (m) => console.warn(m) }
+       );
+@@ -339,10 +345,13 @@ export class LlamaEngine {
+     if (totalRamBytes <= 0) return null;
+ 
+     let shape: GgufShape | null = null;
++    let fileType: number | undefined;
+     try {
+       const meta = (await loadLlamaModelInfo(modelPath)) as Record<string, unknown>;
+       this.lastHeaderArch = typeof meta["general.architecture"] === "string" ? (meta["general.architecture"] as string) : null;
+       shape = parseGgufShape(meta);
++      const ft = Number(meta["general.file_type"]);
++      if (Number.isFinite(ft)) fileType = ft;
+     } catch {
+       // Unreadable header: estimateMemoryFit falls back to file-size heuristics.
+     }
+@@ -352,6 +361,9 @@ export class LlamaEngine {
+       shape,
+       totalRamBytes,
+       availableRamBytes: availableRamFrom({ totalBytes: totalRamBytes, rssBytes, availBytes }),
++      // The default load: the CPU backend repacks repackable weights into anonymous buffers (memoryFit.ts).
++      repack: true,
++      ...(fileType !== undefined ? { fileType } : {}),
+     });
+   }
+ 
+diff --git a/src/inference/memoryFit.test.ts b/src/inference/memoryFit.test.ts
+index 882856bf..315c2292 100644
+--- a/src/inference/memoryFit.test.ts
++++ b/src/inference/memoryFit.test.ts
+@@ -162,3 +162,84 @@ describe("availableRamFrom", () => {
+     expect(availableRamFrom({ totalBytes: 12 * GiB, rssBytes: GiB, availBytes: 10 * GiB })).toBe(10 * GiB);
+   });
+ });
++
++// Anvil fit-estimate-repack: the CPU backend repacks Q4_K/Q4_0/Q6_K/Q8_0… weights into anonymous memory, and while
++// loading the file pages and the repacked copy are both resident. Frozen expectations T1–T6 (card), real header shapes.
++describe("estimateMemoryFit: repacked weights and the load peak (fit-estimate-repack)", () => {
++  const QWEN3_4B = {
++    "general.architecture": "qwen3",
++    "general.file_type": "15",
++    "qwen3.block_count": "36",
++    "qwen3.embedding_length": "2560",
++    "qwen3.attention.head_count": "32",
++    "qwen3.attention.head_count_kv": "8",
++    "qwen3.attention.key_length": "128",
++    "qwen3.attention.value_length": "128",
++    "qwen3.feed_forward_length": "9728",
++    "qwen3.vocab_size": "151936",
++  };
++  const QWEN25_15B = { ...QWEN25_1_5B, "qwen2.attention.key_length": "128", "qwen2.vocab_size": "151936" };
++  const Q4_K_M = 15;
++  const fourB = (totalRamBytes: number, repack: boolean, availBytes = 0) =>
++    estimateMemoryFit({
++      fileBytes: 2.5e9, nCtx: 4096, shape: parseGgufShape(QWEN3_4B), totalRamBytes,
++      availableRamBytes: availableRamFrom({ totalBytes: totalRamBytes, rssBytes: 0, availBytes }), repack, fileType: Q4_K_M,
++    });
++
++  it("T1: the 4B Q4_K_M on the moto g75 (7.2 GiB, budget 4.7 GiB) fits only without repack", () => {
++    const f = fourB(7.2 * GiB, true);
++    expect(f.availableBytes).toBeCloseTo(4.7 * GiB, -6);
++    expect(f.verdict).toBe("repack-peak");
++    expect(f.loadPeakBytes).toBeGreaterThan(4.7 * GiB);
++    expect(f.repackBytes / 2.5e9).toBeCloseTo(0.97, 2);
++  });
++
++  it("T2: the same load without repack is resident with ~1 GiB of anonymous memory (Probe A: 0.88–0.91 GB)", () => {
++    const f = fourB(7.2 * GiB, false);
++    expect(f.verdict).toBe("resident");
++    expect(f.repackBytes).toBe(0);
++    expect(f.anonBytes).toBeLessThan(1.2 * GiB);
++    expect(f.loadPeakBytes).toBe(f.anonBytes);
++  });
++
++  it("T3: on a 12 GB phone (11.6 GiB, budget 8.7 GiB) the repack peak fits: resident", () => {
++    const f = fourB(11.6 * GiB, true);
++    expect(f.availableBytes).toBeCloseTo(8.7 * GiB, -6);
++    expect(f.verdict).toBe("resident");
++    expect(f.loadPeakBytes).toBeLessThan(8.7 * GiB);
++  });
++
++  it("T4: the 1.5B Q4_K_M on the g75 is resident with repack (peak ~2.4 GiB; the g75 measured RSS 2.6 GB, no kill)", () => {
++    const f = estimateMemoryFit({
++      fileBytes: 0.99e9, nCtx: 4096, shape: parseGgufShape(QWEN25_15B), totalRamBytes: 7.2 * GiB,
++      availableRamBytes: availableRamFrom({ totalBytes: 7.2 * GiB, rssBytes: 0 }), repack: true, fileType: Q4_K_M,
++    });
++    expect(f.verdict).toBe("resident");
++    expect(f.repackBytes).toBeGreaterThan(0);
++    expect(f.loadPeakBytes).toBeLessThan(2.6 * GiB);
++  });
++
++  it("T5: a ternary (TQ2_0, Maple-like) or unknown file type is never repacked: verdicts as today", () => {
++    const base = { fileBytes: 11 * GiB, nCtx: 4096, shape: parseGgufShape(QWEN3_30B_A3B), totalRamBytes: 12 * GiB, availableRamBytes: 7 * GiB };
++    const today = estimateMemoryFit(base);
++    for (const fileType of [37, undefined, 1024]) {
++      const f = estimateMemoryFit({ ...base, repack: true, ...(fileType !== undefined ? { fileType } : {}) });
++      expect(f.repackBytes).toBe(0);
++      expect(f.verdict).toBe(today.verdict);
++      expect(f.anonBytes).toBe(today.anonBytes);
++    }
++  });
++
++  it("T6: the 4B on the iPhone 13 (4 GB) is still too big, as before: not resident, not repack-peak", () => {
++    const f = fourB(4 * GiB, true);
++    expect(f.verdict).not.toBe("resident");
++    expect(f.verdict).not.toBe("repack-peak");
++    expect(f.verdict).toBe(fourB(4 * GiB, false).verdict);
++  });
++
++  it("describeFit explains a repack-peak load without asking the user to free RAM", () => {
++    const msg = describeFit("qwen3-4b.gguf", fourB(7.2 * GiB, true))!;
++    expect(msg).toMatch(/without weight repacking/);
++    expect(msg).not.toMatch(/[Cc]lose other apps/);
++  });
++});
+diff --git a/src/inference/memoryFit.ts b/src/inference/memoryFit.ts
+index bbccde27..9d5f6d28 100644
+--- a/src/inference/memoryFit.ts
++++ b/src/inference/memoryFit.ts
+@@ -16,6 +16,12 @@
+  * anonymous memory and refused every model bigger than free RAM, including a
+  * Qwen3-30B-A3B whose per-token working set is ~10% of its file.
+  *
++ * - **Repacked weights** (Anvil fit-estimate-repack): on CPU backends llama.cpp copies Q4_0/Q8_0/Q4_K/Q5_K/
++ *   Q6_K/IQ4_NL/MXFP4 weights into anonymous CPU_REPACK buffers, and while loading the file pages and the
++ *   repacked copy are both resident. On the moto g75 (7.2 GB) that load peak got the 4B killed by lmkd although
++ *   the estimate said "resident". The estimate counts both; when only a load without repack fits, the verdict is
++ *   "repack-peak" and LlamaEngine loads with no_extra_bufts.
++ *
+  * Pure module (no native imports) so it is unit-testable; LlamaEngine feeds it
+  * the GGUF header (llama.rn loadLlamaModelInfo) and the device RAM readouts.
+  * All figures are approximations, not measurements: see docs/ADAPTIVE_ROUTING.md.
+@@ -48,14 +54,16 @@ export type FitVerdict =
+   /** Buffers fit but the per-token hot set does not: every token re-reads weights from storage. Loads, very slowly. */
+   | "thrashing"
+   /** Anonymous buffers (KV + compute) alone exceed available RAM: loading would OOM. */
+-  | "insufficient";
++  | "insufficient"
++  /** Fits only without weight repacking (CPU_REPACK): the repack load peak would not. LlamaEngine loads with no_extra_bufts. */
++  | "repack-peak";
+ 
+ export interface MemoryFit {
+   verdict: FitVerdict;
+   fileBytes: number;
+   kvCacheBytes: number;
+   computeBytes: number;
+-  /** Anonymous (non-evictable) memory: KV + compute. */
++  /** Anonymous (non-evictable) memory: KV + compute, plus the repacked weights when the CPU backend repacks them. */
+   anonBytes: number;
+   /** Weights touched per generated token (shared + active experts). Equals fileBytes for dense models. */
+   hotWeightBytes: number;
+@@ -65,6 +73,10 @@ export interface MemoryFit {
+   totalBytes: number;
+   /** True when the GGUF header was usable; false means the estimate fell back to file-size heuristics. */
+   fromMetadata: boolean;
++  /** Bytes copied into anonymous repack buffers (0 without repack, or for a type the CPU backend doesn't repack). */
++  repackBytes: number;
++  /** Load-time peak: file pages read while repacking + the repacked copy + KV + compute. Equals anonBytes when repackBytes is 0. */
++  loadPeakBytes: number;
+ }
+ 
+ export interface FitInputs {
+@@ -81,8 +93,21 @@ export interface FitInputs {
+   expertFractionHint?: number;
+   totalRamBytes: number;
+   availableRamBytes: number;
++  /** The CPU backend repacks weights into anonymous buffers (llama.cpp CPU_REPACK): true unless loaded with no_extra_bufts. */
++  repack?: boolean;
++  /** general.file_type from the GGUF header (llama_ftype): whether the weights are a type the CPU backend repacks. */
++  fileType?: number;
+ }
+ 
++/**
++ * llama_ftype values whose weights llama.cpp's CPU backend repacks on ARM (NEON dotprod / i8mm). Checked against
++ * llama.rn 0.13.0-rc.4's vendored llama.h (2 Q4_0, 7 Q8_0, 14 Q4_K_S, 15 Q4_K_M, 16 Q5_K_S, 17 Q5_K_M, 18 Q6_K,
++ * 25 IQ4_NL, 38 MXFP4_MOE) and ggml-cpu/repack.cpp (Q2_K repacks only on AVX-512 / RISC-V; ternary TQ and IQ2/IQ3 never).
++ */
++export const REPACKABLE_FTYPES = new Set([2, 7, 14, 15, 16, 17, 18, 25, 38]);
++/** Share of the file that is repacked: everything but the input embedding lookup (get_rows). */
++export const REPACK_FRACTION = 0.97;
++
+ const GiB = 1024 ** 3;
+ const MiB = 1024 ** 2;
+ 
+@@ -196,17 +221,28 @@ export function estimateMemoryFit(i: FitInputs): MemoryFit {
+     expertFraction = i.expertFractionHint ?? 0;
+   }
+ 
+-  const anon = kv + compute;
++  const baseAnon = kv + compute;
++  const repackBytes = i.repack && i.fileType !== undefined && REPACKABLE_FTYPES.has(i.fileType) ? i.fileBytes * REPACK_FRACTION : 0;
++  const anon = baseAnon + repackBytes;
++  // File pages are read in full while repacking, next to the anonymous copy.
++  const loadPeak = repackBytes > 0 ? anon + i.fileBytes : anon;
+   // Without a header, assume the common 8-of-128 routing.
+   const activeExperts = s && s.expertCount ? s.expertUsedCount / s.expertCount : expertFraction > 0 ? 8 / 128 : 1;
+   const hot = i.fileBytes * (1 - expertFraction) + i.fileBytes * expertFraction * activeExperts;
+ 
+   const avail = Math.max(i.availableRamBytes, 0);
++  // Today's mmap-aware verdict for the weights as file pages (a load without repack).
+   let verdict: FitVerdict;
+-  if (anon > avail) verdict = "insufficient";
+-  else if (anon + i.fileBytes <= avail) verdict = "resident";
+-  else if (anon + Math.min(hot * HOT_SET_SLACK, i.fileBytes) <= avail && expertFraction > 0) verdict = "streaming";
++  if (baseAnon > avail) verdict = "insufficient";
++  else if (baseAnon + i.fileBytes <= avail) verdict = "resident";
++  else if (baseAnon + Math.min(hot * HOT_SET_SLACK, i.fileBytes) <= avail && expertFraction > 0) verdict = "streaming";
+   else verdict = "thrashing";
++  // Repacked: resident in its anonymous copy when the load peak fits. Otherwise it loads only without repack
++  // ("repack-peak") when that would be resident or streaming; a model too big either way keeps today's verdict.
++  if (repackBytes > 0) {
++    if (loadPeak <= avail) verdict = "resident";
++    else if (verdict === "resident" || verdict === "streaming") verdict = "repack-peak";
++  }
+ 
+   return {
+     verdict,
+@@ -219,6 +255,8 @@ export function estimateMemoryFit(i: FitInputs): MemoryFit {
+     availableBytes: avail,
+     totalBytes: i.totalRamBytes,
+     fromMetadata: !!s,
++    repackBytes,
++    loadPeakBytes: loadPeak,
+   };
+ }
+ 
+@@ -261,6 +299,11 @@ export function describeFit(filename: string, f: MemoryFit): string | null {
+         `and it reads ~${toGb(f.hotWeightBytes)}GB of weights per token from storage. It will load, but ` +
+         `answers may take minutes. A smaller model is recommended.`
+       );
++    case "repack-peak":
++      return (
++        `"${filename}" loads without weight repacking on this device: repacking would need ~${toGb(f.loadPeakBytes)}GB ` +
++        `at load (~${toGb(f.availableBytes)}GB available). Answers may start a little slower.`
++      );
+     case "insufficient":
+       return (
+         `"${filename}" needs ~${toGb(f.anonBytes)}GB of working memory (context cache and buffers) that cannot ` +

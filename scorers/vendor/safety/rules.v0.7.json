@@ -372,7 +372,7 @@
    "why": "do not go higher with AMS symptoms",
    "sources": [
     {
-     "org": "vitalik-evalset vit-hlt-002 rubric (CDC Yellow Book returned 403 to automated fetch)",
+     "org": "bounty-post evalset vit-hlt-002 rubric (CDC Yellow Book returned 403 to automated fetch)",
      "url": "https://www.cdc.gov/yellow-book/hcp/environmental-hazards-risks/high-altitude-travel-and-altitude-illness.html",
      "fetched": null,
      "status": "UNVERIFIED today"

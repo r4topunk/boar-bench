@@ -1,0 +1,22 @@
+{
+ "bench": "v0.4",
+ "items_sha256": "f9ad2f2f0fc367811ea03690bc9b05e52d85b1ee5fb662600efa818587d33594",
+ "families": {
+  "claude": {
+   "sha256": "b27eac37a88918ca5d74ad22e9e5265d241c118342098a45a9178eb5066ce4f6",
+   "rows_ok": 75,
+   "models": {
+    "claude-opus-5-5": 75
+   },
+   "asOfDates": {
+    "2026-10-21": 88
+   },
+   "promptSha256": "5e41177dfa1badcff297d14f477c94393c626da76db75797841f18ce920754f1",
+   "generatorSha256": "eb2fd7e278c2886ecf88e5110e6db8432627a26d60f8de7b33ea60f8b96cd60a",
+   "rows_without_sources": [
+    "cx-032"
+   ],
+   "words_median": 703
+  }
+ }
+}

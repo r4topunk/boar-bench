@@ -1,0 +1,20 @@
+{
+ "bench": "slice-packread-v1",
+ "frozen": true,
+ "n_items": 54,
+ "n_ok": 54,
+ "questions_sha256": "7db387e433f96c693eaf71094b722548ea152305118f7d8262a58b8627f1d18b",
+ "jsonl_sha256": "ed917f080ccd68d3dc200a2d32fa4a09c1e0898cd1a3772f65d185c327fe11b6",
+ "sources": [
+  "bench/selftest/boar-factbook",
+  "bench/selftest/boar-firstaid-en",
+  "bench/selftest/boar-medlineplus-en",
+  "bench/selftest/boar-simplewiki-en",
+  "bench/selftest/qa-bitcoin-se",
+  "bench/selftest/qa-ethereum-se",
+  "bench/selftest/qa-health-se",
+  "bench/selftest/qa-outdoors-se",
+  "bench/selftest/qa-travel-se"
+ ],
+ "_note": "v1.1 2026-10-19: ids = first 6 per pack among items whose engine run called the model (prompt dumped); replaces the first-6-requests list (deviation logged)"
+}

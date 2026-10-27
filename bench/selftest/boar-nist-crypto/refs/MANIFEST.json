@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-boar-nist-crypto",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "45c641a6a6a68669cec718c35e4a4dc94c4bd7d0326a59535a883f6f875b86cb",
+ "questions_sha256": "2088b0ca5508767ca13c98c629002d9d89210c91f85ae9e8b9acb28d5a321948",
+ "jsonl_sha256": "06f0f067fdce0612ed636164721b584155177a558f244fc894417595ddb24734"
+}

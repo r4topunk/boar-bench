@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-travel-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "ddae455f2c3f9b6f9f7dd5bc99241aff8c2b5f827ef95dd9337392fdce83c16a",
+ "questions_sha256": "6683af45cd6abce37d92e1d3a22a4f5fe46f73df5ef25869118a41efc80c77b9",
+ "jsonl_sha256": "9fa9e786d1c331b5e43a793b37433944d9a4ae8f1f278ddf5036297a1fab0b60"
+}

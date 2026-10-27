@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-health-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "c60ce657282bb79d25c42b1d01e6098aeb4f7ae4549ab438dc6dda5c295db276",
+ "questions_sha256": "e20f0819cea5a897078ef7be8880fd724c10c57073e19653339e946433fe807a",
+ "jsonl_sha256": "dfe42d68ecf68a542b8d79c26c49ff84383210ee09a66caca88100bfdf81b1c5"
+}

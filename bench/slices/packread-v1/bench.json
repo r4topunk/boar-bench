@@ -1,0 +1,6 @@
+{
+ "bench": "slice-packread-v1",
+ "questions": "questions.jsonl",
+ "refs": "refs/refs.jsonl",
+ "_note": "PACKREAD (rnd arms/packread, criterion 4649513d): first 6 ids of 9 pack self-tests that have cut7+X2b engine contexts; questions and refs copied verbatim from bench/selftest/<pack> (frozen agent-written refs); dev only"
+}

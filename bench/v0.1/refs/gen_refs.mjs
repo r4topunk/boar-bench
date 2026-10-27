@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Frozen "frontier + web" reference answers for the 27 NEW items of boar-eval bench v0.1 (origin "lantern-v0.1").
-// Same recipe as rnd/bench/refs/gen_refs.mjs (v0): the shared claude -p helper (clean env -> subscription only),
+// Same recipe as rnd/bench/refs/gen_refs.mjs (v0): the shared claude -p helper (clean env -> no API key),
 // system prompt reference.v1 (sha256 d5144343…), tools WebSearch + WebFetch, sequential with a 5 s gap, resumable,
 // rate limit -> stop (exit 3), other error -> 1 retry after 60 s, second failure -> stop (exit 4).
 // The 33 kept items reuse the frozen v0 answers (bench/v0.1/build.py copies them by id and checks their hash).
@@ -11,7 +11,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-// Shared helper (vendored under scorers/vendor/eval-lib) (clean env: strips API keys -> subscription only).
+// Shared helper (vendored under scorers/vendor/eval-lib) (clean env: strips API keys).
 import { cleanEnv, isRateLimited, logSpend, runClaude, sleep, totalSpend, usageSummary } from "../../../scorers/vendor/eval-lib/claude-cli.mjs";
 
 const REFS_DIR = dirname(fileURLToPath(import.meta.url));
@@ -122,7 +122,7 @@ for (const q of questions) {
     webFetches: r.toolCalls.filter((c) => c.name === "WebFetch").map((c) => c.input?.url),
     requestedModel: model,
     tools: TOOLS,
-    via: "claude-code-subscription (claude -p, cleanEnv: no API key)",
+    via: "claude-code (claude -p, cleanEnv: no API key)",
     promptVersion: PROMPT_VERSION,
     promptFile: `prompts/${PROMPT_VERSION}.md`,
     promptSha256,
@@ -133,7 +133,7 @@ for (const q of questions) {
     generatedAt: new Date().toISOString(),
   };
   appendFileSync(out, JSON.stringify(row) + "\n");
-  console.log(`${q.id} ok wall=${(row.wallMs / 1000).toFixed(1)}s search=${row.webSearches.length} fetch=${row.webFetches.length} out=${row.outputTokens ?? "?"}tok model=${row.actualModelId} listUsd=${row.listPriceEquivalentUsd?.toFixed(3) ?? "?"}`);
+  console.log(`${q.id} ok wall=${(row.wallMs / 1000).toFixed(1)}s search=${row.webSearches.length} fetch=${row.webFetches.length} out=${row.outputTokens ?? "?"}tok model=${row.actualModelId}`);
 }
 const okNow = new Set(readJsonl(out).filter((r) => r.ok).map((r) => r.id));
-console.log(`progress ${all.filter((q) => okNow.has(q.id)).length}/${all.length} new items ok in ${out}; this chunk ${((performance.now() - t0) / 1000).toFixed(0)}s; cumulative list-price equivalent ${totalSpend(SPEND).toFixed(2)} USD (subscription, not a charge)`);
+console.log(`progress ${all.filter((q) => okNow.has(q.id)).length}/${all.length} new items ok in ${out}; this chunk ${((performance.now() - t0) / 1000).toFixed(0)}s; usage ledger ${SPEND}`);

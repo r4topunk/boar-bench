@@ -1,0 +1,10 @@
+# Data card: bench/selftest (pack self-tests)
+
+- **What:** 14 sets for the knowledge packs: first six built on topic packs (`boar-factbook`, `boar-firstaid-en`, `boar-medlineplus-en`, `boar-nist-crypto`, `boar-simplewiki-en`, `boar-visa-en`), seven on Stack Exchange QA packs (`qa-bitcoin-se`, `qa-cooking-se`, `qa-ethereum-se`, `qa-health-se`, `qa-money-se`, `qa-outdoors-se`, `qa-travel-se`), and `safepack` (30 emergency-safety items from public-domain preparedness pages). 13 sets have 20 items; 290 items in all.
+- **How made:** an agent read public pack passages and wrote questions that need a fact in the pack, a gold answer from quoted pack text (`selftest.in_pack_facts` quotes it with chunk index), and a rubric. `selftest.source` records article, URL, licence and attribution. Style varies (first person, imperative, direct, situation).
+- **Reference side:** `refs/refs.jsonl` per set are agent-written gold answers, not frontier-plus-web references. `refs/MANIFEST.json` pins each file's sha256. Use these sets to test whether a pack delivers a fact, not to compute a ratio against the bounty bar; never pool them with v0.1 or claim rows.
+- **Licences:** per item source: CC0 (CIA World Factbook archive), US public domain (MedlinePlus, NIST FIPS, Ready.gov, US Army FM 21-76), CC BY-SA 4.0 (Wikipedia, Simple English Wikipedia, Wikibooks, Stack Exchange 4.0 posts), CC BY-SA 3.0 and 2.5 for older Stack Exchange posts. Share-alike applies to the derived parts. Attribution is in the item's `selftest.source`.
+- **Health caveat:** `boar-firstaid-en`, `boar-medlineplus-en`, `qa-health-se` and `safepack` are AI-reviewed, not clinically reviewed; not medical advice.
+- **Held out:** no. These are dev sets and were used during development.
+- **Known limits:** n = 20 per set; gold is derived from the same passages the pack contains, so a high score shows retrieval and reading, not independent knowledge; Stack Exchange answers reflect the opinions of their authors.
+- **Verify:** `python3 tools/verify-pins.py` (refs vs MANIFEST).

@@ -65,7 +65,7 @@ describe("protocol v1", () => {
     const anchor = {
       protocol: PROTOCOL_VERSION, runId: "anchors-haiku", itemId: "q1", question: "q",
       engine: { commit: "n/a-anchor", arm: "anchor-haiku" },
-      runtime: { adapter: "reference-cli", host: "claude-code-subscription", model: "claude-haiku-4-5-20251001", sampler: {} },
+      runtime: { adapter: "reference-cli", host: "claude-code", model: "claude-haiku-4-5-20251001", sampler: {} },
       config: { ...config, commit: "n/a-anchor", arm: "anchor-haiku", modelId: "claude-haiku-4-5-20251001", device: null },
       route: { task: null, tier: null, outcome: "answered", reasonCodes: [] },
       retrieval: { raw: [], kept: [], dropped: [] },

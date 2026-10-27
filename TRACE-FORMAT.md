@@ -5,7 +5,7 @@ TL;DR: run your app on `bench/v0.1/questions.public.jsonl` and write one JSON li
 ```sh
 pnpm i                                                      # zod + tsx for the validator
 node harness/validate.mjs my.traces.jsonl                   # optional strict schema check (full EvalTrace)
-node harness/judge.mjs --traces my.traces.jsonl --out my.judgments.jsonl --bench bench/v0.1 --dry-run   # counts calls, no spend
+node harness/judge.mjs --traces my.traces.jsonl --out my.judgments.jsonl --bench bench/v0.1 --dry-run   # counts calls, runs nothing
 node harness/judge.mjs --traces my.traces.jsonl --out my.judgments.jsonl --bench bench/v0.1            # Opus, judge.v1
 python3 metrics/floor_metrics.py --dir . --runs my --questions bench/v0.1/questions.public.jsonl --decline-ratio 0.306
 python3 scorers/score.py --traces my.traces.jsonl --judgments my.judgments.jsonl --bench bench/v0.1 --json my.score.json   # win/tie/loss + precheck + safety
@@ -49,13 +49,13 @@ Rules for a fair trace:
 
 ## 2. Running the judge with Claude Code
 
-- Needs the `claude` CLI logged in (subscription or API). `judge.mjs` strips API-key variables from the child environment (`cleanEnv`), so a subscription login is used when present. Each call is `claude -p` with no tools and a JSON schema (`scorers/vendor/eval-lib/judge-core.mjs`, prompt **judge.v1**).
+- Needs the `claude` CLI logged in. `judge.mjs` strips API-key variables from the child environment (`cleanEnv`), so the CLI's own login is used when present. Each call is `claude -p` with no tools and a JSON schema (`scorers/vendor/eval-lib/judge-core.mjs`, prompt **judge.v1**).
 - **Both orders:** every item is judged twice, once with your answer as A and once as B. The first order per item is drawn with `--seed 7`. Both answers are blinded first (`<think>` blocks, trailing `Sources:` lists, URLs, markdown links and `[n]` markers removed) so the judge cannot tell which is the reference.
 - **Default model:** `--judge-model opus` (judge.v1). These are the only numbers comparable with ours.
 - **Cheap triage:** `--judge-model claude-haiku-5-5 --effort low`. The rows are then tagged `judgeVersion: judge.v1-low`. Never mix them with judge.v1 numbers: Haiku agrees with Opus on the winner (54/57 items) but compresses gaps, so it ranks systems without sizing the difference.
 - **Resume:** rerun the same command. Rows already in `--out` are reused only if the traces, questions and references shas, the judge version and the model all match (otherwise it exits 7). Rate limit → exit 3; API error → exit 4. Nothing is retried silently.
 - **Parallel:** run N shards with disjoint `--ids` and `--gap-ms 0`, then concatenate (we use N = 4 for Opus).
-- **Cost:** about $0.027 list-equivalent per Opus call. One v0.1 run is 114 calls (≈ $3; ≈ 27 min sequential at ≈ 9 s per call plus the default 5 s gap; ≈ 5 min at N = 4).
+- **Time:** one v0.1 run is 114 calls (≈ 27 min sequential at ≈ 9 s per call plus the default 5 s gap; ≈ 5 min at N = 4).
 - **Pass `--strict`** for a public number: it exits before any call if a trace or reference is missing.
 
 ## 3. Reading the three scales (our definitions)

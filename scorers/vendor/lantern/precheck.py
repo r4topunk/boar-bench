@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""precheck v2: deterministic pre-check of BOAR answers against vitalik-evalset grading.
+"""precheck v2: deterministic pre-check of BOAR answers against the bounty-post evalset grading.
 
 Statuses (one per answer):
   pass             must_any / must_k satisfied, nothing forbidden
@@ -28,7 +28,7 @@ import argparse, json, re, sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent.parent
-DEFAULT_Q = HERE / "handoff" / "questions.vitalik-lantern.jsonl"
+DEFAULT_Q = HERE / "questions.lantern.jsonl"   # not shipped; pass --questions
 
 # Exact strings from boar-app src/routing/answer.ts (lines ~965-1243 at 14de107), EN and PT.
 APP_REFUSALS = [

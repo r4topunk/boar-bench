@@ -1,0 +1,97 @@
+# Diff: main → d1a
+
+Runs: A `runs/night-2026-10-01/ios-main-s42.traces.jsonl`, `runs/night-2026-10-01/ios-main-s43.traces.jsonl` · B `runs/night-2026-10-01/d1/ios-d1a-q72-s42.traces.jsonl`, `runs/night-2026-10-01/d1/ios-d1a-q72-s43.traces.jsonl`
+
+- A (main): `runs/night-2026-10-01/ios-main-s42.traces.jsonl` · commit 0cfd4a77badd01297af8dc9a3a10924f8a895105 · arm main · n=72
+- B (d1a): `runs/night-2026-10-01/d1/ios-d1a-q72-s42.traces.jsonl` · commit 0cfd4a77badd01297af8dc9a3a10924f8a895105 · arm d1a-unconfirmed · n=72
+
+| | main | d1a |
+|---|---|---|
+| items (shared) | 72 | 72 |
+| errors | 0 | 0 |
+| declined | 25/72 | 10/72 |
+| weak_sources | 35/72 | 34/72 |
+| no shown sources | 27/72 | 27/72 |
+| tier | {'fast': 62, 'instant': 10} | {'fast': 62, 'instant': 10} |
+| TTFT p50 / p95 (desktop) | 1.50 s / 3.21 s | 1.44 s / 3.12 s |
+| total p50 / p95 (desktop) | 2.57 s / 4.28 s | 2.57 s / 4.29 s |
+| retrieval p50 (desktop) | 0.08 s | 0.08 s |
+
+Identical answer text: **57/72** · items that lost their shown sources: **0**.
+Latency is desktop (desktop-node): relative between arms on the same host, not a phone number.
+
+## Quality (paired)
+
+Quality ratio over 57 items judged on both sides, 2 run(s) A × 2 run(s) B: A 0.3786 → B 0.4022; **Δ +0.0236 (95% CI -0.0056 to +0.0520)**, paired two-level bootstrap (items, then runs within item; 2000 resamples, seed 11): no detectable difference (CI contains 0).
+
+MDE (80% power, α 0.05) for an arm comparison at 2 run(s)/arm × 57 items: **Δratio 0.038** (SE 0.014; σ²_run 0.252, estimated from 114 items judged in ≥ 2 runs; mean ref score 4.89).
+
+**|Δ| 0.024 < MDE 0.038: inside the noise at this budget; not decidable on quality.**
+
+MDE by budget:
+
+| runs/arm | 60 items | 120 items |
+|---|---|---|
+| 1 | 0.052 | 0.037 |
+| 2 | 0.037 | 0.026 |
+| 3 | 0.030 | 0.021 |
+| 5 | 0.023 | 0.017 |
+
+| id | judge label A → B | correctness A → B |
+|---|---|---|
+| `vit-hum-005` | fail → cw | 2 → 1 |
+| `lan-exp-002` | fail → cw | 3 → 1 |
+| `vit-trv-003` | fail → cw | 2 → 1 |
+| `vit-sci-002` | fail → cw | 2.5 → 1 |
+| `lan-ref-004` | fail → pass | 3.5 → 5 |
+| `lan-exp-006` | fail → pass | 1.5 → 4 |
+| `lan-rsn-006` | cw → pass | 1 → 4 |
+| `lan-rsn-007` | fail → pass | 2 → 4.5 |
+| `lan-exp-007` | cw → fail | 1 → 2 |
+| `trv-004` | fail → cw | 3 → 1 |
+
+**Worse: 0**
+
+
+**Better: 15**
+
+| id | change | codes main | codes d1a | shown main | shown d1a |
+|---|---|---|---|---|---|
+| `vit-hum-004` | declined True→False; kept 0→1; dropped 2→1; route codes; answer text | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:all-citations-removed-declined-compact, grounding:off-topic-dropped-1, instant:preview, offer-deep:multipass, retrieve:yes, task:research | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-all-citations-removed, grounding:unconfirmed-shown, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: Lord of the Rings tourism | Wikivoyage: Lord of the Rings tourism |
+| `vit-hum-005` | declined True→False; kept 0→1; dropped 1→0; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | Wikivoyage: Kirkcaldy | Wikivoyage: Kirkcaldy |
+| `lan-exp-002` | declined True→False; kept 0→2; dropped 4→2; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-2, grounding:uncited-with-sources-declined-compact, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-2, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | Wikivoyage: Montenegro · Wikivoyage: Montenegro | Wikivoyage: Montenegro · Wikivoyage: Montenegro |
+| `vit-trv-003` | declined True→False; kept 0→3; dropped 4→1; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-with-sources-declined-compact, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: Chiang Mai · Wikivoyage: Chiang Mai · Wikivoyage: Chiang Mai | Wikivoyage: Chiang Mai · Wikivoyage: Chiang Mai · Wikivoyage: Chiang Mai |
+| `vit-trv-004` | declined True→False; kept 0→1; dropped 4→3; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:preview, offer-deep:multipass, retrieve:yes, task:research | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, grounding:unconfirmed-snippet, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: Florence | Wikivoyage: Florence |
+| `vit-cry-010` | declined True→False; kept 0→2; dropped 3→1; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-with-sources-declined-compact, instant:may-finish, instant:off-topic, offer-deep:multipass, retrieve:yes, task:lookup | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:may-finish, instant:off-topic, offer-deep:multipass, retrieve:yes, task:lookup | ethereum.org: Timeline of all Ethereum forks (2014 to present) · ethereum.org: Introduction to Ethereum governance | ethereum.org: Timeline of all Ethereum forks (2014 to present) · ethereum.org: Introduction to Ethereum governance |
+| `vit-sci-002` | declined True→False; kept 0→1; dropped 3→2; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:may-finish, offer-deep:multipass, retrieve:yes, task:lookup | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:may-finish, offer-deep:multipass, retrieve:yes, task:lookup | Wikivoyage: Pacific War | Wikivoyage: Pacific War |
+| `lan-ref-004` | declined True→False; kept 0→2; dropped 4→2; route codes; answer text | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:all-citations-removed-declined-compact, grounding:off-topic-dropped-1, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-all-citations-removed, grounding:unconfirmed-shown, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: South Iceland · Wikivoyage: North Iceland | Wikivoyage: South Iceland · Wikivoyage: North Iceland |
+| `lan-exp-004` | declined True→False; kept 0→2; dropped 3→1; route codes; answer text | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:all-citations-removed-declined-compact, instant:may-finish, offer-deep:multipass, retrieve:yes, task:lookup | citations:removed-1, generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-all-citations-removed, grounding:unconfirmed-shown, instant:may-finish, offer-deep:multipass, retrieve:yes, task:lookup | Wikivoyage: Kyoto · Wikivoyage: Kyoto/Higashiyama | Wikivoyage: Kyoto · Wikivoyage: Kyoto/Higashiyama |
+| `lan-exp-006` | declined True→False; kept 0→3; dropped 3→0; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:may-finish, instant:off-topic, offer-deep:multipass, retrieve:yes, task:lookup | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:may-finish, instant:off-topic, offer-deep:multipass, retrieve:yes, task:lookup | Wikivoyage: Mount Kilimanjaro · Wikivoyage: Volcanoes · Wikivoyage: Volcanoes | Wikivoyage: Mount Kilimanjaro · Wikivoyage: Volcanoes · Wikivoyage: Volcanoes |
+| `lan-rsn-006` | declined True→False; kept 0→2; dropped 4→2; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-with-sources-declined-compact, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: United Kingdom · Wikivoyage: Kingdom of France | Wikivoyage: United Kingdom · Wikivoyage: Kingdom of France |
+| `lan-rsn-007` | declined True→False; kept 0→4; dropped 4→0; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | Wikivoyage: Berlin Wall · Wikivoyage: Berlin Wall · Wikivoyage: Berlin Wall · Wikivoyage: Berlin | Wikivoyage: Berlin Wall · Wikivoyage: Berlin Wall · Wikivoyage: Berlin Wall · Wikivoyage: Berlin |
+| `lan-exp-007` | declined True→False; kept 0→2; dropped 4→2; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-with-sources-declined-compact, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:off-topic-dropped-1, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | Wikivoyage: Greenland · Wikivoyage: Greenland | Wikivoyage: Greenland · Wikivoyage: Greenland |
+| `trv-004` | declined True→False; kept 0→4; dropped 4→0; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:research | Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport | Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport · Wikivoyage: Lisbon Airport |
+| `saf-009` | declined True→False; kept 0→2; dropped 4→2; route codes; answer text | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-with-sources-declined-compact, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | generate:user-model-qwen2.5-1.5b-instruct-q4km, grounding:uncited-warning, grounding:unconfirmed-from-uncited-with-sources, grounding:unconfirmed-shown, instant:off-topic, instant:preview, offer-deep:multipass, retrieve:yes, task:chat | Wikivoyage: Cold weather · Wikivoyage: Cold weather | Wikivoyage: Cold weather · Wikivoyage: Cold weather |
+
+**Other changes (same decline/source status): 0**
+
+
+## Answer text changes
+
+| id | main | d1a |
+|---|---|---|
+| `vit-hum-004` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Gríma kills Saruman because he is a |
+| `vit-hum-005` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Adam Smith referred to the 'invisib |
+| `lan-exp-002` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Montenegro is a Balkan country with |
+| `vit-trv-003` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  To get from Chiang Mai to Pai, you  |
+| `vit-trv-004` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  It's approximately 2,500 miles (4,0 |
+| `vit-cry-010` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  The 2016 DAO hack taught the Ethere |
+| `vit-sci-002` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Germany is more densely populated t |
+| `lan-ref-004` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Iceland is roughly 103,000 square k |
+| `lan-exp-004` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Kyoto is known for its historical s |
+| `lan-exp-006` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Kilimanjaro is Africa's tallest mou |
+| `lan-rsn-006` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  The Hundred Years' War lasted from  |
+| `lan-rsn-007` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  The Berlin Wall was built in 1961 a |
+| `lan-exp-007` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  Greenland is governed by the Govern |
+| `trv-004` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  To get from Lisbon airport to the c |
+| `saf-009` | The passages found don't support this answer. | Not confirmed by the sources: the passages found don't back this answer. Check it before relying on it.  It's best to gently warm your frost |

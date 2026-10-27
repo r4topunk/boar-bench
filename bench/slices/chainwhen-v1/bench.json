@@ -1,0 +1,6 @@
+{
+ "bench": "slice-chainwhen-v1",
+ "questions": "questions.jsonl",
+ "refs": "refs/refs.jsonl",
+ "_note": "CHAINWHEN (rnd arms/chainwhen, criterion adba95cb): the 150 RELGATE contexts (9 pack self-tests with a cut7+X2b engine context); questions and refs copied verbatim from bench/selftest/<pack>; dev only"
+}

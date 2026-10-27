@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-boar-simplewiki-en",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "d8631885aa0a6921dd9456f07aff1da1a14fead10b8a86a44642db8360e2c247",
+ "questions_sha256": "892f0e685e66d78fb52c02f9c815bf6bad0726ff1ff455fe998183bb24143544",
+ "jsonl_sha256": "46943f3333747190d4d66c5e58aae45022d9b0c8e17b676662b70a654db46bc4"
+}

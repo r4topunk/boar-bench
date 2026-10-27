@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Pairwise judge over EvalTrace: each traced answer vs the bench's frozen Opus+web reference, both A/B orders, with
-// Claude Code headless (`claude -p`, no tools) on the subscription. Thin wrapper: prompt, schema, blinding, order
+// Claude Code headless (`claude -p`, no tools) on the user's own CLI login. Thin wrapper: prompt, schema, blinding, order
 // draw, verdict mapping and the CLI call are the vendored eval lib (scorers/vendor/eval-lib); the loop and row
 // fields follow rnd/bench/judge/judge_bench.mjs (sha256 7bc91413…). Rows are what scorers/score.py reads.
 // Any API error or rate limit stops the run (no retry); rerunning resumes (done = ok rows already in --out).
@@ -163,4 +163,4 @@ if (floorIds.length) { // errored traces: floor-score both orders, no LLM call
   }
   console.log(`floor-errored: ${n} rows for ${floorIds.length} errored items (${floorIds.join(",")})`);
 }
-console.log(`done ${out}; cumulative list-price equivalent ${totalSpend(SPEND).toFixed(2)} USD (runs/judge-spend.jsonl)`);
+console.log(`done ${out}; usage ledger runs/judge-spend.jsonl`);

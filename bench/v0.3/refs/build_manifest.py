@@ -72,7 +72,6 @@ def main():
         "n_retried": sum(m["attempt"] > 1 for m in man),
         "words_median": statistics.median(w) if w else None, "words_max": max(w, default=None),
         "n_over_250_words": sum(x > WORD_CAP for x in w),
-        "list_price_equivalent_usd": 0,
         "refs_jsonl_sha256": sha(jsonl(rows)),
         "policy": "reference TEXT stays in private/ (never in git); only hashes and numbers are committed"}, indent=1, ensure_ascii=False) + "\n")
     print(f"refs {len(man)}/{len(items)} ok; missing {len(missing)}; frozen={a.freeze}")

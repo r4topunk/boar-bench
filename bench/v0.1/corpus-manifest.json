@@ -6,19 +6,19 @@
   {
    "id": "corpus-standard",
    "sha256": "2aeff76db48098851e1304fb37dc8013d9facf9214395897e7e05f276f85d2ff",
-   "sourceUrl": "https://raw.githubusercontent.com/rferrari/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-standard.json",
+   "sourceUrl": "https://raw.githubusercontent.com/UPSTREAM_REPO/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-standard.json",
    "license": "CC BY-SA 4.0 (Wikipedia)"
   },
   {
    "id": "corpus-full",
    "sha256": "6d602003bb9da59200e3e55b75b9e15bb073a4b9b1357da2c2d47b2803c570be",
-   "sourceUrl": "https://raw.githubusercontent.com/rferrari/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-full.json",
+   "sourceUrl": "https://raw.githubusercontent.com/UPSTREAM_REPO/boar-app/9e46dc4d8f9a95bc7716194b94117f769504c0e0/assets/corpus/corpus-full.json",
    "license": "CC BY-SA 4.0 (Wikipedia)"
   },
   {
    "id": "wiki-vital5",
    "sha256": "d3b87d562baba3489f6878bf99783f50d504db94c347029771e53f6d1aecc666",
-   "sourceUrl": "https://github.com/rferrari/boar-app/releases/download/knowledge-pack-v1/wiki-vital5.sqlite",
+   "sourceUrl": "https://github.com/UPSTREAM_REPO/boar-app/releases/download/knowledge-pack-v1/wiki-vital5.sqlite",
    "license": "CC BY-SA 4.0 (Wikipedia Vital Articles L5 introductions)",
    "local_copy_sha256": "d3b87d562baba3489f6878bf99783f50d504db94c347029771e53f6d1aecc666",
    "local_copy_matches_pin": true,

@@ -1,0 +1,345 @@
+diff --git a/src/rag/queryVector.ts b/src/rag/queryVector.ts
+new file mode 100644
+index 00000000..3716e017
+--- /dev/null
++++ b/src/rag/queryVector.ts
+@@ -0,0 +1,42 @@
++/**
++ * Query vectors retrieval already computed, kept so a classifier on the same text (the danger detector,
++ * src/routing/dangerDetector.ts) reuses them instead of embedding the question again.
++ *
++ * Pure on purpose: retrieve.ts registers the embedder and remembers every vector it computes; the
++ * answerer reads them here without importing the native embedding engine (its deps stay injectable).
++ * With no embedder registered (unit tests, a build without retrieval) queryVectorFor returns undefined.
++ */
++export type QueryEmbedder = (text: string) => Promise<Float32Array>;
++
++/** A few answers' worth: retrieve() embeds 1-2 texts per question (PT: the English names too). */
++const KEEP = 8;
++let embedder: QueryEmbedder | null = null;
++const recent = new Map<string, Float32Array>();
++
++export function registerQueryEmbedder(fn: QueryEmbedder | null): void {
++  embedder = fn;
++}
++
++export function rememberQueryVector(text: string, vec: Float32Array): void {
++  recent.delete(text);
++  recent.set(text, vec);
++  while (recent.size > KEEP) recent.delete(recent.keys().next().value as string);
++}
++
++/** The text's vector: the one retrieval computed for this exact text, else one embedding call; undefined if neither works. */
++export async function queryVectorFor(text: string): Promise<Float32Array | undefined> {
++  const hit = recent.get(text);
++  if (hit) return hit;
++  if (!embedder) return undefined;
++  try {
++    const vec = await embedder(text);
++    rememberQueryVector(text, vec);
++    return vec;
++  } catch {
++    return undefined;
++  }
++}
++
++export function clearQueryVectors(): void {
++  recent.clear();
++}
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..9d8e5510 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -17,9 +17,13 @@ import { EXPLAIN_INTENT } from "./explain";
+ import { identifiersIn, titleHasIdentifier } from "./identifiers";
+ import { ptLexicon } from "./ptLexiconAsset";
+ import { dedupeArticleCopies } from "./dedupe";
++import { registerQueryEmbedder, rememberQueryVector } from "./queryVector";
+ 
+ export type { RetrievedChunk } from "./retrieve.types";
+ 
++// The answerer's danger detector reuses the question's vector (src/rag/queryVector.ts) instead of embedding it again.
++registerQueryEmbedder((text) => embeddingEngine.embed(text));
++
+ // Extra BM25 candidates fetched so the term-coverage gate has something to
+ // choose from; the result is still capped at `limit`.
+ const LEXICAL_CANDIDATE_MULTIPLIER = 4;
+@@ -165,6 +169,7 @@ async function retrieveOne(
+ ): Promise<RetrievedChunk[]> {
+   const { includeWikiPacks = true, titles } = opts;
+   const queryVec = opts.queryVec ?? (await embeddingEngine.embed(query));
++  rememberQueryVector(query, queryVec);
+   const [lexical, semantic, packs, wiki] = await Promise.all([
+     lexicalSearch(query, queryVec, topK * 2),
+     semanticSearch(queryVec, topK * 2),
+diff --git a/src/routing/answer.test.ts b/src/routing/answer.test.ts
+index 31805732..7a2c5ce1 100644
+--- a/src/routing/answer.test.ts
++++ b/src/routing/answer.test.ts
+@@ -1,11 +1,13 @@
+-import { describe, it, expect, beforeEach } from "vitest";
++import { describe, it, expect, beforeEach, afterEach } from "vitest";
+ import type { RetrievedChunk } from "../rag/retrieve.types";
+ import { answerPromptPrefix, assemblePrompt, assembleChatMessages } from "../rag/pure";
+ import { AnswerDeps, createAnswerer, InstalledLlm } from "./answer";
+ import type { AnswerEvent } from "./events";
+ import type { AnswerSettings } from "../models/settings";
+ import type { GenerateOptions } from "../inference/LlamaEngine";
+-import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, NO_SOURCE_INSTRUCTION, PT_ANSWER_LANGUAGE } from "./context";
++import { approxTokens, HEALTH_GROUNDING_INSTRUCTION, isHealthQuestion, NO_SOURCE_INSTRUCTION, noHealthSourceAnswer, PT_ANSWER_LANGUAGE } from "./context";
++import { DANGER_HEAD_V1 } from "./dangerDetector";
++import { clearQueryVectors, registerQueryEmbedder } from "../rag/queryVector";
+ import { ModelLoadError } from "../inference/loadError";
+ import { answerReducer, initialAnswer } from "./answerReducer";
+ 
+@@ -32,6 +34,7 @@ const MOLD = chunk(
+   "A mold or mould is one of the structures that certain fungi can form. The dust-like, colored appearance of molds is due to the formation of spores. " +
+     "Molds are considered to be microbes and do not form a specific taxonomic or phylogenetic grouping. Mold growth needs moisture."
+ );
++const DEAN_LEE_A1 = chunk("dla", "Dean Lee", "Dean Lee (born 1971) is an American nuclear theorist who works on quantum computing algorithms.");
+ const HALL = chunk(
+   "c3",
+   "Hall Primary School",
+@@ -1906,3 +1909,91 @@ describe("answer(): multi-pass answer language", () => {
+     expect(seen).toEqual([PT_ANSWER_LANGUAGE, undefined]);
+   });
+ });
++
++describe("answer(): arm A1, danger detector v1 on memory answers only", () => {
++  // Vectors the frozen head scores as danger / not danger (its own direction and the opposite one).
++  const w = DANGER_HEAD_V1.w;
++  const n = Math.sqrt(w.reduce((s, x) => s + x * x, 0));
++  const DANGER = Float32Array.from(w.map((x) => x / n));
++  const SAFE = Float32Array.from(w.map((x) => -x / n));
++  // Regex-missed danger question (task chat: the compact model answers it from memory on main).
++  const STROKE = "My dad's face suddenly droops on one side and his speech is slurred. Can we wait until morning?";
++  let embedded: string[];
++  const embedAs = (vec: Float32Array) =>
++    registerQueryEmbedder(async (text) => {
++      embedded.push(text);
++      return vec;
++    });
++  beforeEach(() => {
++    embedded = [];
++  });
++  afterEach(() => {
++    registerQueryEmbedder(null);
++    clearQueryVectors();
++  });
++
++  it("a danger question with only off-topic sources gets the no-source card, no model", async () => {
++    embedAs(DANGER);
++    f.retrieved = [CANBERRA, MOLD, HALL];
++    const { events, result } = await collect(STROKE);
++    expect(isHealthQuestion(STROKE)).toBe(false);
++    expect(f.generations).toHaveLength(0);
++    expect(result.text).toBe(noHealthSourceAnswer(false));
++    expect(result.sources).toEqual([]);
++    expect(result.receipt.modelId).toBe("grounding-guard");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:danger-v1", "grounding:health-no-source"]));
++    expect(result.receipt.reasonCodes).not.toContain("grounding:health-strict");
++    expect(events.some((e) => e.type === "warning")).toBe(false);
++    expect(embedded).toEqual([STROKE]);
++  });
++
++  it("a PT danger question gets the PT card", async () => {
++    embedAs(DANGER);
++    f.retrieved = [CANBERRA];
++    const { result } = await collect("Meu pai está com a boca torta e fala enrolada, posso esperar até amanhã?");
++    expect(result.text).toBe(noHealthSourceAnswer(true));
++  });
++
++  it("a non-danger question is unchanged: same memory answer as without the detector", async () => {
++    f.retrieved = [CANBERRA, MOLD, HALL];
++    const before = await collect(STROKE);
++    f = makeFake();
++    f.retrieved = [CANBERRA, MOLD, HALL];
++    embedAs(SAFE);
++    const after = await collect(STROKE);
++    expect(after.result.text).toBe(before.result.text);
++    expect(after.result.receipt.reasonCodes).toEqual(before.result.receipt.reasonCodes);
++    expect(types(after.events)).toEqual(types(before.events));
++    expect(f.generations).toHaveLength(1);
++  });
++
++  it("a danger question with a good source is unchanged: the source is kept and the detector never runs", async () => {
++    embedAs(DANGER);
++    f.retrieved = [DEAN_LEE_A1, CANBERRA];
++    const q = "Why was Canberra chosen as the capital of Australia?";
++    const { events, result } = await collect(q);
++    const sources = (events.find((e) => e.type === "sources") as any).sources as RetrievedChunk[];
++    expect(sources.map((c) => c.title)).toEqual(["Canberra"]);
++    expect(result.sources.map((c) => c.title)).toEqual(["Canberra"]);
++    expect(result.receipt.reasonCodes).not.toContain("grounding:danger-v1");
++    expect(result.text).not.toBe(noHealthSourceAnswer(false));
++    expect(embedded).toEqual([]);
++  });
++
++  it("a regex health question keeps the health path (its own card), the detector never runs", async () => {
++    embedAs(DANGER);
++    f.retrieved = [CANBERRA];
++    const { result } = await collect("How do I stop a nosebleed?");
++    expect(result.receipt.reasonCodes).toEqual(expect.arrayContaining(["grounding:health-strict", "grounding:health-no-source"]));
++    expect(result.receipt.reasonCodes).not.toContain("grounding:danger-v1");
++    expect(embedded).toEqual([]);
++  });
++
++  it("an existing decline is not turned into the card (compact model, lookup with no source)", async () => {
++    embedAs(DANGER);
++    f.retrieved = [CANBERRA];
++    const { result } = await collect("Is it fine to sleep it off after hitting my head hard and throwing up twice?");
++    expect(result.receipt.reasonCodes).toContain("grounding:declined-compact");
++    expect(result.receipt.reasonCodes).not.toContain("grounding:danger-v1");
++  });
++});
+diff --git a/src/routing/answer.ts b/src/routing/answer.ts
+index b638e663..8906389c 100644
+--- a/src/routing/answer.ts
++++ b/src/routing/answer.ts
+@@ -114,6 +114,7 @@ import type { AnswerSettings } from "../models/settings";
+ import type { ResearchOptions, ResearchProgress, ResearchResult } from "../services/orchestrator";
+ import type { ExecutionOutcome, ExecutionTelemetryRecord, ModelResidency } from "../services/executionTelemetry.pure";
+ import { smallTalkReply } from "./smallTalk";
++import { isDangerQuestion } from "./dangerDetector";
+ 
+ /** Development builds log each answer's checks to Metro ([ANSWER] lines); never in a release build or a test. */
+ const DEV_LOG = typeof __DEV__ !== "undefined" && __DEV__ && process.env.NODE_ENV !== "test";
+@@ -993,6 +994,16 @@ export function createAnswerer(deps: AnswerDeps) {
+         finalText = message;
+         return finish(genTier, "success", message, [], receipt({ retrievalMs }));
+       }
++      // Arm A1 (danger v1): a danger question the health regex misses (dangerDetector.ts), about to be answered by
++      // the model with no source, gets the same no-source card as health instead. Checked only here, after every
++      // source decision and every decline: it never drops a source or sends a question down the health path (exp-08c).
++      if (!health && gen && genLlm && gen.mode !== "multipass" && sources.length === 0 && (await isDangerQuestion(req.query))) {
++        reasonCodes.push("grounding:danger-v1", "grounding:health-no-source");
++        const text = noHealthSourceAnswer(pt);
++        markVisible();
++        emit({ type: "token", answerId, tier: genTier, text });
++        return finish(genTier, "success", text, [], receipt({ modelId: "grounding-guard", modelLabel: "No offline source", retrievalMs }));
++      }
+       if (fromMemory) {
+         reasonCodes.push("grounding:no-source-memory");
+         emit({ type: "warning", answerId, code: "weak_sources", message: "No offline source covers this question." });
+diff --git a/src/routing/dangerDetector.test.ts b/src/routing/dangerDetector.test.ts
+new file mode 100644
+index 00000000..9b2c44ac
+--- /dev/null
++++ b/src/routing/dangerDetector.test.ts
+@@ -0,0 +1,60 @@
++import { describe, it, expect, afterEach } from "vitest";
++import { DANGER_HEAD_V1, dangerProbability, isDangerQuestion, isDangerVector } from "./dangerDetector";
++import { clearQueryVectors, queryVectorFor, registerQueryEmbedder, rememberQueryVector } from "../rag/queryVector";
++
++const w = DANGER_HEAD_V1.w;
++const norm = Math.sqrt(w.reduce((s, x) => s + x * x, 0));
++/** The head's own direction scores sigmoid(|w| + b): danger. Its opposite: not danger. */
++const DANGER_VEC = Float32Array.from(w.map((x) => x / norm));
++const SAFE_VEC = Float32Array.from(w.map((x) => -x / norm));
++
++afterEach(() => {
++  registerQueryEmbedder(null);
++  clearQueryVectors();
++});
++
++describe("danger detector v1 (frozen head)", () => {
++  it("is the frozen head: 384 weights, bias, tau 0.5", () => {
++    expect(w).toHaveLength(384);
++    expect(DANGER_HEAD_V1.b).toBeCloseTo(-2.7524463243222175, 12);
++    expect(DANGER_HEAD_V1.tau).toBe(0.5);
++  });
++
++  it("p = sigmoid(w·x + b) on the L2-normalized vector", () => {
++    const p = dangerProbability(DANGER_VEC)!;
++    expect(p).toBeCloseTo(1 / (1 + Math.exp(-(norm + DANGER_HEAD_V1.b))), 9);
++    expect(p).toBeGreaterThan(0.5);
++    expect(dangerProbability(SAFE_VEC)!).toBeLessThan(0.5);
++    // Scale does not matter (the engine's vectors may or may not come normalized).
++    expect(dangerProbability(DANGER_VEC.map((x) => x * 7.5))!).toBeCloseTo(p, 9);
++    // The zero vector scores the bias alone: sigmoid(b) < 0.5 is never danger, but it is reported as unscorable.
++    expect(dangerProbability(new Float32Array(384))).toBeNull();
++  });
++
++  it("never flags a vector it can't score", () => {
++    expect(isDangerVector(undefined)).toBe(false);
++    expect(isDangerVector(new Float32Array(768))).toBe(false);
++    expect(isDangerVector(new Float32Array(384))).toBe(false);
++    expect(isDangerVector(Float32Array.from(DANGER_VEC, (x, i) => (i === 0 ? NaN : x)))).toBe(false);
++  });
++
++  it("reuses the vector retrieval remembered for the same text: no second embedding", async () => {
++    let calls = 0;
++    registerQueryEmbedder(async () => (calls++, SAFE_VEC));
++    rememberQueryVector("q", DANGER_VEC);
++    expect(await isDangerQuestion("q")).toBe(true);
++    expect(calls).toBe(0);
++    expect(await isDangerQuestion("other text")).toBe(false);
++    expect(calls).toBe(1);
++    await queryVectorFor("other text");
++    expect(calls).toBe(1);
++  });
++
++  it("no embedder, or an embedder that throws: not danger", async () => {
++    expect(await isDangerQuestion("q")).toBe(false);
++    registerQueryEmbedder(async () => {
++      throw new Error("model not loaded");
++    });
++    expect(await isDangerQuestion("q")).toBe(false);
++  });
++});
+diff --git a/src/routing/dangerDetector.ts b/src/routing/dangerDetector.ts
+new file mode 100644
+index 00000000..83b5b70d
+--- /dev/null
++++ b/src/routing/dangerDetector.ts
+@@ -0,0 +1,42 @@
++/**
++ * Danger detector v1 (Compass, rnd/research/compass/cards/embedding-danger-detector-v1.md; FROZEN combined
++ * sha256 6f18dddf…2294): a logistic head over the question's bge-small-en-v1.5 embedding, the same vector
++ * retrieval computes (raw question, no prefix). danger = sigmoid(w·x + b) > 0.5 on the L2-normalized vector.
++ *
++ * dangerHead.v1.json is the frozen health-lr.v1.json byte for byte (sha256 f5d5d32f…c4dc768): 384 weights + bias.
++ * Used only as an addition to isHealthQuestion, and only where an answer would otherwise come from memory with
++ * no source (answer.ts): it never changes retrieval, the health path or which sources are shown.
++ */
++import head from "./dangerHead.v1.json";
++import { queryVectorFor } from "../rag/queryVector";
++
++export interface DangerHead {
++  w: number[];
++  b: number;
++  tau: number;
++}
++
++export const DANGER_HEAD_V1: DangerHead = { w: head.w, b: head.b, tau: head.tau };
++
++/** p(danger) for an embedding; null for a vector the head can't score (wrong size, zero, non-finite). */
++export function dangerProbability(vec: ArrayLike<number>, h: DangerHead = DANGER_HEAD_V1): number | null {
++  if (vec.length !== h.w.length) return null;
++  let norm = 0;
++  for (let i = 0; i < vec.length; i++) norm += vec[i] * vec[i];
++  norm = Math.sqrt(norm);
++  if (!(norm > 0) || !Number.isFinite(norm)) return null;
++  let z = h.b;
++  for (let i = 0; i < vec.length; i++) z += (h.w[i] * vec[i]) / norm;
++  return 1 / (1 + Math.exp(-z));
++}
++
++export function isDangerVector(vec: ArrayLike<number> | undefined, h: DangerHead = DANGER_HEAD_V1): boolean {
++  if (!vec) return false;
++  const p = dangerProbability(vec, h);
++  return p !== null && p > h.tau;
++}
++
++/** The detector on the raw question: retrieval's vector for the same text when there is one, else one embedding. */
++export async function isDangerQuestion(query: string): Promise<boolean> {
++  return isDangerVector(await queryVectorFor(query));
++}
+diff --git a/src/routing/dangerHead.v1.json b/src/routing/dangerHead.v1.json
+new file mode 100644
+index 00000000..554242da
+--- /dev/null
++++ b/src/routing/dangerHead.v1.json
+@@ -0,0 +1 @@
++{"model": "bge-small-en-v1.5-q8_0.gguf via embed.mjs (no prefix, L2-normalized)", "rule": "danger if sigmoid(w.x+b) > 0.5", "tau": 0.5, "b": -2.7524463243222175, "w": [-0.203926, -0.030681, 0.548841, 0.09736, -0.386651, -0.429521, 1.866085, -0.506056, 0.066629, -0.961975, -0.335531, -1.280435, 0.589203, -1.045181, 1.163077, -0.055183, 1.503727, -0.428519, -1.156305, -0.319834, -0.213157, 1.260655, -0.413031, 0.787431, -1.183496, -0.304776, 0.349886, 0.255302, 0.023966, 0.886338, 0.887739, 0.847566, -0.792656, -0.311601, 0.546557, 0.329086, -0.804907, 0.676024, 0.118789, -0.320593, 0.140224, 0.323196, -0.810645, 0.171305, -0.019811, -0.871936, -0.286154, -0.473798, 3.763638, -0.173069, -1.038698, -0.432646, 0.639479, 0.211953, 0.153451, -0.964654, 0.573891, -1.610426, 0.517895, 0.195594, 0.722998, 0.716568, 1.722419, -0.264485, 0.388243, -0.973805, -0.490899, -0.228817, 1.601687, 0.995793, 1.357382, 0.239233, -0.086046, 0.643285, -0.591067, 0.068965, 0.749306, -0.044877, -0.735229, 0.937392, -0.575348, 0.698587, 0.060457, -1.589037, 0.285096, 0.074758, 1.190715, -0.337024, -0.504809, 0.029592, 0.313195, -0.282544, 0.125674, 0.6067, -0.013425, -0.385002, -0.961909, 0.101845, -2.023404, 2.666025, 0.234809, 0.173434, 0.958012, -0.257298, -0.683301, -0.282135, 1.293879, -0.053778, 0.338054, 0.063795, 0.340098, 0.289944, 0.14306, 0.363324, -0.468189, 1.910101, -1.021986, -0.639994, -2.052239, 0.247474, 0.147372, -0.076034, -0.274638, 0.415675, -0.553866, -0.081059, 1.03692, 0.536388, -0.599018, 0.194155, -1.32507, -0.872911, 2.057278, 0.136936, -0.21521, 0.168097, -0.874495, 0.601469, 0.068034, -0.667791, 0.552992, -1.471683, -0.650444, 0.680637, 1.294298, -0.211889, -1.008419, -0.031704, 0.535365, -0.986949, -1.349047, -0.06669, -0.1094, 0.317356, -0.310735, -0.212709, -0.798464, -0.137092, 0.34207, 1.357387, 0.618341, -1.72087, -0.046823, -2.133245, -0.247879, 1.845203, -0.121172, -0.727408, -0.236897, -0.215738, 0.906461, -0.458889, 1.35338, -0.792585, -0.206895, 0.387719, 1.820902, -0.436561, -0.842368, -0.458009, 0.307094, 0.114555, -0.479276, 0.09199, 0.13524, 0.342904, 1.005131, -0.11421, 0.438902, -0.549852, -0.658311, 0.693482, -0.707904, -0.950415, -0.788317, -0.208697, 0.195627, -0.035554, -0.779756, 1.070727, 1.127671, -0.028, 0.639649, 0.344604, 0.325719, 1.392264, -0.821611, -1.422366, -0.537618, 0.486085, 0.215971, -1.16483, 1.293573, 0.070163, 0.790903, -0.077823, -0.058446, 0.977163, -0.553851, -0.48812, 0.332534, -0.064669, 0.505295, -0.544644, 0.202343, 0.883804, 0.399606, -1.127205, 0.35188, 0.497397, 0.132853, 0.463343, -1.792246, 0.238174, -0.472624, 1.530329, 1.06994, -0.15041, -1.052993, 0.927903, 0.282573, 0.07789, 0.671469, -0.531975, -0.321026, -0.058839, -0.143472, -0.685484, 0.043051, 1.546352, 1.323042, -0.012118, -0.751836, -0.688896, 0.030256, -0.046946, -1.639498, -0.144191, 0.073155, 0.933031, 0.3847, -0.303589, -1.185311, -0.593357, -0.307684, 0.306961, -0.428837, -1.181962, 0.07105, -0.933341, -0.210343, -1.918044, 0.984473, 1.103416, -1.087458, 0.266476, 0.057262, 0.685317, -0.919992, -0.70582, 0.135429, -0.516727, -1.270576, 0.50638, 0.082851, 1.913542, -1.499365, -1.723672, 0.983362, 0.960955, 0.889749, -0.199489, 0.67851, 0.471559, -0.46645, 0.733552, 0.124097, 0.778367, -0.058225, -1.176656, -0.07984, -0.306584, 0.022886, -0.820882, 0.715628, -0.358208, 0.640407, -1.08445, -0.006233, -1.144837, 0.165836, 0.710963, -0.492236, 1.286574, 0.075573, 0.642498, -0.407703, 1.42179, -0.800305, -1.372477, -0.200027, -1.048096, -0.689708, -0.580236, 0.547135, 0.274665, -0.034905, -0.829536, -0.291816, -1.830384, 0.308019, 0.180787, 0.239579, -0.183195, -0.658956, -1.756379, 0.313001, 0.190958, -0.797811, -1.513306, 0.646021, -0.354179, -0.152083, 0.439438, -0.644752, -0.179043, -0.544573, 0.876895, -0.333058, 0.451572, 0.167111, -0.19718, -0.129548, 0.930132, -2.272118, 0.822338, -0.280343, 0.709689, 0.318826, 1.405658, 0.833614, 0.080974, 0.421529, -0.665831, 0.46274, 1.314292, 0.580764, -0.588228, 0.595785, 0.468971, 0.009193, 0.159879, 1.370676, 0.928643, 0.236885, -0.467397, 0.619695, 0.669488, -0.152979, -0.021373, -0.472552, -0.605163, -1.614321, -0.161241], "prototypes_sha256": "d65d8f4794ae807133b9b87ca55af3ad93c9b0e9bb71f40f5dfc6d2434d0c3b5"}
+\ No newline at end of file

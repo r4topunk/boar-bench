@@ -1,0 +1,91 @@
+diff --git a/src/rag/retrieve.namedcap.test.ts b/src/rag/retrieve.namedcap.test.ts
+new file mode 100644
+index 00000000..c918d2fe
+--- /dev/null
++++ b/src/rag/retrieve.namedcap.test.ts
+@@ -0,0 +1,42 @@
++import { describe, it, expect, vi } from "vitest";
++
++vi.mock("./db", () => ({ getDb: async () => ({ getAllAsync: async () => [] }) }));
++vi.mock("./embed", () => ({ embeddingEngine: { embed: async () => new Float32Array([1, 0, 0, 0]) } }));
++vi.mock("./ptLexiconAsset", () => ({ ptLexicon: () => ({}) }));
++// A large pack names one article ("Nobel Prize in Literature") and returns 3 of its passages via the title path; a
++// format-1 pack has the answer's own article (vital5's "Kazuo Ishiguro") at cos 0.8.
++vi.mock("./packs", () => {
++  // Distinct passages (similar ones would be dropped as cross-library copies by dedupeArticleCopies).
++  const TEXTS: Record<number, string> = {
++    1: "The Nobel Prize in Literature is awarded annually by the Swedish Academy.",
++    2: "Alfred Nobel's will of 1895 established the prizes, first given in 1901.",
++    3: "Laureates receive a gold medal, a diploma and a sum of money at a ceremony in Stockholm.",
++    4: "Ishiguro moved to England at age five; his novels include The Remains of the Day.",
++  };
++  const hit = (articleId: number, chunkId: number, title: string, via: "title" | "bm25") =>
++    ({ articleId, chunkId, title, section: "", text: TEXTS[chunkId], start: 0, end: 1, score: 1, via, source: "enwiki", views: 0, lead: chunkId === 1, action: false });
++  return {
++    packHitToChunk: (packId: string, h: any) => ({ chunkId: `pack:${packId}:${h.chunkId}`, docId: `pack:${packId}:a${h.articleId}`, title: h.title, body: h.text, score: 1, matchType: "lexical" }),
++    searchWikiPacks: async (q: string) =>
++      /two/.test(q)
++        ? [{ packId: "en", hits: [hit(1, 1, "Nobel Prize in Literature", "title"), hit(1, 2, "Nobel Prize in Literature", "title"), hit(2, 3, "Kazuo Ishiguro", "title"), hit(2, 4, "Kazuo Ishiguro", "title")] }]
++        : [{ packId: "en", hits: [1, 2, 3].map((i) => hit(1, i, "Nobel Prize in Literature", "title")) }],
++    searchPacks: async () => ({
++      lexical: [],
++      semantic: [{ chunkId: "v5:ki", docId: "v5:Kazuo Ishiguro", title: "Kazuo Ishiguro", body: "Kazuo Ishiguro won the 2017 Nobel Prize in Literature.", source: "Wikipedia", score: 0.8, similarity: 0.8, matchType: "semantic" as const }],
++    }),
++  };
++});
++
++import { retrieve } from "./retrieve";
++
++describe("retrieve: named-article cap (MAX_CHUNKS_PER_ARTICLE)", () => {
++  it("one named article takes at most 2 of the 3 slots; the third goes to the next source", async () => {
++    const out = await retrieve("Who received the Nobel Prize in Literature in 2017?", 3);
++    expect(out.map((c) => c.title)).toEqual(["Nobel Prize in Literature", "Nobel Prize in Literature", "Kazuo Ishiguro"]);
++  });
++  it("several named articles still go first, 2 passages each (may pass top-K, as before)", async () => {
++    const out = await retrieve("Compare the two prizes", 3);
++    expect(out.map((c) => c.chunkId)).toEqual(["pack:en:1", "pack:en:2", "pack:en:3", "pack:en:4"]);
++  });
++});
+diff --git a/src/rag/retrieve.ts b/src/rag/retrieve.ts
+index d4c6b4e7..d080573e 100644
+--- a/src/rag/retrieve.ts
++++ b/src/rag/retrieve.ts
+@@ -7,6 +7,7 @@ import {
+   filterByTermCoverage,
+   fuseRetrievalResults,
+   gateByRelevance,
++  MAX_CHUNKS_PER_ARTICLE,
+   MIN_SEMANTIC_SIMILARITY,
+ } from "./pure";
+ import type { RetrievedChunk } from "./retrieve.types";
+@@ -184,9 +185,20 @@ async function retrieveOne(
+   // Large-pack passages from articles the question names come first, in the
+   // pack's own order; its keyword hits compete with everything else.
+   // A named disambiguation page is a list of links, not a source to put first (any pack, any language).
++  // At most MAX_CHUNKS_PER_ARTICLE passages per named article, as the fusion caps every other article (Sonar,
++  // enwiki named-cap): with k = 3 one named article from a large pack ("Nobel Prize in Literature" x3) took every slot.
++  const perArticle = new Map<string, number>();
+   const named = wiki
+     .flatMap((w) => w.hits.filter((h) => h.via === "title").map((h) => packHitToChunk(w.packId, h)))
+-    .filter((c) => !isDisambiguation(c));
++    .filter((c) => !isDisambiguation(c))
++    .filter((c) => {
++      const n = perArticle.get(c.docId) ?? 0;
++      perArticle.set(c.docId, n + 1);
++      return n < MAX_CHUNKS_PER_ARTICLE;
++    });
++  // Named passages of a single article keep the usual top-K cut (the slots past them go to other sources); several
++  // named articles may still go past it, as before (both sides of a comparison).
++  const namedArticles = new Set(named.map((c) => c.docId)).size;
+   const wikiLexical = wiki.flatMap((w) => w.hits.filter((h) => h.via !== "title").map((h) => packHitToChunk(w.packId, h)));
+   // The bundled corpus and format-1 packs pass the relevance gate first (their chunks carry the
+   // question's cosine similarity): an unrelated question gets none of them, and weak chunks can't
+@@ -211,7 +223,7 @@ async function retrieveOne(
+   const result = dedupeArticleCopies([
+     ...first.filter((c, i) => first.findIndex((x) => x.chunkId === c.chunkId) === i),
+     ...fused.filter((c) => !seen.has(c.chunkId)),
+-  ]).slice(0, Math.max(topK, named.length));
++  ]).slice(0, namedArticles <= 1 ? topK : Math.max(topK, named.length));
+   // A what-to-do question: the lay sources the pack search added past its limit (a first-aid manual next to the
+   // clinical article) must reach the answer, not be cut here with the rest of the keyword hits.
+   if (action) {

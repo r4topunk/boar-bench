@@ -1,0 +1,22 @@
+{
+ "source": {
+  "path": "runs/night-2026-10-01/questions72.jsonl",
+  "sha256": "653461d918ba9bfc5bcb321cab62f87a9fd6b62a87b5b677aee63f3c1d9428cf",
+  "items": 72
+ },
+ "evalSetVersion": "dataset-bench-v0.1-72",
+ "files": {
+  "and-gemma4-e4b-quick-p3speed.request.json": "2afd187f87c6687a6c21e711ed42352c1b950e0a0fb3a52a85c159fb5d1bbbd9",
+  "and-gemma4-e4b-quick-smoke.request.json": "840dfb545a5cc68d98e27e327a002615777351142e00c12439dd749af91890a8",
+  "and-gemma4-e4b-quick.request.json": "c68b6c4efcad6f4084a6ad9f58890b4e32ac5ef3c171f0eb07e78b8789d9d902",
+  "and-q15-quick-p3speed.request.json": "b727f74aebd513a6a073569632d45a0bd78533eadcc8a5ba41e3a5e438248637",
+  "and-q15-quick-smoke.request.json": "4f5227ec6a937f646afacb08a8ef26bef808256212fa66558ad0add34edca462",
+  "and-q15-quick.request.json": "82ebb99a353e8815ffab37d8587c9f6719a31801a5a1f87c5f5da0d08f6be620",
+  "and-qwen3-4b-quick-p3speed.request.json": "f59df319a837bb0abb23f81103f71250a9cbcc3a274c266e330b0322caacce28",
+  "and-qwen3-4b-quick-smoke.request.json": "83ed35f1fbe213a4df95a22cfbad9ef5415a63da0ed6414a263ee345ed69e65f",
+  "and-qwen3-4b-quick.request.json": "9c2a7f12b6524b43233f3942e091ed702424b5c26916a9ea73647464c5ee5a9a",
+  "ios-q15-quick.request.json": "0f3087edfa3dee69f7c92692e02d5dfb18c7b7b0eb0ca74015e6dde73c95bd5f",
+  "p3-speed9x3.device.jsonl": "c6ee4d92e8e703309944c85a17c0efd9757a85b24cfe2826514a52cf87b7e55f",
+  "questions72.device.jsonl": "a4a218d2bb8eb27a5d5a0e6184278c930b11c51aaadc0b06e8e01463729deb09"
+ }
+}

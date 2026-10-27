@@ -15,10 +15,10 @@ Checks (exit 1 on any failure; prints counts and booleans, never held-out text o
   safety      overlay v0.3 ids exist in the split and are danger items
   layout      bench.json paths exist (harness scorers/bench.py); gold/sources.json ids/titles; safety files equal the
               scorers' vendored copy
-  fieldatlas  0 residue: no fieldatlas provenance/source/id; no n-token window of any bench file hashes to a
-              Field Atlas question (fieldatlas.denylist.json); if the local checkout exists, the denylist is re-derived
+  competitor  0 residue: no competitor provenance/source/id; no n-token window of any bench file hashes to a
+              competitor question (competitor.denylist.json); if the local checkout exists, the denylist is re-derived
               from git and a literal case-insensitive grep of the 31 question strings finds nothing
-  jaccard     max word-Jaccard of new questions vs Field Atlas (needs the local checkout) and vs every other bench/safety
+  jaccard     max word-Jaccard of new questions vs competitor (needs the local checkout) and vs every other bench/safety
               question is < 0.5 and equals similarity.json
   heldout     local held-out files (rnd/private-heldout) match heldout.manifest.json; no id collision; no exact/near duplicate
               (Jaccard >= 0.8) and no normalized-hash match against any public question. --skip-heldout skips it
@@ -34,7 +34,7 @@ V0_SPLIT = B / "rnd/bench/questions/v0/questions.public.jsonl"
 V0_SPLIT_SHA = "dc859ebd91b0e02736ff45a5370fc64d42237ac65b93f02d57df619b20bb6b4f"
 V0_REFS = B / "rnd/bench/refs/v0/claude-code__opus.jsonl"
 V0_REFS_SHA = "cfb8ceccd5005f91f4be6941adbbe2ceadd7d5d8d39901507492d017498965bf"
-FA_REPO = B / "competitors/fieldatlas"
+FA_REPO = B / "competitors/<testcase-repo>"
 VEIL = B / "rnd/private-heldout"
 N_ITEMS, N_DANGER, N_NEW, NEW_ORIGIN = 60, 5, 27, "lantern-v0.1"
 NEW_LICENSE = "original (CC BY 4.0), boar-eval bench v0.1"
@@ -241,15 +241,15 @@ def main():
                  if not (vendor / f).exists() or fsha(vendor / f) != fsha(HERE / "safety" / f)]
         check("safety files identical to scorers/vendor/safety", not diffv, f"differ {diffv}" if diffv else "4 files")
 
-    # ---- Field Atlas residue
-    deny = json.loads((HERE / "fieldatlas.denylist.json").read_text())
+    # ---- competitor residue
+    deny = json.loads((HERE / "competitor.denylist.json").read_text())
     dh = {c["norm_sha256"] for c in deny["cases"]}
     lens = sorted({c["n_tokens"] for c in deny["cases"]})
-    meta = [it["id"] for it in items if "fieldatlas" in json.dumps([it["provenance"], it["reference_sources"], it["license"]]).lower()
+    meta = [it["id"] for it in items if any(n in json.dumps([it["provenance"], it["reference_sources"], it["license"]]).lower() for n in ("competitor", "87bb6e9"))
             or it["id"].startswith("vit-fa-")]
-    check("no Field Atlas provenance / source URL / vit-fa id in the split", not meta, f"{len(meta)} items" + (f": {meta}" if meta else ""))
+    check("no competitor provenance / source URL / vit-fa id in the split", not meta, f"{len(meta)} items" + (f": {meta}" if meta else ""))
     scan = [p for p in sorted(HERE.rglob("*")) if p.is_file() and p.suffix in (".json", ".jsonl", ".md", ".py", ".mjs") and "__pycache__" not in p.parts
-            and p.name != "fieldatlas.denylist.json"]
+            and p.name != "competitor.denylist.json"]
     hitfiles, windows = [], 0
     for p in scan:
         tk = tokens(p.read_text(encoding="utf-8", errors="replace"))
@@ -258,24 +258,24 @@ def main():
                 windows += 1
                 if sha(" ".join(tk[i:i + n]).encode()) in dh:
                     hitfiles.append(p.relative_to(HERE).as_posix()); break
-    check("Field Atlas residue (hashed n-gram scan of every bench file)", not hitfiles,
+    check("competitor residue (hashed n-gram scan of every bench file)", not hitfiles,
           f"{len(dh)} questions, {len(scan)} files, {windows} windows" + (f"; hits in {sorted(set(hitfiles))}" if hitfiles else ""))
     fa_tok = None
     if (FA_REPO / ".git").exists():
         fa_raw = []
         for f, h in deny["source"]["files"].items():
             b = subprocess.run(["git", "-C", str(FA_REPO), "show", f"87bb6e9:{f}"], capture_output=True).stdout
-            if sha(b) != h: check(f"Field Atlas {f}@87bb6e9 matches denylist source sha", False); continue
+            if sha(b) != h: check(f"competitor {f}@87bb6e9 matches denylist source sha", False); continue
             key = "question" if f.endswith("e2e_cases.json") else "q"
             fa_raw += [c[key] for c in json.loads(b)]
         rederived = {sha(" ".join(tokens(q)).encode()) for q in fa_raw}
-        check("denylist re-derived from the Field Atlas checkout", rederived == dh, f"{len(fa_raw)} questions")
+        check("denylist re-derived from the competitor checkout", rederived == dh, f"{len(fa_raw)} questions")
         grep = [(p.relative_to(HERE).as_posix()) for p in scan
                 if any(re.sub(r"\s+", " ", q.strip().rstrip("?.").lower()) in re.sub(r"\s+", " ", p.read_text(encoding="utf-8", errors="replace").lower()) for q in fa_raw)]
-        check("literal grep of the Field Atlas question strings", not grep, f"{len(fa_raw)} strings x {len(scan)} files" + (f"; hits {grep}" if grep else ""))
+        check("literal grep of the competitor question strings", not grep, f"{len(fa_raw)} strings x {len(scan)} files" + (f"; hits {grep}" if grep else ""))
         fa_tok = [tokens(q) for q in fa_raw]
     else:
-        warn("Field Atlas checkout", "not found; literal grep and Jaccard vs Field Atlas skipped (hashed scan above still ran)")
+        warn("competitor checkout", "not found; literal grep and Jaccard vs competitor skipped (hashed scan above still ran)")
 
     # ---- Jaccard
     sim = json.loads((HERE / "similarity.json").read_text())
@@ -285,9 +285,9 @@ def main():
     check(f"max Jaccard new vs bench + safety track < {JACCARD_MAX}", mb < JACCARD_MAX and round(mb, 4) == sim["max_vs_bench"], f"{mb:.4f} over {len(new)} x {len(pool) - 1} pairs")
     if fa_tok is not None:
         mf = max(jacc(tokens(n["question"]), t) for n in new for t in fa_tok)
-        check(f"max Jaccard new vs Field Atlas < {JACCARD_MAX}", mf < JACCARD_MAX and round(mf, 4) == sim["max_vs_fieldatlas"], f"{mf:.4f} over {len(new)} x {len(fa_tok)} pairs")
+        check(f"max Jaccard new vs competitor < {JACCARD_MAX}", mf < JACCARD_MAX and round(mf, 4) == sim["max_vs_competitor"], f"{mf:.4f} over {len(new)} x {len(fa_tok)} pairs")
     else:
-        check(f"recorded max Jaccard new vs Field Atlas < {JACCARD_MAX}", sim["max_vs_fieldatlas"] < JACCARD_MAX, f"{sim['max_vs_fieldatlas']} (similarity.json)")
+        check(f"recorded max Jaccard new vs competitor < {JACCARD_MAX}", sim["max_vs_competitor"] < JACCARD_MAX, f"{sim['max_vs_competitor']} (similarity.json)")
 
     # ---- held-out (counts/booleans only)
     if skip_heldout:

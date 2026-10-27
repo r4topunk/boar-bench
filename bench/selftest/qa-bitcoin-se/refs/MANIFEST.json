@@ -1,0 +1,9 @@
+{
+ "bench": "selftest-qa-bitcoin-se",
+ "frozen": true,
+ "n_items": 20,
+ "n_ok": 20,
+ "source_sha256": "8c89c5af5bdafd7ccabb209ea951cd471db6b75af042e917050caa3d71bba465",
+ "questions_sha256": "7bdf657835e82ce04033093b6e0819dc6837494bf3e057f051d12851f141bc16",
+ "jsonl_sha256": "5896da3c9df60cd0b5b45711c3de84dcfac36c537f66763df97c88145c877146"
+}

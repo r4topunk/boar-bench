@@ -1,0 +1,26 @@
+{"id": "vit-sci-003", "accept": [[83.33, 1.0]], "patterns": ["1\\s*(?:min|minute)s?\\.?,?\\s*(?:and\\s*)?2[23]\\s*(?:s|sec)", "\\b1:2[23]\\b"], "note": "1300/30 + 400/10 = 83.3 s (v0.1 rubric: 82-84 / 1 min 23)"}
+{"id": "vit-trv-004", "accept": [[2800, 400]], "patterns": [], "note": "round trip 2,400-3,200 km (v0.1 rubric ~2,700-2,900 km, never < 2,000); km only"}
+{"id": "mr-u01", "accept": [[77, 0.5]], "patterns": [], "note": "25*9/5+32"}
+{"id": "mr-u02", "accept": [[37, 0.2]], "patterns": [], "note": "(98.6-32)*5/9"}
+{"id": "mr-u03", "accept": [[42.16, 0.15]], "patterns": [], "note": "26.2*1.609344"}
+{"id": "mr-u04", "accept": [[154.32, 0.6]], "patterns": [], "note": "70*2.20462"}
+{"id": "mr-u05", "accept": [[-40, 0.5]], "patterns": ["minus\\s*40", "[-−]\\s?40\\s*°?\\s*F", "same\\s+(?:number|value|temperature)"], "note": "-40 C = -40 F"}
+{"id": "mr-u06", "accept": [[18.93, 0.1]], "patterns": [], "note": "5*3.78541"}
+{"id": "mr-u07", "accept": [[31.91, 0.4]], "patterns": [], "note": "2.2*14.5038"}
+{"id": "mr-u08", "accept": [[9842.5, 15]], "patterns": [], "note": "3000/0.3048"}
+{"id": "mr-a01", "accept": [[27.3, 0.2]], "patterns": [], "note": "6.5*4.2"}
+{"id": "mr-a02", "accept": [], "patterns": ["\\b12[:.]15\\b"], "note": "12:15"}
+{"id": "mr-a03", "accept": [[231.48, 0.6]], "patterns": [], "note": "250/1.08"}
+{"id": "mr-a04", "accept": [[74, 0.5]], "patterns": [], "note": "20 Ah * 3.7 V"}
+{"id": "mr-a05", "accept": [[3.4, 0.05], [204, 1]], "patterns": ["3\\s*(?:h|hr|hrs|hour|hours)\\.?,?\\s*(?:and\\s*)?24\\s*(?:m|min)"], "note": "12/5 h + 600/600 h = 3.4 h = 3 h 24 min"}
+{"id": "mr-a06", "accept": [[52, 0.01]], "patterns": [], "note": "80*0.65"}
+{"id": "mr-a07", "accept": [[3.6, 0.05], [216, 1]], "patterns": ["3\\s*(?:h|hr|hrs|hour|hours)\\.?,?\\s*(?:and\\s*)?36\\s*(?:m|min)"], "note": "18/5 = 3.6 h = 3 h 36 min"}
+{"id": "mr-a08", "accept": [[9, 0.05], [9000, 1]], "patterns": [], "note": "60*5*30 = 9000 Wh = 9 kWh"}
+{"id": "mr-t01", "accept": [[86, 0.5]], "patterns": [], "note": "30*9/5+32"}
+{"id": "mr-t02", "accept": [[10, 0.6]], "patterns": [], "note": "(50-32)*5/9"}
+{"id": "mr-t03", "accept": [[80.78, 0.6]], "patterns": [], "note": "130/1.609344"}
+{"id": "mr-t04", "accept": [[101.3, 0.2]], "patterns": [], "note": "38.5*9/5+32 (health phrasing: detector may fire)"}
+{"id": "mr-t05", "accept": [[29032, 30]], "patterns": [], "note": "8849/0.3048"}
+{"id": "mr-t06", "accept": [[94.29, 0.15]], "patterns": [], "note": "19.8/21 (crypto kit invites context)"}
+{"id": "mr-t07", "accept": [], "patterns": ["midnight", "\\b12(?::00)?\\s*a\\.?\\s?m\\b", "\\b0?0:00\\b", "\\b24:00\\b"], "note": "15:00 + 9 h = 00:00 (midnight)"}
+{"id": "mr-t08", "accept": [[183.3, 0.5]], "patterns": [], "note": "330/1.8"}

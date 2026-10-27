@@ -1,0 +1,157 @@
+{
+ "requestId": "be-and-gemma4-e4b-quick-p3speed-r1",
+ "pipeline": "answer",
+ "models": [
+  "gemma-4-e4b-it-q4_0"
+ ],
+ "questions": [
+  {
+   "id": "lan-rsn-002__k1",
+   "query": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-cry-001__k1",
+   "query": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-004__k1",
+   "query": "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-005__k1",
+   "query": "What is the difference between Privacy Pools and Tornado Cash?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-006__k1",
+   "query": "What is quadratic funding, and what is its main weakness?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-009__k1",
+   "query": "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-hlt-003__k1",
+   "query": "Is dengue more dangerous the second time you get it?",
+   "category": "health"
+  },
+  {
+   "id": "lan-exp-005__k1",
+   "query": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "category": "explanation"
+  },
+  {
+   "id": "lan-cmp-005__k1",
+   "query": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+   "category": "comparison"
+  },
+  {
+   "id": "lan-rsn-002__k2",
+   "query": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-cry-001__k2",
+   "query": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-004__k2",
+   "query": "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-005__k2",
+   "query": "What is the difference between Privacy Pools and Tornado Cash?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-006__k2",
+   "query": "What is quadratic funding, and what is its main weakness?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-009__k2",
+   "query": "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-hlt-003__k2",
+   "query": "Is dengue more dangerous the second time you get it?",
+   "category": "health"
+  },
+  {
+   "id": "lan-exp-005__k2",
+   "query": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "category": "explanation"
+  },
+  {
+   "id": "lan-cmp-005__k2",
+   "query": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+   "category": "comparison"
+  },
+  {
+   "id": "lan-rsn-002__k3",
+   "query": "If you stood the Burj Khalifa on the deepest point of Lake Baikal, would its top stick out of the water?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-cry-001__k3",
+   "query": "How would Ethereum protect users' funds if a quantum computer suddenly broke ECDSA?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-004__k3",
+   "query": "What is PeerDAS, and how can a node check that blob data is available without downloading all of it?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-005__k3",
+   "query": "What is the difference between Privacy Pools and Tornado Cash?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-006__k3",
+   "query": "What is quadratic funding, and what is its main weakness?",
+   "category": "crypto"
+  },
+  {
+   "id": "vit-cry-009__k3",
+   "query": "I want to stake 10,000 ETH. How many validators did I need before EIP-7251, and what is the minimum after it?",
+   "category": "reasoning"
+  },
+  {
+   "id": "vit-hlt-003__k3",
+   "query": "Is dengue more dangerous the second time you get it?",
+   "category": "health"
+  },
+  {
+   "id": "lan-exp-005__k3",
+   "query": "Explain what the Sahara is: its size, which countries it spans, and what its climate was like in the past.",
+   "category": "explanation"
+  },
+  {
+   "id": "lan-cmp-005__k3",
+   "query": "Which grows bigger, the saltwater crocodile or the Nile crocodile?",
+   "category": "comparison"
+  }
+ ],
+ "evalSetVersion": "dataset-bench-v0.1-72",
+ "answerSettings": {
+  "quickFirst": true,
+  "alwaysComplete": false
+ },
+ "install": {
+  "assets": [
+   "gemma-4-e4b-it-q4_0",
+   "boar-crypto",
+   "boar-wikivoyage-en"
+  ]
+ },
+ "confirmLargeModels": true
+}
