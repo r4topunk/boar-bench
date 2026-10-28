@@ -1,0 +1,97 @@
+{"id":"cw-001","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":41427,"at":"2026-10-22T00:01:35.190Z"}
+{"id":"cw-003","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":58021,"at":"2026-10-22T00:02:20.473Z"}
+{"id":"cw-004","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":1553,"at":"2026-10-22T00:03:18.497Z"}
+{"id":"cw-002","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":99798,"at":"2026-10-22T00:02:20.468Z"}
+{"id":"cw-004","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":1274,"at":"2026-10-22T00:04:15.769Z"}
+{"id":"cw-004","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":83695,"at":"2026-10-22T00:24:17.496Z"}
+{"id":"cw-005","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":22494,"at":"2026-10-22T00:25:41.195Z"}
+{"id":"cw-006","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":84436,"at":"2026-10-22T00:26:03.692Z"}
+{"id":"cw-007","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":1056,"at":"2026-10-22T00:27:28.130Z"}
+{"id":"cw-007","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":70153,"at":"2026-10-22T00:47:29.693Z"}
+{"id":"cw-008","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":31937,"at":"2026-10-22T00:48:39.853Z"}
+{"id":"cw-009","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":26766,"at":"2026-10-22T00:49:11.792Z"}
+{"id":"cw-010","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":998,"at":"2026-10-22T00:49:38.560Z"}
+{"id":"cw-010","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":56095,"at":"2026-10-22T01:09:39.865Z"}
+{"id":"cw-011","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":53869,"at":"2026-10-22T01:10:35.967Z"}
+{"id":"cw-012","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":114854,"at":"2026-10-22T01:11:29.839Z"}
+{"id":"cw-013","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":1536,"at":"2026-10-22T01:13:24.700Z"}
+{"id":"cw-013","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":38909,"at":"2026-10-22T01:33:26.732Z"}
+{"id":"cw-014","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":24688,"at":"2026-10-22T01:34:05.647Z"}
+{"id":"cw-015","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":40923,"at":"2026-10-22T01:34:30.338Z"}
+{"id":"cw-016","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":1191,"at":"2026-10-22T01:35:11.264Z"}
+{"id":"cw-016","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":46097,"at":"2026-10-22T01:55:12.830Z"}
+{"id":"cw-017","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":44626,"at":"2026-10-24T22:28:12.161Z"}
+{"id":"cw-018","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":74665,"at":"2026-10-24T22:28:12.167Z"}
+{"id":"cw-019","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":44607,"at":"2026-10-24T22:28:56.795Z"}
+{"id":"cw-021","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":11988,"at":"2026-10-24T22:29:41.404Z"}
+{"id":"cw-020","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":27062,"at":"2026-10-24T22:29:26.836Z"}
+{"id":"cw-023","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":33055,"at":"2026-10-24T22:29:53.899Z"}
+{"id":"cw-022","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":40686,"at":"2026-10-24T22:29:53.395Z"}
+{"id":"cw-024","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":44258,"at":"2026-10-24T22:30:26.957Z"}
+{"id":"cw-025","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":50531,"at":"2026-10-24T22:30:34.083Z"}
+{"id":"cw-026","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":38018,"at":"2026-10-24T22:31:11.217Z"}
+{"id":"cw-027","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":56326,"at":"2026-10-24T22:31:24.616Z"}
+{"id":"cw-028","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":53836,"at":"2026-10-24T22:31:49.236Z"}
+{"id":"cw-030","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":21162,"at":"2026-10-24T22:32:43.076Z"}
+{"id":"cw-029","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":45170,"at":"2026-10-24T22:32:20.945Z"}
+{"id":"cw-031","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":38292,"at":"2026-10-24T22:33:04.240Z"}
+{"id":"cw-032","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":91982,"at":"2026-10-24T22:33:06.116Z"}
+{"id":"cw-034","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":12740,"at":"2026-10-24T22:34:38.101Z"}
+{"id":"cw-033","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":84372,"at":"2026-10-24T22:33:42.534Z"}
+{"id":"cw-033","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":12070,"at":"2026-10-24T22:35:06.910Z"}
+{"id":"cw-034","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":33351,"at":"2026-10-24T22:34:50.842Z"}
+{"id":"cw-034","turn":2,"attempt":1,"ok":true,"error":null,"wallMs":11565,"at":"2026-10-24T22:35:24.193Z"}
+{"id":"cw-033","turn":2,"attempt":1,"ok":true,"error":null,"wallMs":44581,"at":"2026-10-24T22:35:18.983Z"}
+{"id":"cw-036","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":18842,"at":"2026-10-24T22:36:03.566Z"}
+{"id":"cw-036","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":20666,"at":"2026-10-24T22:36:22.409Z"}
+{"id":"cw-035","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":91227,"at":"2026-10-24T22:35:35.760Z"}
+{"id":"cw-036","turn":2,"attempt":1,"ok":true,"error":null,"wallMs":27660,"at":"2026-10-24T22:36:43.077Z"}
+{"id":"cw-037","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":21275,"at":"2026-10-24T22:37:10.739Z"}
+{"id":"cw-035","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":42528,"at":"2026-10-24T22:37:06.989Z"}
+{"id":"cw-039","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":63577,"at":"2026-10-24T22:37:49.537Z"}
+{"id":"cw-038","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":98676,"at":"2026-10-24T22:37:32.030Z"}
+{"id":"cx-002","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":26461,"at":"2026-10-24T22:39:10.720Z"}
+{"id":"cx-001","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":72471,"at":"2026-10-24T22:38:53.121Z"}
+{"id":"cx-003","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":58326,"at":"2026-10-24T22:39:37.182Z"}
+{"id":"cx-005","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":29519,"at":"2026-10-24T22:40:35.511Z"}
+{"id":"cx-004","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":91964,"at":"2026-10-24T22:40:05.594Z"}
+{"id":"cx-006","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":45843,"at":"2026-10-24T22:41:05.033Z"}
+{"id":"cx-007","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":51392,"at":"2026-10-24T22:41:37.562Z"}
+{"id":"cx-008","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":64618,"at":"2026-10-24T22:41:50.879Z"}
+{"id":"cx-009","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":32798,"at":"2026-10-24T22:42:28.957Z"}
+{"id":"cx-010","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":70629,"at":"2026-10-24T22:42:55.502Z"}
+{"id":"cx-011","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":65360,"at":"2026-10-24T22:43:01.759Z"}
+{"id":"cx-014","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":24783,"at":"2026-10-24T22:44:07.121Z"}
+{"id":"cx-013","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":48214,"at":"2026-10-24T22:44:06.134Z"}
+{"id":"cx-015","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":42461,"at":"2026-10-24T22:44:31.906Z"}
+{"id":"cx-016","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":88740,"at":"2026-10-24T22:44:54.352Z"}
+{"id":"cx-018","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":78577,"at":"2026-10-24T22:45:14.371Z"}
+{"id":"cx-020","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":42728,"at":"2026-10-24T22:46:32.952Z"}
+{"id":"cx-019","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":59788,"at":"2026-10-24T22:46:23.095Z"}
+{"id":"cx-021","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":20312,"at":"2026-10-24T22:47:15.682Z"}
+{"id":"cx-022","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":39754,"at":"2026-10-24T22:47:22.886Z"}
+{"id":"cx-023","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":29031,"at":"2026-10-24T22:47:35.997Z"}
+{"id":"cx-026","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":35365,"at":"2026-10-24T22:48:05.031Z"}
+{"id":"cx-024","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":63443,"at":"2026-10-24T22:48:02.643Z"}
+{"id":"cx-027","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":122835,"at":"2026-10-24T22:48:40.398Z"}
+{"id":"cx-028","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":113068,"at":"2026-10-24T22:49:06.089Z"}
+{"id":"cx-030","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":35563,"at":"2026-10-24T22:50:59.160Z"}
+{"id":"cx-031","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":20398,"at":"2026-10-24T22:51:34.725Z"}
+{"id":"cx-029","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":85876,"at":"2026-10-24T22:50:43.237Z"}
+{"id":"cx-032","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":16100,"at":"2026-10-24T22:51:55.125Z"}
+{"id":"cx-033","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":35461,"at":"2026-10-24T22:52:09.118Z"}
+{"id":"cx-033","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":21029,"at":"2026-10-24T22:52:44.581Z"}
+{"id":"cx-034","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":91258,"at":"2026-10-24T22:52:11.226Z"}
+{"id":"cx-035","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":84950,"at":"2026-10-24T22:53:05.614Z"}
+{"id":"cx-034","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":54503,"at":"2026-10-24T22:53:42.488Z"}
+{"id":"cx-035","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":38698,"at":"2026-10-24T22:54:30.566Z"}
+{"id":"cx-036","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":51950,"at":"2026-10-24T22:54:36.995Z"}
+{"id":"cx-035","turn":2,"attempt":1,"ok":true,"error":null,"wallMs":61782,"at":"2026-10-24T22:55:09.266Z"}
+{"id":"cx-036","turn":1,"attempt":1,"ok":true,"error":null,"wallMs":51081,"at":"2026-10-24T22:55:28.946Z"}
+{"id":"cx-036","turn":2,"attempt":1,"ok":true,"error":null,"wallMs":20484,"at":"2026-10-24T22:56:20.029Z"}
+{"id":"cx-037","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":85993,"at":"2026-10-24T22:56:11.053Z"}
+{"id":"cx-038","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":72213,"at":"2026-10-24T22:56:40.516Z"}
+{"id":"cx-039","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":17642,"at":"2026-10-24T22:57:37.051Z"}
+{"id":"cx-038","turn":0,"attempt":1,"ok":false,"error":"rate limit","wallMs":2747,"at":"2026-10-24T22:58:04.204Z"}
+{"id":"cx-038","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":124721,"at":"2026-10-24T23:01:36.675Z"}
+{"id":"cx-039","turn":0,"attempt":1,"ok":true,"error":null,"wallMs":88896,"at":"2026-10-24T23:03:41.407Z"}

@@ -1,0 +1,5 @@
+# blind/bench-v02 — layout (names and counts only; no item text in this file)
+- `live/v0.2/` plaintext items (burnt: in boar-eval git history d8154b6; treated as dev since 10-10). Never read by researchers; coordinator scripts only.
+- `runs-<arm>/` traces, requests, judgments (Opus `.judgments.jsonl`, Haiku `.judgments.haiku55-low.jsonl`) and tool caches per arm: cut3, cut6, cut7, ship, e3, mp4b, think4b, deepthinkv02, dt512v02 (= H, the recommended deep config), deepiter, deeproute, deepvpara, notes35, quantceil, vitaladd, deepcover, deephedge, packcond.
+- `runs-packcond/` (2026-10-12): retrieval replays with query text — `pg-{off,on,prepatch}-{H32,R20}.jsonl` (PACKCOND P4 packGround gate), `p4b-v02.jsonl` (PACKDENSE D0: per-article named/BM25/coverage/lead-cosine diagnostics), P2 pack-coverage replays, jev caches under `*-cache/`. Aggregates (ids/titles/counts) live in rnd/research/coordinator/arms/packcond/aggregates/.
+- Every read is logged in rnd/research/coordinator/EXPOSURES.md.

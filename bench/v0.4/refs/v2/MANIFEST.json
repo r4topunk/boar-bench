@@ -3,7 +3,7 @@
  "items_sha256": "f9ad2f2f0fc367811ea03690bc9b05e52d85b1ee5fb662600efa818587d33594",
  "families": {
   "claude": {
-   "sha256": "b27eac37a88918ca5d74ad22e9e5265d241c118342098a45a9178eb5066ce4f6",
+   "sha256": "d83e518688cdc636bbf7c221370deeae239b13f859830a9ee8ab337cf9f5209f",
    "rows_ok": 75,
    "models": {
     "claude-opus-5-5": 75

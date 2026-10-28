@@ -1,0 +1,8 @@
+2026-10-20 r2 Codex runs (codex-cli 0.144.3, gpt-5.6-sol, model_reasoning_effort=high, sandbox read-only, --ephemeral --ignore-user-config, env -i clean env; each in a fresh dir)
+1. draft: web_search=disabled; dir = blueprint.md + bounty.md + prompt.txt -> codex-new.jsonl (cx-039 emitted twice, deduplicated)
+2. critique of cw-037..039 + cw-034: web_search=disabled; dir = blueprint.md + bounty.md + claude-items.jsonl -> critique-of-claude-by-codex.jsonl
+3. fact-check: web_search=live; dir = items.jsonl (= items-for-factcheck.jsonl) -> factcheck-codex.jsonl (1 try, 10 lines)
+date: 2026-10-20 (balance round r2)
+codex: codex-cli 0.144.3, gpt-5.6-sol, reasoning high, web_search disabled, sandbox read-only, ephemeral, ignore-user-config, clean env
+cwd: fresh dir with only blueprint.md (BENCH-ITEMS-BLUEPRINT-2026-10-20.md), bounty.md, prompt.txt (copied here as codex-draft.prompt.txt)
+output: 4 lines, cx-039 emitted twice identically; deduplicated (syntax only) -> codex-new.jsonl (3 items)

@@ -1,0 +1,13 @@
+{
+ "jsonl_sha256": "d2e11ecef1659354720764cd709e70f0740f2b7ebe8f1cec861ffe0aa74a684c",
+ "source_refs_sha256": "2cbc0e080fc0c474c5f4571dd28fe2462758fbeea1bf0e4e1b9ce9b74525fab2",
+ "rows": 51,
+ "words_p10_p50_p90_max": [
+  67,
+  77,
+  80,
+  80
+ ],
+ "truncated": 18,
+ "system_prompt_sha256": "9bc9ef7568c8c9ab217af6769c9f1330c9271384dd02ddb88728050e36227b24"
+}

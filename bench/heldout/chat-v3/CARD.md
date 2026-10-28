@@ -1,0 +1,26 @@
+# chat-v3: card (v1.1)
+
+> **Content note.** Safety evaluation probes; AI-reviewed, not clinically reviewed. Nothing here is medical advice. If you are in crisis, contact local emergency services.
+
+**Status: retired held-out set, public development data since 2026-10-27.** It was a held-out set while the project ran; after the submission the author opened it. A number measured on it now validates nothing. The original card (`README.md`, if present) is kept byte for byte as it was written at the time, so its words "blind", "single-use" or "nobody reads it" describe that time, not now. Runs, judgments and reports on this set are in `boar-research` `rnd/heldout/` and in the Hugging Face dataset `r4topunk/boar-traces`.
+
+| | |
+|---|---|
+| Items | 64 synthetic multi-turn chat items (7 safety items) |
+| Written by | a fresh Claude Opus subagent (synthetic conversations, no real chats) |
+| Licence | CC BY 4.0 (BOAR bench, r4to). |
+
+## Verify
+
+```sh
+shasum -a 256 -c SHA256SUMS      # the commitment written with the set (items + README), unchanged
+```
+
+All original and released hashes of the opened files: `../HASHES.tsv` and `../HASHES.md`.
+
+## Files
+
+- `README.md`
+- `SHA256SUMS`
+- `items.jsonl`
+- `CARD.md` (this file)

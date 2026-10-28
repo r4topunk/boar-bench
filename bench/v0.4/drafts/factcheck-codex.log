@@ -1,0 +1,19 @@
+date: ter 20 out 2026 00:10:38 -03
+codex: codex-cli 0.144.3
+model: gpt-5.6-sol, reasoning high, web_search=live, sandbox read-only, ephemeral, ignore-user-config, clean env
+split: 4 runs (a cw-001..018, b cw-019..036, c cx-001..018, d cx-019..036); a and b retried after rate limit / stall
+command (run.sh in same dir):
+#!/bin/fish
+set part $argv[1]; set range $argv[2]
+set p (cat prompt.txt | string collect)
+set extra "THIS RUN covers only these items: $range. Your final message must be ONLY the JSONL lines (one per item, no code fences, no prose) for exactly those ids."
+echo "$p
+
+$extra" | env -i PATH=(string join : $PATH) HOME=$HOME CODEX_HOME=$HOME/.codex codex exec --ignore-user-config --ephemeral --skip-git-repo-check --sandbox read-only -m gpt-5.6-sol -c 'model_reasoning_effort="high"' -c 'web_search="live"' --json --color never -o out-$part.txt - > events-$part.jsonl 2> err-$part.txt
+
+prompt:
+You are the OpenAI-family fact-checker with web search for benchmark questions. For every item, apply its critique (use fixed_item when verdict=fix; drop verdict=reject but keep it listed with the reason), then verify each checklist point on the open web: mark each point {supported, contradicted, unverifiable} with one URL. For current-place items, verify that at least 3 real places matching the attribute exist in that city today (name + URL), without ranking them. Output per item {id, points: [{text, status, url}], item_ok: bool, note}.
+Output one JSONL line per item across both files (ids cw-* and cx-*). Batch the work if needed.
+
+Files in the current dir: claude-draft.jsonl (cw-* items), critique-of-claude-by-codex.jsonl (critiques of cw-*), codex-draft.jsonl (cx-* items), critique-of-codex-by-claude.jsonl (critiques of cx-*). Read them with the shell (read-only).
+post-process: concatenated 4 outputs, split glued JSON objects (syntax only)

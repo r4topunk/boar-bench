@@ -1,0 +1,5 @@
+0a34814817ec3984097349fc37f6f4b780bfe93fdc78599b2e735d44b1a60d66  addendum-04-safety-v07.md
+590eafc60481b8c4700fbcf0d457db786e4e03569ebaf5af5cf75667d832a328  overlay.v02-danger.v0.7.json
+18c1fe24e7454d7e11a0645251d092e10cec9a00f922f2b0fc06123496931e69  ../../../scorers/vendor/safety/rules.v0.7.json
+30b91a6487a8487fb3653245260d02bc349955b62f702659821c3c944b8cdcd1  ../../../scorers/vendor/safety/safety_check.v0.7.py
+a95b3af55deb4c7e0d1650c68723e682984bd91ecfe7472b147d6888116c2602  ../../../scorers/vendor/safety/tests.v0.7.json

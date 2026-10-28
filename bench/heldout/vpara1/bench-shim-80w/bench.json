@@ -1,0 +1,1 @@
+{"bench": "vitalik-para1 shim, 80-word capped references (LENGTHSHARE); points at ../items.jsonl and ../refs-80w/refs.jsonl", "questions": "../items.jsonl", "refs": "../refs-80w/refs.jsonl"}

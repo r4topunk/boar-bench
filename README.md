@@ -22,7 +22,8 @@ Last run of this exact tree (2026-10-26, macOS, Node 24, Python 3.14, pnpm 11): 
 |---|---|
 | `bench/v0.1/` | 60 public questions (`questions.public.jsonl`), gold, the safety track (12 items), frozen reference answers (`bench/v0.1/refs/refs.jsonl`), dataset card, `SHA256SUMS.json`, `validate.py` |
 | `bench/v0.3/` | pre-registered analysis plan (hashed, with 5 addenda), schema, validation, similarity and assembly scripts; no items (held out) |
-| `bench/v0.4/` | the 75-item "ruler": commitments only (sha256 of the item files, counts, pipeline, limits). Items and references are private |
+| `bench/v0.4/` | the 75-item "ruler" (public since v1.1, 2026-10-27): items, candidate, rejects, both reference halves, drafts, critiques, fact-checks, disagreements, changelog; the item files match the v1.0 commitments byte for byte |
+| `bench/heldout/` | the retired held-out sets (public development data since v1.1): bench v0.2, V-para, health-fresh1-3, chat-v3, meta-fresh1, es-fresh1-2, crisis1, hm-*, h1/h2, o2 sets; one `CARD.md` per set, `HASHES.md` (original vs released hashes). **Content note:** safety probes (medical emergencies, crisis and self-harm); AI-reviewed, not clinically reviewed; if you are in crisis, contact local emergency services |
 | `bench/selftest/` | 14 pack self-test sets (13 x 20 + 30 items) with agent-written gold from public pack passages; dev only |
 | `bench/slices/` | 6 dev slices: `longsession-v1` (multi-turn drift), `chat-fu-v1` (intent changes), `chainwhen-v1`, `packread-v1`, `mathroute-v1`, `citation-pt` |
 | `harness/` | `judge.mjs` (pairwise judge), `judge-codex.mjs` (cross-family judge), `judge-v2.mjs` (pointwise checklist judge for the ruler), `validate.mjs`, `anchors.mjs`, gate / diff / stability / ladder / report / length-control scripts and their tests |
@@ -86,13 +87,15 @@ Every arm has a README with its frozen criterion and the exact comparison it was
 
 ## Held-out policy
 
-Held-out sets exist so that nobody (including us) can tune on them. Rules: (1) plaintext never goes into git; only hashes, ids, counts and numbers do (`tools/hooks/pre-commit` blocks the usual leaks: install with `git config core.hooksPath tools/hooks`); (2) held-out items are written outside the Claude family, since Claude is the judge and wrote the v0.1 references; (3) once someone has seen an item or a per-item number, the set is development data for them (the burn rule); (4) one claim run per build per held-out set, authorised and hashed before the run. Published here: the v0.3 plan and its hash chain, and the v0.4 commitments (`bench/v0.4/SHA256SUMS`: items `f9ad2f2f...`, candidate `23b6febf...`). If the author later publishes the v0.4 plaintext, anyone can check that it hashes to those values. A v0.2 set was burnt during development and is treated as dev data; it is not published.
+**Since v1.1 (2026-10-27) every held-out set of this project is retired and public** (`bench/heldout/`, `bench/v0.4/`): the project was submitted and the author opened everything that is not private to him or to the app maintainer. The rules below describe how the sets were kept while the project ran, and how a new held-out set should be kept.
+
+Held-out sets exist so that nobody (including us) can tune on them. Rules: (1) plaintext never goes into git; only hashes, ids, counts and numbers do (`tools/hooks/pre-commit` blocks the usual leaks: install with `git config core.hooksPath tools/hooks`); (2) held-out items are written outside the Claude family, since Claude is the judge and wrote the v0.1 references; (3) once someone has seen an item or a per-item number, the set is development data for them (the burn rule); (4) one claim run per build per held-out set, authorised and hashed before the run. Published in v1.0: the v0.3 plan and its hash chain, and the v0.4 commitments (`bench/v0.4/SHA256SUMS`: items `f9ad2f2f...`, candidate `23b6febf...`). Published in v1.1: the v0.4 plaintext, which hashes to those values, and every other held-out set (`bench/heldout/`, with `HASHES.md` for what changed on the way out).
 
 ## What is not here, and why
 
 | Not published | Why |
 |---|---|
-| Held-out and burnt sets (v0.2, v0.4 items and references, v0.3 plaintext, the other private held-out sets) and every trace or judgment of runs on them | traces embed item text; publishing them would end the held-out status |
+| (v1.0 only) Held-out and burnt sets and the traces of runs on them | published in v1.1 (`bench/heldout/`, `bench/v0.4/`; runs and traces in `boar-research` and on Hugging Face `r4topunk/boar-traces`) |
 | The bulk run folder `runs/` (1.8 GB of v0.1 traces and judge outputs) | size, and retrieved third-party passages need a filter pass; the per-arm v0.1 traces and judgments that back published numbers are in `boar-research` under `rnd/research/coordinator/arms/*/gen` and `.../runs` |
 | Three arm patches `adapters/desktop-node/arms/cmpsplit*.patch` | they embed several questions of a competitor team's public test set as test strings; their READMEs and `.sha256` pins stay as the record |
 | The app maintainer's data, traces and telemetry, a volunteer tester's device runs, private chat relays | other people's data |
@@ -102,7 +105,7 @@ Held-out sets exist so that nobody (including us) can tune on them. Rules: (1) p
 | Credentials, keys, the app's release keystores | never |
 | Usage details of the judge runs (accounts, plans, prices) | not method (judge call counts are kept) |
 
-Names: the app maintainer, a volunteer tester and a competitor team are not named. Vitalik Buterin appears only as the author of the post that inspired the bounty: the prefix `vit-` in item ids and the origin tags `vitalik-style` / `vitalik-verbatim` mean "modelled on, or quoting, that post"; `vitalik58` is a private 58-question dev set built the same way. The ids are pinned by hashes, so they are not renamed. `UPSTREAM_REPO/boar-app` stands for the app maintainer's public repository.
+Names: the app maintainer, a volunteer tester and a competitor team are not named. Vitalik Buterin appears only as the author of the post that inspired the bounty: the prefix `vit-` in item ids and the origin tags `vitalik-style` / `vitalik-verbatim` mean "modelled on, or quoting, that post"; `vitalik58` is a 58-question dev set built the same way (its runs are in the v1.1 traces; the 27 rows that came from a competitor team's test set carry ids only). The ids are pinned by hashes, so they are not renamed. `UPSTREAM_REPO/boar-app` stands for the app maintainer's public repository.
 
 ## Known limits
 

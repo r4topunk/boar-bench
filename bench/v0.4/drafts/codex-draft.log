@@ -1,0 +1,6 @@
+date: 2026-10-20T02:51:17Z
+codex-cli 0.144.3
+model: gpt-5.6-sol (from codex banner), reasoning high, web_search disabled, sandbox read-only
+cwd: <scratch>/codex-items (blueprint.md, bounty.md, prompt.txt)
+cmd: codex exec --ignore-user-config --ignore-rules --ephemeral --skip-git-repo-check --sandbox read-only -c model_reasoning_effort="high" -c web_search="disabled" --color never - < prompt.txt
+tries: 1; validation: 36 lines, 0 JSON errors, quotas match (single 32, mt 4, families 6/7/7/6/6, types 6/8/6/6/6, over_refusal 2, one_b_fail 28/32)

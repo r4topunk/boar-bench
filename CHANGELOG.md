@@ -1,5 +1,21 @@
 # Changelog
 
+## v1.1, 2026-10-27: held-out sets and the v0.4 ruler opened
+
+The project was submitted; the author retired every held-out set and opened everything that is not private to him or to the app maintainer.
+
+Added
+- `bench/heldout/`: 19 retired held-out sets (bench v0.2 with drafts, rewrites, plan, addenda and references; V-para with OSM venue gold and references; health-fresh1-3; chat-v3; meta-fresh1; es-fresh1-2; crisis1; hm-fresh, hm-fresh2, hm-fresh3, hm-loc1; h1-fresh; h2-fresh; h2-pool; o2-blind-items; o2v2c-fresh). One `CARD.md` per set (status, writer, licence, content note, verification); the original set READMEs are kept byte for byte. `HASHES.md` / `HASHES.tsv`: original and released sha256 of every opened file.
+- `bench/v0.4/`: the ruler in plaintext: `items.jsonl` and `items.candidate.jsonl` (byte-identical to the v1.0 commitments `f9ad2f2f...` / `23b6febf...`), `REJECTED.jsonl`, `refs/v2/` (Claude and Codex reference halves and call logs), `drafts/`, `DISAGREEMENTS.md`, `CHANGELOG.md`; the card is the freeze card with a v1.1 status, licence and change note.
+
+Changed
+- `bench/v0.4/refs/v2/MANIFEST.json`: the Claude reference pin changed from `b27eac37...` to `d83e5186...` (per-call usage fields dropped, answers byte-identical); the file's own sha changed from `c6d58017...` to `41b38585...`.
+- `tools/verify-pins.py`: v0.4 items are checked (no longer WITHHELD); pin files written for the private lab layout are reported as KNOWN with the reason; a pin file one folder below the root it names resolves.
+- README, NOTICE, LICENSE-DATA, DATA-CARD: held-out sections updated, licence rows and content note for the opened sets.
+
+Withheld (still)
+- 75 NHS quotations in crisis1, hm-fresh2, hm-fresh3 and hm-loc1 (org and URL kept); spend, token and plan fields; the app maintainer's data (none was found in any set); a competitor team's test questions.
+
 ## v1.0, 2026-10-26: full open record
 
 History is not exported: this is a clean, single-snapshot release that supersedes the earlier curated public release of 2026-10-15 (bench v0.1 + harness only).

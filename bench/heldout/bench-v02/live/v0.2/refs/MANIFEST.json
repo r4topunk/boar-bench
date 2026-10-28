@@ -1,0 +1,29 @@
+{
+ "bench": "boar-eval bench v0.2-new, frontier+web references",
+ "questions_file": "questions.v02-new.jsonl",
+ "questions_sha256": "c883053b05959b4d987afe7458b6ba02c3e1bbda656c8a86514edc9b5885d5e2",
+ "promptVersion": "reference.v1",
+ "promptSha256": "d51443438dfebcc7d2c3a0136340c70a68f495e1214c00a3a8c56bcdbc755972",
+ "frozen": true,
+ "n_items": 110,
+ "n_ok": 110,
+ "n_missing": 0,
+ "missing_ids": [],
+ "generator": "bench/v0.2/refs/gen_refs.mjs (recipe of bench/v0.1/refs/gen_refs.mjs)",
+ "models": [
+  "claude-opus-5-5"
+ ],
+ "cli_versions": [
+  "2.1.287 (Claude Code)"
+ ],
+ "first_generatedAt": "2026-10-02T17:07:59.046Z",
+ "last_generatedAt": "2026-10-02T17:53:07.712Z",
+ "raw_file_sha256": "bf7a8d5fe56e7d8a487267b4b8b7ad51bc6dbec914813740f9aefceffc18590a",
+ "questions_sha256_at_generation": [
+  "c883053b05959b4d987afe7458b6ba02c3e1bbda656c8a86514edc9b5885d5e2"
+ ],
+ "ids_with_superseded_rows": [],
+ "sum_wall_s": 2181,
+ "refs_jsonl_sha256": "bf7a8d5fe56e7d8a487267b4b8b7ad51bc6dbec914813740f9aefceffc18590a",
+ "policy": "reference TEXT stays private (gitignored); only hashes are committed"
+}
