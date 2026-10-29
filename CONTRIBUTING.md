@@ -1,6 +1,6 @@
 # Contributing to the bench 
 
-TL;DR: there are two kinds of contribution. (A) **Held-out items** in the v0.3 schema: you commit the hashes first and release the plaintext only on the published date, so nobody can tune on them. (B) **Leaderboard rows**: aggregate numbers from your own traces, judged with the frozen judge, plus the hashes that tie them to your files. Item text never goes into a PR before its release date.
+TL;DR: there are two kinds of contribution. (A) **A new held-out set** in the v0.3 schema. No v0.3 items exist (that front was dropped), and every earlier held-out set is retired and public since v1.1 (`bench/heldout/`, `bench/v0.4/`), so it is development data for everyone; a new final number needs a new set. If you write one, commit the hashes first and publish the plaintext only on a date you state, so nobody can tune on it. (B) **Leaderboard rows**: aggregate numbers from your own traces, judged with the frozen judge, plus the hashes that tie them to your files. Item text of a set you have not released never goes into a PR.
 
 ## Rules that apply to everyone
 1. **No tuning on held-out items.** Once you have seen a held-out item's text, its answer or any per-item number, it is dev data for you. Any engine change chosen after seeing a held-out number turns that set into dev for your app. A new claim then needs a new set (the "burn rule").
@@ -9,7 +9,9 @@ TL;DR: there are two kinds of contribution. (A) **Held-out items** in the v0.3 s
 4. **One claim run per build per held-out set**, authorised in writing (commit, patch sha, seeds, judge version) and hashed before the run.
 5. Every exposure (a run, a judge pass, someone reading an item) is one line in the set's exposure log.
 
-## A. Contributing held-out items (v0.3 schema)
+## A. Writing a new held-out set (v0.3 schema; no v0.3 items exist yet)
+
+The research is closed, so no freeze or release is running: this section is the procedure and template for a new set, and the "maintainers" steps below describe who would do them if one is organised.
 
 **Schema:** `bench/v0.3/questions.schema.json`. Writer prompts with format-only examples (ids `…-98/-99`) are in `docs/contrib/writer-prompts.md`, and the reference recipe is in `docs/contrib/refs-prompt.md`.
 
@@ -39,12 +41,12 @@ Quality bars, checked by the maintainers' gates G1–G4 (the scripts in `bench/v
 
 ## B. Contributing a leaderboard row (aggregate only)
 
-1. Run your app on `bench/v0.1` (and on a held-out set only through the maintainers' claim-run protocol). Two seeds is recommended.
+1. Run your app on `bench/v0.1`. The retired sets in `bench/heldout/` and `bench/v0.4/` are public development data: you may run them, but they are held out for nobody and rows on them are labelled dev. Two seeds is recommended.
 2. Judge with `harness/judge.mjs`: Opus, judge.v1, both orders, `--strict --floor-errored`. See TRACE-FORMAT.md.
 3. Compute `metrics/floor_metrics.py` (raw, floor-adjusted, above-decline with CIs) and W/T/L.
 4. Open a PR that adds **one row** to `leaderboard/README.md` and one folder `leaderboard/<team>-<date>/` with:
    - `row.json`: app name and version, engine commit, model + quantisation, device or desktop proxy, offline yes/no, seeds, n judged, raw / floor-adjusted / above-decline with CIs, W/T/L, p50 latency, judge model + CLI version.
-   - `SHA256SUMS`: the sha256 of your traces and judgments files. The files themselves are optional for v0.1 (it is public); **never** include files for held-out sets.
+   - `SHA256SUMS`: the sha256 of your traces and judgments files. The files themselves are optional for v0.1 (it is public); **never** include item text of a held-out set you wrote and have not released.
 5. Maintainers re-check the arithmetic from your judgment rows if you share them. Rows without shareable judgments are marked "self-reported".
 
-Not accepted: numbers from a different judge or from regenerated references in the main table (a separate "other judge" table is fine); items written by the same model family as the app; any PR that contains held-out item text before its release date.
+Not accepted: numbers from a different judge or from regenerated references in the main table (a separate "other judge" table is fine); items written by the same model family as the app; any PR that contains item text of a held-out set before its release date.

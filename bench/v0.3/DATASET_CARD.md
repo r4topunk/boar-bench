@@ -1,6 +1,6 @@
-# Dataset card: boar-eval bench v0.3-ext (TBD items; skeleton, filled at the freeze)
+# Dataset card template: bench v0.3-ext (no items were ever written)
 
-TL;DR: TBD. English items in the 10 v0.2 strata, written by the app maintainer with one non-Claude model in a web UI (model TBD), fact-checked by hand against Wikipedia/official `reference_sources`, with gold `answer`, judge-facing `rubric` ("Penalize:" bullets), precheck `grading`, and non-Claude web-UI references. Plaintext lives in `bench/v0.3/work/` and never in git (see HELD-OUT.md).
+TL;DR: **no v0.3 items exist.** The OF-3 front was dropped before any item was written (see `HELD-OUT.md`), so this card was never filled and every `TBD` below is a blank of the template, not pending data. It is kept as a skeleton for anyone who writes a new held-out set with these tools. The design it describes: English items in the 10 v0.2 strata, written by one person with one non-Claude model in a web UI, fact-checked by hand against Wikipedia/official `reference_sources`, with gold `answer`, judge-facing `rubric` ("Penalize:" bullets), precheck `grading`, and non-Claude web-UI references. Plaintext of a set in progress lives in `bench/v0.3/work/` and never in git. The earlier held-out sets are retired and public (`bench/heldout/`, `bench/v0.4/`).
 
 ```sh
 python3 bench/v0.3/assemble.py [--wave1]                 # work/<category>.jsonl -> private/.../questions.v03.jsonl (+ safety_rules v0.7)

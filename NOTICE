@@ -19,6 +19,8 @@ Licences by part
 | bench/slices/longsession-v1 | CC BY 4.0 (bench/slices/longsession-v1/NOTICE.md) |
 | Retired held-out sets (bench/heldout/) and the v0.4 ruler (bench/v0.4/), public since v1.1 | CC BY 4.0 for items, rubrics, cards and records (written by Claude-family agents; v0.4 also by OpenAI gpt-5.6-sol via the Codex CLI); short attributed quotations of public guidance (CVV, Samaritans, WHO, 988 Lifeline, St John Ambulance, healthdirect, CDC, Ready.gov, NOAA and others) stay under their sources' terms; NHS quotations were withheld (org and URL kept); V-para and the v0.4 V-exact anchors paraphrase or quote public example questions by a named author (quotation with attribution); OSM venue gold (bench/heldout/vpara1/gold/, venue-locations.json) ODbL 1.0, (c) OpenStreetMap contributors; reference answers are frontier-model + live-web outputs and may quote cited pages |
 
+Credit: Boar, the open-source app under test, was created by @vaipraonde (MIT). His app's data (runs, questions, telemetry) is not published, by policy.
+
 Not released: the app maintainer's data and traces, run traces (see README), model weights and knowledge packs (listed in BOM.md with source URLs and sha256), and the emergency-detector model (its base-model licence is unknown).
 
 Health, first-aid and safety content (v0.1 health and danger items, their gold answers, the safety track, the safety rules, the health and first-aid self-test sets) is AI-reviewed, not clinically reviewed. Nothing in this repository is medical advice. The retired sets in bench/heldout/ include crisis and self-harm probes: if you are in crisis, contact local emergency services.

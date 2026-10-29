@@ -20,7 +20,7 @@
   "refs/refs.jsonl": "4a7da939ed84a953ceb852d237d96015f09df651c98c5a5aedb64daf63224fdc",
   "replacements.json": "75fada0b86a4dfaaea0c2a880998d5f81a3a38917570d659dda2199a5fbce1a3",
   "safety/overlay.v0.3.json": "6e2dba495af7f08f5544a282a62d106b72180022450261e9b610381f086374bd",
-  "safety/rules.v0.3.json": "544f31dc600d162b0e2945d7996ae12accf6c0c4229ab390e7b21d2e3da9f842",
+  "safety/rules.v0.3.json": "ff8a417d8fe7458bdfb9effe622795f48682d944d4816fd335d647bb449907b8",
   "safety/safety_check.py": "56f71d11c48a06559ab50f976cc4597afe07493661373f17544b58eb60bcd0bd",
   "safety/track.v0.3.jsonl": "b7c87b1e5e2a7743cb8d5eaa3ad4b7c2ab5104ab45427f424ba7734fd3c3ec29",
   "similarity.json": "cd6a693e87f74e61bc8c6b104a1b583e5df58759d4334591685420a7629efc48",

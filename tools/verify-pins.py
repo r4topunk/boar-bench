@@ -18,11 +18,13 @@ WITHHELD = {"adapters/desktop-node/arms/cmpsplit.patch.sha256": {"cmpsplit.patch
 
 V02 = "bench/heldout/bench-v02/live/v0.2/"
 XREPO = "lives in boar-research rnd/heldout/bench-v02/live/v0.2/ (redacted copy; original and released sha in bench/heldout/HASHES.md)"
-LAYOUT = "path written for the private lab layout (scorers/vendor/safety/ of the old eval repo); the v1.0 re-issue of these rules dropped NHS wording, so they differ (bench/heldout/HASHES.md)"
+LAYOUT = "path written for the private lab layout (scorers/vendor/safety/ of the old eval repo); the v1.0 re-issue of these rules dropped NHS wording and v1.1.2 withheld the remaining copyright wording, so they differ (bench/heldout/HASHES.md)"
+COPY = "v1.1.2: copyright wording withheld; frozen v0.3 plan pin kept as written, the released rules differ (bench/heldout/HASHES.md)"
 KNOWN = {**{(V02 + "SHA256SUMS.items", f): XREPO for f in ("assemble.py", "validate.py", "similarity.py", "similarity.json")},
          (V02 + "plan/SHA256SUMS.addendum-01", "addendum-01-coverage-split.md"): "pre-existing: the coverage run record was appended after hashing, before any run (bench/heldout/HASHES.md)",
          **{(V02 + f"plan/SHA256SUMS.addendum-0{n}", f"../../../scorers/vendor/safety/{k}.v0.{n + 3}.{e}"): LAYOUT
-            for n in (2, 3, 4) for k, e in (("rules", "json"), ("safety_check", "py"), ("tests", "json"))}}
+            for n in (2, 3, 4) for k, e in (("rules", "json"), ("safety_check", "py"), ("tests", "json"))},
+         **{("bench/v0.3/plan/SHA256SUMS.addendum-0" + str(n), f"../../../scorers/vendor/safety/rules.v0.{n + 3}.json"): COPY for n in (2, 3, 4)}}
 known = []
 
 def sha(p): return hashlib.sha256(Path(p).read_bytes()).hexdigest()

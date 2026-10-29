@@ -24,7 +24,7 @@ The v0.4 ruler (75 items, candidate, rejects, both reference halves, drafts, cri
 
 ## Licence
 
-Items, rubrics and cards: **CC BY 4.0** (BOAR bench, r4to), written by Claude-family agents (the writer is named in each card); the v0.4 ruler also by OpenAI gpt-5.6-sol through the Codex CLI. Short attributed quotations of public guidance stay under their sources' terms; **NHS wording is not redistributed** (75 quotations in crisis1, hm-fresh2, hm-fresh3 and hm-loc1 were withheld: org and URL kept). OpenStreetMap venue data: ODbL 1.0, (c) OpenStreetMap contributors. Reference answers are frontier-model + live-web outputs and may quote their cited pages. V-para and the four V-exact anchors of v0.4 paraphrase or quote public example questions by Vitalik Buterin (named as the inspiration of the bounty only).
+Items, rubrics and cards: **CC BY 4.0** (BOAR bench, r4to), written by Claude-family agents (the writer is named in each card); the v0.4 ruler also by OpenAI gpt-5.6-sol through the Codex CLI. Short attributed quotations of public guidance stay under their sources' terms; **NHS wording is not redistributed** (75 quotations in crisis1, hm-fresh2, hm-fresh3 and hm-loc1 were withheld: org and URL kept), and since v1.1.2 neither is copyright first-aid wording (30 healthdirect and St John quotations in hm-fresh2, hm-fresh3 and hm-loc1, withheld the same way). OpenStreetMap venue data: ODbL 1.0, (c) OpenStreetMap contributors. Reference answers are frontier-model + live-web outputs and may quote their cited pages. V-para and the four V-exact anchors of v0.4 paraphrase or quote public example questions by Vitalik Buterin (named as the inspiration of the bounty only).
 
 ## Integrity
 
@@ -32,4 +32,4 @@ Items, rubrics and cards: **CC BY 4.0** (BOAR bench, r4to), written by Claude-fa
 
 ## What changed on the way out
 
-Local paths and hosts neutral; usage, token, price and plan fields dropped from reference-answer rows and manifests; competitor names replaced by `competitor`; NHS quotations withheld (above). Item ids, set names, questions, rubrics and answers are otherwise unchanged. No row in any set came from the app maintainer (checked by origin field and by content).
+Local paths and hosts neutral; usage, token, price and plan fields dropped from reference-answer rows and manifests; competitor names replaced by `competitor`; NHS and copyright quotations withheld (above). Item ids, set names, questions, rubrics and answers are otherwise unchanged. No row in any set came from the app maintainer (checked by origin field and by content).

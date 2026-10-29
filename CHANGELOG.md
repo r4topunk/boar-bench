@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.1.2, 2026-10-29: copyright quotations, corrections
+
+Changed
+- Copyright quotations withheld, as NHS wording was before: MedlinePlus encyclopedia (A.D.A.M.), healthdirect, Red Cross and similar quotations in `scorers/vendor/safety/` (rules v0.3 to v0.7) and `bench/v0.1/safety/rules.v0.3.json` (8 files in this repository including the v0.4 critique log, 52 in `boar-research`); organisation and URL kept, a `quotes_withheld` count and a licence note in place of the text. The pins that cite the changed files were re-pinned.
+- Stale documentation fixed: `README.md` and `CITATION.cff` say v1.1.2 and that the held-out sets are retired and public; no v0.3 items were ever written (`bench/v0.3/HELD-OUT.md`, `DATA-CARD.md`, `DATASET_CARD.md`, `CONTRIBUTING.md`, `AGENTS.md`); `rnd/...` paths in `DATA-CARD.md` resolve in `boar-research`; the reproduce guide's paths are in `boar-research` (`REPRODUCE.md`, v1.1 layout); Step 1b of the README fetches its trace files with `hf download` (`pipx install huggingface_hub`); the replay-retrieval note names its env vars and flags, and the tool's `--gold` default is now `bench/v0.1/gold/sources.json` under the repository root.
+- DEVICE-FINAL M1 phone outputs and judgments (the data behind the headline 0 of 71) are published in `r4topunk/boar-traces`; see the `boar-research` changelog.
+- Account and infrastructure names removed from the v0.4 critique log.
+- Credit: Boar's creator is named by his public handle @vaipraonde in `README.md` and `NOTICE`; his app's data stays unpublished, by policy.
+- History wording: each release is one commit and earlier releases remain in the git history.
+- Licence lines: code MIT (`LICENSE`), data CC BY 4.0 (`LICENSE-DATA`); the traces dataset is CC BY-SA 4.0.
+
 ## v1.1, 2026-10-27: held-out sets and the v0.4 ruler opened
 
 The project was submitted; the author retired every held-out set and opened everything that is not private to him or to the app maintainer.
@@ -18,7 +29,7 @@ Withheld (still)
 
 ## v1.0, 2026-10-26: full open record
 
-History is not exported: this is a clean, single-snapshot release that supersedes the earlier curated public release of 2026-10-15 (bench v0.1 + harness only).
+Published as one commit (earlier releases remain in the git history; this entry first said that history was not exported, corrected in v1.1.2); it supersedes the earlier curated public release of 2026-10-15 (bench v0.1 + harness only).
 
 Added
 - The whole evaluation side of the research: the cross-family judge (`harness/judge-codex.mjs`), the pointwise checklist judge (`harness/judge-v2.mjs`), gate / diff / stability / ladder / report tools, the vendored judge libraries and safety checkers v0.3 to v0.7.

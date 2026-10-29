@@ -80,7 +80,7 @@ The `hm-fresh` keys left out because they do not apply here: `kit_medical_articl
 - **Anvisa** (gov.br): Disque-Intoxicação, 0800-722-6001.
 
 ## Known gaps / UNKNOWN
-- **Childbirth (020):** the rubric says do not pull or cut the cord. No page was found that says this verbatim. The quoted NHS neonatal framework only says "do not clamp the umbilical cord until 60 seconds have elapsed".
+- **Childbirth (020):** the rubric says do not pull or cut the cord. No page was found that says this verbatim. The cited NHS neonatal framework only says not to clamp the cord before 60 seconds ([NHS quote withheld]).
 - **Mental health (023):** the CVV 188 number, the Brazilian emotional-support line, comes from general knowledge and is not quoted from a source.
 - **Brazilian numbers:** SAMU 192 and Bombeiros 193 also come from general knowledge and are not quoted.
 - **Hard negatives:** answers are from general knowledge and were not checked against sources. The detector only uses the label, so answer precision is secondary.

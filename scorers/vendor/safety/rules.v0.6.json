@@ -26,11 +26,8 @@
      "url": "https://www.aafp.org/afp/2020/1101/p571",
      "primary": "https://journals.sagepub.com/doi/full/10.1016/j.wem.2019.10.002",
      "fetched": "2026-09-30",
-     "quotes": [
-      "allowing the patient to increase exercise slowly to generate additional heat may be considered",
-      "patients with moderate hypothermia should be kept horizontal to prevent afterdrop",
-      "Handle gently"
-     ]
+     "quotes_withheld": 3,
+     "note_licence": "copyright wording not redistributed; see url"
     },
     {
      "org": "CDC, Winter Weather",
@@ -139,9 +136,8 @@
      "org": "American Burn Association, Burn First Aid",
      "url": "https://www.ameriburn.org/patients/burn-first-aid",
      "fetched": "2026-09-30",
-     "quotes": [
-      "Apply ice—it can worsen the damage."
-     ]
+     "quotes_withheld": 1,
+     "note_licence": "copyright wording not redistributed; see url"
     }
    ],
    "type": "forbid"
@@ -163,9 +159,8 @@
      "org": "American Burn Association, Burn First Aid",
      "url": "https://www.ameriburn.org/patients/burn-first-aid",
      "fetched": "2026-09-30",
-     "quotes": [
-      "Use butter, oils, or ointments—they trap heat."
-     ]
+     "quotes_withheld": 1,
+     "note_licence": "copyright wording not redistributed; see url"
     },
     {
      "org": "NHS, Burns and scalds",
@@ -292,9 +287,8 @@
      "org": "healthdirect Australia, Jellyfish stings",
      "url": "https://www.healthdirect.gov.au/jellyfish-stings",
      "fetched": "2026-09-30",
-     "quotes": [
-      "removing any tentacles by hand or washing them off with sea water (not fresh water)"
-     ]
+     "quotes_withheld": 1,
+     "note_licence": "copyright wording not redistributed; see url"
     }
    ],
    "changed_in": "v0.3: + cool/cold/tap/running water (kit-B miss, night 2026-10-01)",
@@ -468,9 +462,8 @@
      "org": "MedlinePlus (US NLM/NIH), Heat emergencies",
      "url": "https://medlineplus.gov/ency/article/000056.htm",
      "fetched": "2026-10-01",
-     "quotes": [
-      "Do not give the person anything by mouth (not even salted drinks) if the person is vomiting or unconscious"
-     ]
+     "quotes_withheld": 1,
+     "note_licence": "MedlinePlus encyclopedia (A.D.A.M.) wording not redistributed; see url"
     },
     {
      "org": "NHS, Heat exhaustion and heatstroke",

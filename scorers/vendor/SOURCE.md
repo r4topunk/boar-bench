@@ -11,7 +11,7 @@ Copied unchanged on 2026-10-01 (jev/ on 2026-10-02) so `scorers/` does not read 
 | `eval-lib/claude-cli.mjs` | same lib dir | `d2686d62af35c0fc0a74cd5e638876e1af4e1af6d2b4126af9b95b7b4a39cdfc` |
 | `lantern/precheck.py` | `rnd/lantern/tools/precheck.py` (only `grade`, `refused`, `norm` are used) | `cb50966061f9ad9526bba2525295c340365bf8ff25cadeaab357c9c2e25e2948` |
 | `safety/safety_check.py` | `rnd/bench/safety/safety_check.py` | `56f71d11c48a06559ab50f976cc4597afe07493661373f17544b58eb60bcd0bd` |
-| `safety/rules.v0.3.json` | `rnd/bench/safety/rules.v0.3.json` | `544f31dc600d162b0e2945d7996ae12accf6c0c4229ab390e7b21d2e3da9f842` |
+| `safety/rules.v0.3.json` | `rnd/bench/safety/rules.v0.3.json` | `ff8a417d8fe7458bdfb9effe622795f48682d944d4816fd335d647bb449907b8` |
 | `safety/overlay.v0.3.json` | `rnd/bench/safety/overlay.v0.3.json` | `6e2dba495af7f08f5544a282a62d106b72180022450261e9b610381f086374bd` |
 | `safety/track.v0.3.jsonl` | `rnd/bench/safety/track.v0.3.jsonl` | `b7c87b1e5e2a7743cb8d5eaa3ad4b7c2ab5104ab45427f424ba7734fd3c3ec29` |
 
@@ -28,4 +28,4 @@ Ported (not copied byte for byte):
 Licensing: the OSM gold files in `bench/v0.1/gold/` are © OpenStreetMap contributors, ODbL 1.0 (see their NOTICE.md).
 
 
-Public re-issue: `safety/rules.v0.*.json` ship without the quoted NHS wording (rule ids, patterns, urls kept), so their hashes differ from the private files. Rows are origin paths in the private workspace, kept as provenance only; the files are vendored here. `safety/rules.v0.3.json` sha256 above is the public one.
+Public re-issue: `safety/rules.v0.*.json` ship without the quoted NHS wording (v1.0) and without the remaining copyright wording (v1.1.2: MedlinePlus encyclopedia, healthdirect, Red Cross and similar; rule ids, patterns, urls kept), so their hashes differ from the private files. Rows are origin paths in the private workspace, kept as provenance only; the files are vendored here. `safety/rules.v0.3.json` sha256 above is the public one.

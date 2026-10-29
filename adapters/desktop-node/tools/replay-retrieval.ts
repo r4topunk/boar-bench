@@ -74,7 +74,7 @@ const cli = {
   compress: argv.includes("--compress"),
   tasksFrom: get("--tasks-from"),
   gate: get("--gate", "search") as "search" | "rules",
-  gold: get("--gold", join(BOAR, "boar-eval/bench/v0.1/gold/sources.json"))!,
+  gold: get("--gold", join(ADAPTER, "../../bench/v0.1/gold/sources.json"))!, // repo root = two levels above adapters/desktop-node
   k: Number(get("--k", "5")),
   packs: (get("--packs") ?? [join(BOAR, "shared-data/crypto/boar-crypto.sqlite"), join(BOAR, "shared-data/packs/boar-wikivoyage-en.sqlite")].join(","))
     .split(",").filter(Boolean).map(abs),

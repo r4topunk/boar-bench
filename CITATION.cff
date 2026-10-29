@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this benchmark, harness or data, please cite it as below."
 title: "BOAR bench: an open benchmark and harness for offline research assistants"
 type: software
-version: "1.0"
-date-released: "2026-10-26"
+version: "1.1.2"
+date-released: "2026-10-29"
 license: MIT
 authors:
   - alias: "r4to"
@@ -12,7 +12,7 @@ abstract: >-
   Public questions with frozen frontier-plus-web reference answers, a pairwise judge (both A/B orders),
   a cross-family judge, scorers, a desktop adapter that simulates the phone, arm patches with frozen criteria,
   pre-registered plans and pack self-test sets from the BOAR research on poidh bounty #31.
-  Held-out sets are published as hashes only. Data is under CC BY 4.0 and the licences listed in NOTICE;
+  The held-out sets are retired and public since v1.1 (bench/heldout/, bench/v0.4/). Data is under CC BY 4.0 and the licences listed in NOTICE;
   code is MIT. Health content is AI-reviewed, not clinically reviewed.
 keywords:
   - benchmark

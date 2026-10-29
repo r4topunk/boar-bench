@@ -14,7 +14,7 @@ Model: Qwen3.6-35B-A3B UD-Q2_K_XL (sha256 `96b9c0af…`). Prompts: the same 10 r
 | `rss_anon_mib` (bmoe telemetry) | 0 (macOS: telemetry reads /proc, Linux-only) | **4,048–4,390 MiB** |
 | expert reads | `o_direct=1` (F_NOCACHE on macOS) | `o_direct=1` |
 
-- **Why 6750 MiB, not 8g/9g/10g:** Docker Desktop's VM has 7.65 GiB total and 6.9 GiB available. Its size was not changed, because a restart would bounce r4to's `mdm-postgres` (coordinator). A 6750 MiB cap keeps the VM safe and is stricter than the card's 8 GiB, so passing it settles reading 1. The descriptive 9g/10g points were not needed.
+- **Why 6750 MiB, not 8g/9g/10g:** Docker Desktop's VM has 7.65 GiB total and 6.9 GiB available. Its size was not changed, to avoid restarting the VM. A 6750 MiB cap keeps the VM safe and is stricter than the card's 8 GiB, so passing it settles reading 1. The descriptive 9g/10g points were not needed.
 - **Reading:** under the cap the kernel reclaims file-backed pages (the cgroup sits at its limit) while anonymous memory stays at ~4.3 GiB. An LMK that counts anon + swap (PSS) would see ~4–4.5 GiB plus resident file pages, not 10 GiB.
 - **Caveats:**
   - **speeds here are meaningless** (virtiofs; TTFT 59–87 s in the VM);

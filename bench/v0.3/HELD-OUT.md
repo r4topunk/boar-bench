@@ -1,9 +1,12 @@
-# v0.3 is held out: plaintext is not here
+# v0.3: no items were ever written
 
-The v0.3 question file and its reference answers are held offline by the bench maintainers until the published release date. They are not in this repository, and they must never be committed to any git repository: only hashes, ids, counts and numbers go in.
+No v0.3 question file or reference answers exist, anywhere. The plan was to have the app maintainer write a held-out set outside the Claude family; that front (OF-3) was dropped before any item was written, so there is no release date to wait for and nothing is withheld. The held-out sets that did exist (bench v0.2, V-para and others, plus the v0.4 ruler) are retired and public since v1.1: see `bench/heldout/` and `bench/v0.4/`.
 
-- `bench/v0.3/work/` is a scratch directory for contributors' local drafts (the scripts in this folder default to it). Its contents are ignored by git and blocked by the pre-commit hook (`tools/hooks/pre-commit`; install with `git config core.hooksPath tools/hooks`).
-- This folder keeps the schema, the validation, similarity and assembly scripts, the pre-registered plan under `plan/` (with `SHA256SUMS`), and the reference-import tooling under `refs/`.
-- Claim runs on v0.3 are started by the maintainers with `--bench <private dir>`; their outputs stay private.
+What this folder holds is the pre-registered plan, the item schema and the tooling, kept as a record and as a template for anyone who wants to write a new held-out set:
 
-See `CONTRIBUTING.md` for how to contribute held-out items.
+- `plan/`: the pre-registered analysis plan with its hash chain (`plan/SHA256SUMS`) and the metric scripts.
+- `questions.schema.json`, `validate.py`, `similarity.py`, `assemble.py`: schema, validation, similarity and assembly scripts.
+- `refs/`: the reference-import tooling.
+- `work/`: a scratch directory for local drafts (the scripts in this folder default to it). Its contents are ignored by git and blocked by the pre-commit hook (`tools/hooks/pre-commit`; install with `git config core.hooksPath tools/hooks`). If you write a new held-out set with these tools, keep its plaintext out of git (see "Held-out policy" in the top-level `README.md`).
+
+See `CONTRIBUTING.md` for how to contribute items.

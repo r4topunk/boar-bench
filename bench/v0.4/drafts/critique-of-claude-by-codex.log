@@ -1,3 +1,3 @@
-codex exec --ignore-user-config --ephemeral --skip-git-repo-check --sandbox read-only -c model_reasoning_effort="high" -c web_search="disabled" --color never -o out.txt - < prompt.txt; codex-cli 0.144.3; cwd=<home>/.claude-sopa/jobs/0175ca4f/tmp/codex-critique; env: clean (PATH HOME USER TMPDIR LANG CODEX_HOME); started seg 19 out 2026 23:51:33 -03
+codex exec --ignore-user-config --ephemeral --skip-git-repo-check --sandbox read-only -c model_reasoning_effort="high" -c web_search="disabled" --color never -o out.txt - < prompt.txt; codex-cli 0.144.3; cwd=<home>/<config>/jobs/0175ca4f/tmp/codex-critique; env: clean (PATH HOME USER TMPDIR LANG CODEX_HOME); started seg 19 out 2026 23:51:33 -03
 
 model: gpt-5.6-sol (from stderr banner); 1 try; no edits
