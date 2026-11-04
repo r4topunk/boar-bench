@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased: bounty 1520 errata
+
+Fixed
+- `scorers/score.py`: the bounty-bar verdict (`quality.bounty_bar.verdict`) is now computed on the floor-adjusted U = sum(m_sys - 1) / sum(m_ref - 1) with its own bootstrap CI (new keys `floor_adjusted_u`, `floor_adjusted_u_ci95`; `bounty_bar.metric` names it), not on the raw ratio of 1..5 means. The raw ratio and its CI are still printed (`quality_ratio`, labelled raw in `harness/report.py`, which now shows a floor-adjusted row). The bar is defined on U; a system at raw 0.50 sits at U about 0.371 and used to be able to print MEETS. On the published DEVICE-FINAL dev judgments (71 headline items) U reproduces 0.173 / 0.170 / 0.244 / 0.244 (Opus s42/s43, Codex s42/s43). Published numbers do not change (they were computed from U). Reported in poidh bounty 1520, claim 9300.
+
+Documented, not changed (the v0.1 precheck is frozen), see `docs/ERRATA-precheck.md`
+- The `forbid` list in `scorers/vendor/lantern/precheck.py` is negation-blind: "Don't keep climbing" labels `confident-wrong` on `vit-hlt-002`. Reported in poidh bounty 1520, claim 9279.
+- A numeric term ending in a digit gets a trailing `\b`, so the reference answer of `vit-trv-004` ("2,800-3,200 km") fails its own `must_any`. Reported in poidh bounty 1520, claim 9279.
+
 ## v1.1.2, 2026-10-29: copyright quotations, corrections
 
 Changed

@@ -84,6 +84,12 @@ def race(r):
     return r / (1 + r) if r is not None else None
 
 
+def floor_ratio(pairs):
+    """Floor-adjusted U = sum(m_sys - 1) / sum(m_ref - 1) over judged pairs (rubric minimum 1 removed; the bar is
+    defined on this, not on the raw ratio). No decline zeroing here: pairs are judged answers only."""
+    return sum(p["boarMean"] - 1 for p in pairs) / sum(p["refMean"] - 1 for p in pairs)
+
+
 def bar_verdict(ratio, ci):
     if ratio is None:
         return "not judged"
@@ -94,22 +100,28 @@ def bar_verdict(ratio, ci):
     return "INCONCLUSIVE (95% CI contains 0.50)"
 
 
-def quality_block(judge_res, n_questions):
+def quality_block(judge_res, n_questions, seed=11):
     s = judge_res["summary"]
     if not s:
         return {"status": "no complete pairs", "n_judged": 0}
     ci = s["qualityRatioCI"]
+    pairs = judge_res["pairs"]
+    u = floor_ratio(pairs)
+    u_ci = stats.bootstrap_ci(pairs, floor_ratio, seed=seed + 1)
     return {
         "status": "ok", "n_judged": s["n"], "n_questions": n_questions, "coverage": s["n"] / n_questions,
-        "quality_ratio": s["qualityRatio"], "quality_ratio_ci95": ci,
+        "quality_ratio": s["qualityRatio"], "quality_ratio_ci95": ci,  # RAW ratio of 1..5 means: not the bar metric
+        "floor_adjusted_u": u, "floor_adjusted_u_ci95": u_ci,
         "race_equivalent": race(s["qualityRatio"]), "race_equivalent_ci95": [race(ci[0]), race(ci[1])],
-        "bounty_bar": {"ratio": BOUNTY_BAR, "race": race(BOUNTY_BAR), "verdict": bar_verdict(s["qualityRatio"], ci)},
+        "bounty_bar": {"ratio": BOUNTY_BAR, "race": race(BOUNTY_BAR), "metric": "floor_adjusted_u",
+                       "verdict": bar_verdict(u, u_ci)},
         "win": s["boarWin"], "tie": s["tie"], "loss": s["refWin"],
         "win_score": s["winScore"], "win_score_ci95": s["winScoreCI"],
         "position_consistency": s["positionConsistency"], "correct_rate_judge": judge_res["correctRate"],
         "rubric_system": s["rubricBoar"], "rubric_ref": s["rubricRef"],
         "judge_meta": judge_res["judgeMeta"], "single_order_dropped": judge_res["singleOrderDropped"],
-        "method": "judge-core.mjs summarize(): ratio = sum mean-rubric(system) / sum mean-rubric(ref) over pairs; "
+        "method": "judge-core.mjs summarize(): raw ratio = sum mean-rubric(system) / sum mean-rubric(ref) over pairs; "
+                  "floor_adjusted_u = sum (m_sys - 1) / sum (m_ref - 1), the bounty-bar metric (bootstrap seed+1); "
                   "both A/B orders combined (disagreement = tie, scores averaged); percentile bootstrap 2,000 "
                   "resamples; bootstrap seed = --seed (ratio CI uses seed+1, as in judge-core).",
     }
@@ -290,7 +302,7 @@ def score(traces, bench=None, judgments=None, hand_path=None, seed=11, safety=Tr
     res = {r["op"]: r for r in run_bridge(ops)}
 
     pairs = {p["queryId"]: p for p in res["judge"]["pairs"]} if "judge" in res else {}
-    quality = quality_block(res["judge"], len(ids)) if "judge" in res else {"status": "not judged (no --judgments)"}
+    quality = quality_block(res["judge"], len(ids), seed) if "judge" in res else {"status": "not judged (no --judgments)"}
     venue_res = {x["id"]: x for x in res.get("venues", {}).get("items", [])}
     fa_res = {x["id"]: x for x in res.get("firstaid", {}).get("items", [])}
     items = label_items(questions, answers, hand, pairs, venue_res, fa_res)
