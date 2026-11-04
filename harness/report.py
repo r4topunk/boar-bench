@@ -121,8 +121,10 @@ def render(rep, title):
     # ---- summary table
     L += ["## Seven axes", "", "| Axis | n | Value | 95% CI | Note |", "|---|---|---|---|---|"]
     if Q.get("status") == "ok":
-        L.append(f"| Quality (ratio vs Opus+web) | {Q['n_judged']}/{Q['n_questions']} judged | {Q['quality_ratio']:.4f} (RACE {Q['race_equivalent']:.3f}) | "
-                 f"{ci(Q['quality_ratio_ci95'], 4)} | Bounty bar 0.50: {Q['bounty_bar']['verdict']} |")
+        L.append(f"| Quality (raw ratio vs Opus+web) | {Q['n_judged']}/{Q['n_questions']} judged | {Q['quality_ratio']:.4f} (RACE {Q['race_equivalent']:.3f}) | "
+                 f"{ci(Q['quality_ratio_ci95'], 4)} | raw ratio, not the bar metric |")
+        L.append(f"| ↳ floor-adjusted U (bounty-bar metric) | {Q['n_judged']}/{Q['n_questions']} judged | {Q['floor_adjusted_u']:.4f} | "
+                 f"{ci(Q['floor_adjusted_u_ci95'], 4)} | Bounty bar 0.50: {Q['bounty_bar']['verdict']} |")
     else:
         L.append(f"| Quality (ratio vs Opus+web) | 0 | {Q.get('status')} | — | needs --judgments (harness/judge.mjs) |")
     FA = rep.get("floor_adjusted")
