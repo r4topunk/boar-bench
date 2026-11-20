@@ -18,7 +18,7 @@ const load = (f) => import(pathToFileURL(join(LIB, f)).href);
 const sha = (f) => createHash("sha256").update(readFileSync(join(LIB, f))).digest("hex");
 const readJsonl = (p) => readFileSync(p, "utf8").split("\n").filter((l) => l.trim()).map((l) => JSON.parse(l));
 
-async function judge({ path, ids, seed = 11 }) {
+async function judge({ path, ids, seed = 11, traceRunIds }) {
   const { combineOrders, summarize, meanScore } = await load("judge-core.mjs");
   const keep = ids ? new Set(ids) : null;
   // Same grouping as eval/scripts/report.mjs pairsFor() and rnd/plumb/analyze.mjs: ok rows only, last row per
@@ -34,7 +34,15 @@ async function judge({ path, ids, seed = 11 }) {
   const single = Object.entries(byQ).filter(([, o]) => !(o.boarA && o.boarB)).map(([q]) => q);
   const pairs = Object.entries(byQ)
     .filter(([, o]) => o.boarA && o.boarB)
-    .map(([queryId, o]) => ({ queryId, category: o.boarA.category, ...combineOrders(o.boarA.mapped, o.boarB.mapped) }));
+    .map(([queryId, o]) => {
+      const traceRun = traceRunIds?.[queryId];
+      for (const row of [o.boarA, o.boarB]) {
+        if (traceRun && row.runId && row.runId !== traceRun) {
+          throw new Error(`Judgment run mismatch for ${queryId} (${row.order}): judgment ${row.runId}, trace ${traceRun}`);
+        }
+      }
+      return { queryId, category: o.boarA.category, ...combineOrders(o.boarA.mapped, o.boarB.mapped) };
+    });
   const meta = [...new Set(Object.values(byQ).flatMap((o) => Object.values(o)).map((j) => `${j.judgeModel}|${j.judgeVersion}|${j.reference}|${j.system}`))];
   return {
     op: "judge",
