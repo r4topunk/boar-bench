@@ -284,7 +284,8 @@ def score(traces, bench=None, judgments=None, hand_path=None, seed=11, safety=Tr
 
     ops = [{"op": "info"}]
     if judgments:
-        ops.append({"op": "judge", "path": str(judgments), "ids": ids, "seed": seed})
+        ops.append({"op": "judge", "path": str(judgments), "ids": ids, "seed": seed,
+                    "traceRunIds": {qid: trace.get("runId") for qid, trace in traces.items()}})
     venue_items, fa_items = [], []
     for q in questions:
         row, g = answers.get(q["id"]), q.get("grading", {})
